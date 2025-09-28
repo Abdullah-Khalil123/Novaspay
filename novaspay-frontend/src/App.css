@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-sidebar-bg: #293a01;
+  --color-background: #141414;
+  --color-text-primary: #cfd3dc;
+  --spacing-padding: 1.5rem;
+  --color-secondary: #1d1e1f;
+  --color-border: #414243;
+}
+
+* {
+  font-family: 'Times New Roman', Times, serif;
+}
