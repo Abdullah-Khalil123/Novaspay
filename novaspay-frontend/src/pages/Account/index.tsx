@@ -90,7 +90,7 @@ const ReceiveAccount = () => {
                     <div>{header}</div>
                   </th>
                 ))}
-                <th className="w-[40px]"></th>
+                <th className="w-[60px] sticky right-0 bg-background z-10"></th>
               </tr>
             </thead>
             <tbody className="text-center text-text-primary">
@@ -110,7 +110,7 @@ const ReceiveAccount = () => {
                       </div>
                     </td>
                   ))}
-                  <td className="w-[40px] text-sidebar-bg text-end">
+                  <td className="w-[60px] sticky right-0 bg-background text-sidebar-bg text-end">
                     <p className="hover:text-[#60831a] cursor-pointer">
                       Details
                     </p>
