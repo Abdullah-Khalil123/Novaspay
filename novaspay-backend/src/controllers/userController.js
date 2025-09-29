@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
+
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Please fill all fields' });
   }
@@ -52,7 +53,7 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, name: user.name, role: user.role },
+      { id: user.id, name: user.name },
       process.env.JWT_SECRET,
       {
         expiresIn: '7d',

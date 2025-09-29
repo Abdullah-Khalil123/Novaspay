@@ -23,30 +23,17 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { logout } from '@/actions/auth';
+// import { logout } from '@/actions/auth';
 import { toast } from 'sonner';
 
 const sidebarData = [
   {
-    label: 'Articles',
-    items: [
-      { title: 'Articles List', icon: FileText, url: 'articles' },
-      { title: 'Authors', icon: Users, url: 'authors' },
-    ],
+    label: 'Transactions',
+    items: [{ title: 'Transactions', icon: FileText, url: 'transactions' }],
   },
   {
     label: 'Website Settings',
     items: [
-      // {
-      //   title: 'Navigation Bar Settings',
-      //   icon: Settings,
-      //   url: '/admin/settings/navigation',
-      // },
-      // {
-      //   title: 'Feedback Information',
-      //   icon: LifeBuoy,
-      //   url: '/admin/settings/feedback',
-      // },
       {
         title: 'Coupon Settings',
         icon: Puzzle,
@@ -164,12 +151,12 @@ export function AppSidebar() {
         <Button
           onClick={async () => {
             try {
-              await logout()
-                .then(() => dispatch({ type: 'auth/logout' }))
-                .finally(() => {
-                  toast.success('Logged out successfully');
-                  navigate('/auth/login');
-                });
+              // await logout()
+              //   .then(() => dispatch({ type: 'auth/logout' }))
+              //   .finally(() => {
+              //     toast.success('Logged out successfully');
+              //     navigate('/auth/login');
+              //   });
             } catch (error) {
               toast.error('Logout failed');
               console.error(error);
