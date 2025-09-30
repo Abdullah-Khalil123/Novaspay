@@ -1,75 +1,12 @@
 import HistoryFilter from './HistoryFilter';
 import PageFilters from '../Account/pagination';
-
-const mockData = [
-  {
-    orderId: 'ORD-1001',
-    accountName: 'John D. Savings',
-    paymentAccount: 'Standard Chartered - 123456789',
-    receivingName: 'Alice Johnson',
-    amount: '$1,200.00',
-    fee: '$12.00',
-    status: 'Completed',
-    orderType: 'Transfer',
-    reason: 'Personal Payment',
-    creationDate: '2025-08-10',
-    latestUpdate: '2025-09-20',
-  },
-  {
-    orderId: 'ORD-1002',
-    accountName: 'Ali K. Current',
-    paymentAccount: 'Habib Bank - 876543210',
-    receivingName: 'Muhammad Ahmed',
-    amount: '₨85,000',
-    fee: '₨500',
-    status: 'Pending',
-    orderType: 'Deposit',
-    reason: 'Business Payment',
-    creationDate: '2025-09-01',
-    latestUpdate: '2025-09-25',
-  },
-  {
-    orderId: 'ORD-1003',
-    accountName: 'Emma W. Business',
-    paymentAccount: 'Barclays - 345678901',
-    receivingName: 'Olivia Smith',
-    amount: '€2,450',
-    fee: '€15',
-    status: 'Failed',
-    orderType: 'Withdrawal',
-    reason: 'Insufficient Funds',
-    creationDate: '2025-07-22',
-    latestUpdate: '2025-09-18',
-  },
-  {
-    orderId: 'ORD-1004',
-    accountName: 'John D. Savings',
-    paymentAccount: 'Standard Chartered - 123456789',
-    receivingName: 'Sophia Williams',
-    amount: '$560.00',
-    fee: '$5.00',
-    status: 'Completed',
-    orderType: 'Transfer',
-    reason: 'Gift',
-    creationDate: '2025-08-15',
-    latestUpdate: '2025-09-10',
-  },
-  {
-    orderId: 'ORD-1005',
-    accountName: 'Ali K. Current',
-    paymentAccount: 'Habib Bank - 876543210',
-    receivingName: 'Noah Khan',
-    amount: '₨120,000',
-    fee: '₨700',
-    status: 'In Review',
-    orderType: 'Deposit',
-    reason: 'Salary Payment',
-    creationDate: '2025-09-05',
-    latestUpdate: '2025-09-27',
-  },
-];
+import { useTransactions } from '@/hooks/useTransaction';
+import type { Transaction } from '@/types/transaction';
 
 const HistoryPage = () => {
+  const { data, isLoading } = useTransactions();
+  const transactions: Transaction[] = data?.data || [];
+
   return (
     <div className="px-padding mt-2">
       <HistoryFilter />
@@ -82,14 +19,15 @@ const HistoryPage = () => {
                   'Order Id',
                   'Account Name',
                   'Payment Account',
-                  'Receiving Name',
+                  'Receiver Name',
+                  'Receiver Number',
                   'Amount',
                   'Fee',
                   'Status',
                   'Order Type',
                   'Reason',
-                  'Creation Data',
-                  'Latest Update',
+                  'Created At',
+                  'Updated At',
                 ].map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
                     <div>{header}</div>
@@ -99,32 +37,51 @@ const HistoryPage = () => {
               </tr>
             </thead>
             <tbody className="text-center text-text-primary">
-              {mockData.map((acc, idx) => (
-                <tr
-                  key={idx}
-                  className={
-                    idx % 2 === 0
-                      ? 'bg-background border-t border-t-border'
-                      : 'border-t border-t-border'
-                  }
-                >
-                  {Object.values(acc).map((val, i) => (
-                    <td key={i} className="w-[80px] min-w-[80px] px-2 py-10">
-                      <div className="truncate overflow-hidden whitespace-nowrap">
-                        {val}
-                      </div>
-                    </td>
-                  ))}
-                  <td className="w-[40px] sticky right-0 bg-background text-sidebar-bg text-center space-y-4">
-                    <p className="hover:text-[#60831a] cursor-pointer">
-                      Credential
-                    </p>
-                    <p className="hover:text-[#60831a] cursor-pointer">
-                      Details
-                    </p>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={13} className="py-10">
+                    Loading...
                   </td>
                 </tr>
-              ))}
+              ) : transactions.length === 0 ? (
+                <tr>
+                  <td colSpan={13} className="py-10">
+                    No transactions found
+                  </td>
+                </tr>
+              ) : (
+                transactions.map((tx, idx) => (
+                  <tr
+                    key={tx.id}
+                    className={
+                      idx % 2 === 0
+                        ? 'bg-background border-t border-t-border'
+                        : 'border-t border-t-border'
+                    }
+                  >
+                    <td className="px-2 py-2">{tx.orderId}</td>
+                    <td className="px-2 py-2">{tx.accountName}</td>
+                    <td className="px-2 py-2">{tx.paymentAccount}</td>
+                    <td className="px-2 py-2">{tx.receiverName}</td>
+                    <td className="px-2 py-2">{tx.receiverNumber}</td>
+                    <td className="px-2 py-2">{tx.amount}</td>
+                    <td className="px-2 py-2">{tx.fee}</td>
+                    <td className="px-2 py-2">{tx.status}</td>
+                    <td className="px-2 py-2">{tx.orderType}</td>
+                    <td className="px-2 py-2">{tx.reason}</td>
+                    <td className="px-2 py-2">{tx.createdAt}</td>
+                    <td className="px-2 py-2">{tx.updatedAt}</td>
+                    <td className="w-[40px] sticky right-0 bg-background text-sidebar-bg text-center space-y-4">
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        Credential
+                      </p>
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        Details
+                      </p>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

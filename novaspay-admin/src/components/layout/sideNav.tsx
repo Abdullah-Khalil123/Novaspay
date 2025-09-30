@@ -21,8 +21,8 @@ import {
   LogOut,
 } from 'lucide-react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+// import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Button } from '../ui/button';
 // import { logout } from '@/actions/auth';
 import { toast } from 'sonner';
@@ -103,8 +103,8 @@ const sidebarData = [
 ];
 
 export function AppSidebar() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     Articles: false,
     'Website Settings': false,

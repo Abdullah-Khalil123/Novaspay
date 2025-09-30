@@ -19,6 +19,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:4000',
+      'http://localhost:5173',
       process.env.ADMIN_URL,
       process.env.ADMIN2_URL,
     ],

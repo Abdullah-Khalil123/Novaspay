@@ -44,7 +44,7 @@ const KYCForm = ({ action = 'create' }: { action?: 'create' | 'edit' }) => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<KYCFormValues>({
     resolver: zodResolver(KYCschema),
     defaultValues: {
