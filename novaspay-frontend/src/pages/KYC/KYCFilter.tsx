@@ -2,33 +2,70 @@ import Button from '../../components/custom/Button';
 import Input from '../../components/custom/Input';
 import { Search, RotateCcwIcon, Upload } from 'lucide-react';
 
-const KYCFilter = () => {
+interface KYCFiltersProps {
+  filters: {
+    email: string;
+    name: string;
+    status: string;
+  };
+  setFilters: React.Dispatch<React.SetStateAction<any>>;
+  refetch: () => void;
+  onUpload?: () => void;
+}
+
+const KYCFilter = ({
+  filters,
+  setFilters,
+  refetch,
+  onUpload,
+}: KYCFiltersProps) => {
   return (
     <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border">
-      <Input label="Email" />
-      <Input label="Name" />
-      <Input label="Status" />
+      <Input
+        label="Email"
+        value={filters.email}
+        onChange={(e) =>
+          setFilters((prev: any) => ({ ...prev, email: e.target.value }))
+        }
+      />
+      <Input
+        label="Name"
+        value={filters.name}
+        onChange={(e) =>
+          setFilters((prev: any) => ({ ...prev, name: e.target.value }))
+        }
+      />
+      <Input
+        label="Status"
+        value={filters.status}
+        onChange={(e) =>
+          setFilters((prev: any) => ({ ...prev, status: e.target.value }))
+        }
+      />
+
       <div className="flex space-x-4">
+        <Button onClick={refetch}>
+          <p className="flex items-center gap-1">
+            <Search size={16} /> Search
+          </p>
+        </Button>
         <Button
-          children={
+          onClick={() => {
+            setFilters({ email: '', name: '', status: '' });
+            Promise.resolve().then(refetch);
+          }}
+        >
+          <p className="flex items-center gap-1">
+            <RotateCcwIcon size={16} /> Reset
+          </p>
+        </Button>
+        {onUpload && (
+          <Button onClick={onUpload}>
             <p className="flex items-center gap-1">
-              <Search size={16} />
-              Search
+              <Upload size={16} /> KYC 批量导入
             </p>
-          }
-        />
-        <Button
-          children={
-            <p className="flex items-center gap-1">
-              <RotateCcwIcon size={16} />
-              Reset
-            </p>
-          }
-        />
-        <button className="flex gap-2 bg-sidebar-bg h-8 px-4 items-center text-sm rounded-sm text-white hover:bg-[#60831a] transition">
-          <Upload size={16} />
-          KYC 批量导入
-        </button>
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -2,14 +2,28 @@ import HistoryFilter from './HistoryFilter';
 import PageFilters from '../Account/pagination';
 import { useTransactions } from '@/hooks/useTransaction';
 import type { Transaction } from '@/types/transaction';
+import { useState } from 'react';
 
 const HistoryPage = () => {
-  const { data, isLoading } = useTransactions();
-  const transactions: Transaction[] = data?.data || [];
+  const [filters, setFilters] = useState({
+    orderId: '',
+    area: '',
+    receiverName: '',
+    receiverNumber: '',
+    orderType: '',
+    status: '',
+  });
 
+  const { data, isLoading, refetch } = useTransactions(filters);
+
+  const transactions: Transaction[] = data?.data || [];
   return (
     <div className="px-padding mt-2">
-      <HistoryFilter />
+      <HistoryFilter
+        filters={filters}
+        setFilters={setFilters}
+        refetch={refetch}
+      />
       <div className="bg-secondary rounded-md border border-border mt-4 p-4">
         <div className="overflow-x-auto">
           <table className="table-fixed text-sm w-full border-collapse">

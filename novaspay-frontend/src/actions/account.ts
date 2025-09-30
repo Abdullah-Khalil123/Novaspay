@@ -1,9 +1,10 @@
 import type { Account } from '@/types/accounts';
+import type { Params } from '@/types/params';
 import { axiosInstance } from '@/utils/axios';
 
-const getAllAccounts = async () => {
+const getAllAccounts = async (params?: Params) => {
   try {
-    const response = await axiosInstance.get('/account');
+    const response = await axiosInstance.get('/account', { params });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch accounts:', error);

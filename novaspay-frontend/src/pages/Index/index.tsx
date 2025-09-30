@@ -1,23 +1,14 @@
+import { useTransactions } from '@/hooks/useTransaction';
+import type { Transaction } from '@/types/transaction';
 import { Info } from 'lucide-react';
 
-const tableData = [
-  {
-    description: 'Transfer',
-    date: '2024-06-01',
-    amount: '$100.00',
-    fee: '$2.00',
-    status: 'Completed',
-  },
-  {
-    description: 'Payment',
-    date: '2024-06-02',
-    amount: '$50.00',
-    fee: '$1.00',
-    status: 'Pending',
-  },
-];
-
 const IndexPage = () => {
+  const { data } = useTransactions({
+    page: 1,
+    limit: 10,
+  });
+
+  const transactions: Transaction[] = data?.data || [];
   return (
     <div className="px-padding pt-2">
       <div>
@@ -49,24 +40,14 @@ const IndexPage = () => {
 
         <div className="bg-secondary mt-8 p-3.5 rounded-md border-gray-500 border-[1px]">
           <h2 className="text-3xl font-bold mb-4">Recent Transactions</h2>
-          <Table data={tableData} />
+          <Table data={transactions} />
         </div>
       </div>
     </div>
   );
 };
 
-const Table = ({
-  data,
-}: {
-  data: {
-    description: string;
-    date: string;
-    amount: string;
-    fee: string;
-    status: string;
-  }[];
-}) => {
+const Table = ({ data }: { data: Transaction[] }) => {
   return (
     <table className="w-full">
       <thead>
@@ -81,8 +62,8 @@ const Table = ({
       <tbody className="text-center text-text-primary">
         {data.map((item, index) => (
           <tr key={index} className={index % 2 === 0 ? 'bg-background' : ''}>
-            <td className="py-2">{item.description}</td>
-            <td>{item.date}</td>
+            <td className="py-2">{item.orderType}</td>
+            <td>{item.updatedAt}</td>
             <td>{item.amount}</td>
             <td>{item.fee}</td>
             <td>{item.status}</td>

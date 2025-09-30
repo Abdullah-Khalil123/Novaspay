@@ -6,13 +6,14 @@ import {
   updateTransaction,
 } from '@/actions/transaction';
 import { queryClient } from '@/providers/react-query';
+import type { Params } from '@/types/params';
 import type { Transaction } from '@/types/transaction';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-const useTransactions = () => {
+const useTransactions = (params?: Params) => {
   return useQuery({
     queryKey: ['transactions'],
-    queryFn: async () => getAllTransactions(),
+    queryFn: async () => getAllTransactions(params),
   });
 };
 

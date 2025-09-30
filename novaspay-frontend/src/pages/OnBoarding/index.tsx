@@ -1,45 +1,16 @@
+import { useOnboardings } from '@/hooks/useOnBoarding';
 import PageFilters from '../Account/pagination';
 import OnboardingFilters from './OnBoardingFilters';
-
-const mockData = [
-  {
-    clientName: 'John Doe',
-    accountErrorMsg: 'Invalid IBAN format',
-    bankAccountStatusMsg: 'Verification Pending',
-    reason: 'Incorrect account details',
-    creationDate: '2025-09-01',
-  },
-  {
-    clientName: 'Jane Smith',
-    accountErrorMsg: 'Account frozen',
-    bankAccountStatusMsg: 'Rejected',
-    reason: 'Fraud suspicion',
-    creationDate: '2025-08-28',
-  },
-  {
-    clientName: 'Michael Johnson',
-    accountErrorMsg: 'Bank not supported',
-    bankAccountStatusMsg: 'Failed',
-    reason: 'Unsupported bank',
-    creationDate: '2025-09-10',
-  },
-  {
-    clientName: 'Emily Brown',
-    accountErrorMsg: 'Duplicate account',
-    bankAccountStatusMsg: 'Rejected',
-    reason: 'Duplicate submission',
-    creationDate: '2025-09-15',
-  },
-  {
-    clientName: 'David Lee',
-    accountErrorMsg: 'Timeout',
-    bankAccountStatusMsg: 'Verification Failed',
-    reason: 'Bank API timeout',
-    creationDate: '2025-09-20',
-  },
-];
+import type { OnBoarding } from '@/types/onBoarding';
 
 const OnboardingPage = () => {
+  const { data, isLoading } = useOnboardings({
+    page: 1,
+    limit: 10,
+  });
+
+  const onboardings: OnBoarding[] = data?.data || [];
+
   return (
     <div className="px-padding mt-2">
       <OnboardingFilters />
@@ -63,31 +34,53 @@ const OnboardingPage = () => {
               </tr>
             </thead>
             <tbody className="text-center text-text-primary">
-              {mockData.map((acc, idx) => (
-                <tr
-                  key={idx}
-                  className={
-                    idx % 2 === 0
-                      ? 'bg-background border-t border-t-border'
-                      : 'border-t border-t-border'
-                  }
-                >
-                  {Object.values(acc).map((val, i) => (
-                    <td key={i} className="w-[80px] min-w-[80px] px-2 py-4">
-                      <div className="truncate overflow-hidden whitespace-nowrap">
-                        {val}
-                      </div>
-                    </td>
-                  ))}
-                  <td
-                    className={`sticky right-0 font-sans text-center space-y-4 text-[#c2cb3d]`}
-                  >
-                    <p className="hover:text-[#60831a] cursor-pointer">
-                      Details
-                    </p>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={6} className="py-4">
+                    Loading...
                   </td>
                 </tr>
-              ))}
+              ) : onboardings.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-4">
+                    No onboarding records found.
+                  </td>
+                </tr>
+              ) : (
+                onboardings.map((acc, idx) => (
+                  <tr
+                    key={acc.id || idx}
+                    className={
+                      idx % 2 === 0
+                        ? 'bg-background border-t border-t-border'
+                        : 'border-t border-t-border'
+                    }
+                  >
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.clientName}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.accountErrorMessage}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.bankAccountStatusMsg}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.reason}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.createdAt}
+                    </td>
+                    <td
+                      className={`sticky right-0 font-sans text-center space-y-4 text-[#c2cb3d]`}
+                    >
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        Details
+                      </p>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

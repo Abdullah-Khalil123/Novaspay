@@ -7,12 +7,13 @@ import {
 } from '@/actions/kyc';
 import { queryClient } from '@/providers/react-query';
 import type { KYC } from '@/types/kyc';
+import type { Params } from '@/types/params';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-const useKYCs = () => {
+const useKYCs = (param?: Params) => {
   return useQuery({
     queryKey: ['kycs'],
-    queryFn: async () => getAllKYCs(),
+    queryFn: async () => getAllKYCs(param),
   });
 };
 

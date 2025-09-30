@@ -1,73 +1,36 @@
+import { useState } from 'react';
+import { useAccounts } from '@/hooks/useAccounts';
 import AccountsFilters from './filter';
 import PageFilters from './pagination';
-
-const mockAccounts = [
-  {
-    bankingName: 'Standard Chartered',
-    currencyClient: 'USD',
-    clientName: 'John Doe',
-    ibanNumber: 'US12 3456 7890 1234 5678',
-    balance: '$12,450.00',
-    accountNumber: '123456789',
-    accountName: 'John D. Savings',
-    bankingAddress: '123 Wall Street, New York, USA',
-    creationDate: '2023-01-15',
-    latestUpdate: '2025-09-25',
-  },
-  {
-    bankingName: 'Habib Bank Limited',
-    currencyClient: 'PKR',
-    clientName: 'Ali Khan',
-    ibanNumber: 'PK36 HABB 0000 1234 5678',
-    balance: '₨950,000',
-    accountNumber: '876543210',
-    accountName: 'Ali K. Current',
-    bankingAddress: 'Blue Area, Islamabad, Pakistan',
-    creationDate: '2024-06-10',
-    latestUpdate: '2025-09-20',
-  },
-  {
-    bankingName: 'Barclays',
-    currencyClient: 'EUR',
-    clientName: 'Emma Watson',
-    ibanNumber: 'GB29 BARC 2000 1234 5678',
-    balance: '€8,300',
-    accountNumber: '345678901',
-    accountName: 'Emma W. Business',
-    bankingAddress: '10 Downing St, London, UK',
-    creationDate: '2022-09-01',
-    latestUpdate: '2025-09-22',
-  },
-  {
-    bankingName: 'Barclays',
-    currencyClient: 'EUR',
-    clientName: 'Emma Watson',
-    ibanNumber: 'GB29 BARC 2000 1234 5678',
-    balance: '€8,300',
-    accountNumber: '345678901',
-    accountName: 'Emma W. Business',
-    bankingAddress: '10 Downing St, London, UK',
-    creationDate: '2022-09-01',
-    latestUpdate: '2025-09-22',
-  },
-  {
-    bankingName: 'Barclays',
-    currencyClient: 'EUR',
-    clientName: 'Emma Watson',
-    ibanNumber: 'GB29 BARC 2000 1234 5678',
-    balance: '€8,300',
-    accountNumber: '345678901',
-    accountName: 'Emma W. Business',
-    bankingAddress: '10 Downing St, London, UK',
-    creationDate: '2022-09-01',
-    latestUpdate: '2025-09-22',
-  },
-];
+import type { Account } from '@/types/accounts';
 
 const ReceiveAccount = () => {
+  // State for filters
+  const [filters, setFilters] = useState({
+    accountNumber: '',
+    bankingName: '',
+    ibanNumber: '',
+    accountName: '',
+    currency: '',
+    status: '',
+  });
+
+  // Pass filters as params to the hook
+  const { data, isLoading, refetch } = useAccounts({
+    page: 1,
+    limit: 10,
+    ...filters,
+  });
+
+  const accounts: Account[] = data?.data || [];
+
   return (
     <div className="px-padding mt-2">
-      <AccountsFilters />
+      <AccountsFilters
+        filters={filters}
+        setFilters={setFilters}
+        refetch={refetch}
+      />
 
       <div className="bg-secondary border mt-4 border-border p-2">
         <div className="overflow-x-auto">
@@ -76,7 +39,7 @@ const ReceiveAccount = () => {
               <tr>
                 {[
                   'Banking Name',
-                  'Currency Client',
+                  'Currency',
                   'Client Name',
                   'IBAN Number',
                   'Balance',
@@ -87,36 +50,74 @@ const ReceiveAccount = () => {
                   'Latest Update',
                 ].map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
-                    <div>{header}</div>
+                    {header}
                   </th>
                 ))}
                 <th className="w-[60px] sticky right-0 bg-background z-10"></th>
               </tr>
             </thead>
+
             <tbody className="text-center text-text-primary">
-              {mockAccounts.map((acc, idx) => (
-                <tr
-                  key={idx}
-                  className={
-                    idx % 2 === 0
-                      ? 'bg-background border-t border-t-border'
-                      : 'border-t border-t-border'
-                  }
-                >
-                  {Object.values(acc).map((val, i) => (
-                    <td key={i} className="w-[80px] min-w-[80px] px-2 py-4">
-                      <div className="truncate overflow-hidden whitespace-nowrap">
-                        {val}
-                      </div>
-                    </td>
-                  ))}
-                  <td className="w-[60px] sticky right-0 bg-background text-sidebar-bg text-end">
-                    <p className="hover:text-[#60831a] cursor-pointer">
-                      Details
-                    </p>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={11} className="py-4">
+                    Loading...
                   </td>
                 </tr>
-              ))}
+              ) : accounts.length === 0 ? (
+                <tr>
+                  <td colSpan={11} className="py-4">
+                    No accounts found.
+                  </td>
+                </tr>
+              ) : (
+                accounts.map((acc, idx) => (
+                  <tr
+                    key={acc.id || idx}
+                    className={
+                      idx % 2 === 0
+                        ? 'bg-background border-t border-t-border'
+                        : 'border-t border-t-border'
+                    }
+                  >
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.bankingName}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.currency}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.clientName}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.ibanNumber}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.balance}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.accountNumber}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.accountName}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.bankingAddress}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.createdAt}
+                    </td>
+                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                      {acc.updatedAt}
+                    </td>
+                    <td className="w-[60px] sticky right-0 bg-background text-end">
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        Details
+                      </p>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -1,21 +1,35 @@
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
-const Select = ({ label, options }: { label: string; options: string[] }) => {
+const Select = ({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: string[];
+  value?: string | null;
+  onChange?: (val: string) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+
+  const handleSelect = (option: string) => {
+    onChange?.(option);
+    setIsOpen(false);
+  };
 
   return (
     <div className="flex items-center h-8 w-64 space-x-4 cursor-pointer">
       {/* Label */}
-      <p className="text-nowrap">{label}</p>
+      <p className="whitespace-nowrap">{label}</p>
 
       {/* Main Select */}
       <div
         onClick={() => setIsOpen(!isOpen)}
         className="relative border flex justify-between items-center border-border w-full px-2 py-1 rounded-sm"
       >
-        <span>{selected || options[0] || 'Select an option'}</span>
+        <span>{value || options[0] || 'Select an option'}</span>
         <ChevronDown
           size={16}
           className={`transition-transform duration-200 ${
@@ -35,10 +49,7 @@ const Select = ({ label, options }: { label: string; options: string[] }) => {
                 <div
                   key={option}
                   className="px-2 py-1 hover:bg-border-border cursor-pointer"
-                  onClick={() => {
-                    setSelected(option);
-                    setIsOpen(false);
-                  }}
+                  onClick={() => handleSelect(option)}
                 >
                   {option}
                 </div>

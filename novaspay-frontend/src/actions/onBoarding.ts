@@ -1,9 +1,10 @@
 import type { OnBoarding } from '@/types/onBoarding';
+import type { Params } from '@/types/params';
 import { axiosInstance } from '@/utils/axios';
 
-const getAllOnboardings = async () => {
+const getAllOnboardings = async (params?: Params) => {
   try {
-    const response = await axiosInstance.get('/onboarding');
+    const response = await axiosInstance.get('/onboarding', { params });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch onboardings:', error);

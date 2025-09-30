@@ -1,9 +1,12 @@
+import type { Params } from '@/types/params';
 import type { VA } from '@/types/va';
 import { axiosInstance } from '@/utils/axios';
 
-const getAllVAs = async () => {
+const getAllVAs = async (params?: Params) => {
   try {
-    const response = await axiosInstance.get('/va');
+    const response = await axiosInstance.get('/va', {
+      params,
+    });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch VAs:', error);

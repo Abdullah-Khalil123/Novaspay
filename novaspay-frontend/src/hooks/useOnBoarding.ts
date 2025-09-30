@@ -7,12 +7,13 @@ import {
 } from '@/actions/onBoarding';
 import { queryClient } from '@/providers/react-query';
 import type { OnBoarding } from '@/types/onBoarding';
+import type { Params } from '@/types/params';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-const useOnboardings = () => {
+const useOnboardings = (params?: Params) => {
   return useQuery({
     queryKey: ['onboardings'],
-    queryFn: async () => getAllOnboardings(),
+    queryFn: async () => getAllOnboardings(params),
   });
 };
 

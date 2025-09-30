@@ -1,12 +1,13 @@
 import { createVA, deleteVA, getAllVAs, getVA, updateVA } from '@/actions/va';
 import { queryClient } from '@/providers/react-query';
+import type { Params } from '@/types/params';
 import type { VA } from '@/types/va';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-const useVAs = () => {
+const useVAs = (params?: Params) => {
   return useQuery({
     queryKey: ['vas'],
-    queryFn: async () => getAllVAs(),
+    queryFn: async () => getAllVAs(params),
   });
 };
 

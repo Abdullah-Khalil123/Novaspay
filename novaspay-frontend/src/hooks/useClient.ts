@@ -7,12 +7,13 @@ import {
 } from '@/actions/client';
 import { queryClient } from '@/providers/react-query';
 import type { Client } from '@/types/client';
+import type { Params } from '@/types/params';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-const useClients = () => {
+const useClients = (params?: Params) => {
   return useQuery({
     queryKey: ['clients'],
-    queryFn: async () => getAllClients(),
+    queryFn: async () => getAllClients(params),
   });
 };
 
