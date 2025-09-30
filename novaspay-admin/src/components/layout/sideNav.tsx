@@ -15,6 +15,7 @@ import {
   FileText,
   Users,
   Settings,
+  AlignCenterHorizontalIcon,
   Puzzle,
   ChevronDown,
   LogOut,
@@ -32,47 +33,69 @@ const sidebarData = [
     items: [{ title: 'Transactions', icon: FileText, url: 'transactions' }],
   },
   {
-    label: 'Website Settings',
+    label: 'Accounts',
+    items: [{ title: 'Accounts', icon: Settings, url: 'accounts' }],
+  },
+  {
+    label: 'KYC',
+    items: [{ title: 'KYC List', icon: Puzzle, url: 'kyc' }],
+  },
+  {
+    label: 'Clients',
     items: [
-      {
-        title: 'Coupon Settings',
-        icon: Puzzle,
-        url: '/admin/settings/coupons',
-      },
-      {
-        title: 'Slideshow Settings',
-        icon: FileText,
-        url: '/admin/settings/banner',
-      },
-      {
-        title: 'Currency Settings',
-        icon: Settings,
-        url: '/admin/settings/currency',
-      },
+      { title: 'Client List', icon: AlignCenterHorizontalIcon, url: 'clients' },
     ],
   },
   {
-    label: 'Game',
-    items: [{ title: 'Game List', icon: Puzzle, url: '/admin/games' }],
+    label: 'Virtual Accounts (VA)',
+    items: [{ title: 'VA List', icon: Users, url: 'vas' }],
   },
   {
-    label: 'Service',
-    items: [
-      { title: 'Category List', icon: Users, url: '/admin/categorys' },
-      { title: 'Service List', icon: FileText, url: '/admin/services' },
-    ],
+    label: 'Onboarding',
+    items: [{ title: 'Onboarding List', icon: Users, url: 'onboardings' }],
   },
-  {
-    label: 'Supplier & Order',
-    items: [
-      {
-        title: 'Order List',
-        icon: FileText,
-        url: '/admin/orders',
-      },
-      { title: 'Supplier List', icon: Users, url: '/admin/suppliers' },
-    ],
-  },
+  // {
+  //   label: 'Website Settings',
+  //   items: [
+  //     {
+  //       title: 'Coupon Settings',
+  //       icon: Puzzle,
+  //       url: '/admin/settings/coupons',
+  //     },
+  //     {
+  //       title: 'Slideshow Settings',
+  //       icon: FileText,
+  //       url: '/admin/settings/banner',
+  //     },
+  //     {
+  //       title: 'Currency Settings',
+  //       icon: Settings,
+  //       url: '/admin/settings/currency',
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: 'Game',
+  //   items: [{ title: 'Game List', icon: Puzzle, url: '/admin/games' }],
+  // },
+  // {
+  //   label: 'Service',
+  //   items: [
+  //     { title: 'Category List', icon: Users, url: '/admin/categorys' },
+  //     { title: 'Service List', icon: FileText, url: '/admin/services' },
+  //   ],
+  // },
+  // {
+  //   label: 'Supplier & Order',
+  //   items: [
+  //     {
+  //       title: 'Order List',
+  //       icon: FileText,
+  //       url: '/admin/orders',
+  //     },
+  //     { title: 'Supplier List', icon: Users, url: '/admin/suppliers' },
+  //   ],
+  // },
   {
     label: 'User Management',
     items: [{ title: 'User List', icon: Users, url: '/admin/users' }],

@@ -6,6 +6,11 @@ import { connectDB } from './src/config/db.js';
 // Import routes
 import userRoutes from './src/routes/userRoute.js';
 import transactionRoutes from './src/routes/transactionRoute.js';
+import accountRoutes from './src/routes/accounts.js';
+import kycRoutes from './src/routes/kycRoute.js';
+import onboardingRoutes from './src/routes/onboardingRoute.js';
+import vaRoutes from './src/routes/vaController.js';
+import clientRoute from './src/routes/clientRoute.js';
 
 // Initialize express app
 const app = express();
@@ -29,6 +34,11 @@ app.use(cookieParser());
 // Use routes
 app.use('/api/user', userRoutes);
 app.use('/api/transaction', transactionRoutes);
+app.use('/api/account', accountRoutes);
+app.use('/api/kyc', kycRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/va', vaRoutes);
+app.use('/api/client', clientRoute);
 
 connectDB().then(() => {
   app.listen(5000, () => {

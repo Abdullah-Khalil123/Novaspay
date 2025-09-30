@@ -4,6 +4,11 @@ import Login from '../pages/Login';
 import NotFound from '@/pages/404NotFound';
 import HomePage from '@/pages/Home';
 import { transactionRoute } from './routes/transaction';
+import { accountRoutes } from './routes/accounts';
+import { kycRoutes } from './routes/kyc';
+import { clientRoute } from './routes/client';
+import { vaRoutes } from './routes/va';
+import { onBoardingRoutes } from './routes/onBoarding';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +28,11 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       transactionRoute,
+      accountRoutes,
+      kycRoutes,
+      clientRoute,
+      vaRoutes,
+      onBoardingRoutes,
     ],
   },
 

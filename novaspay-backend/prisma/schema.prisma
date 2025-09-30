@@ -32,6 +32,81 @@ model Transaction {
   orderType       String?
   reason          String?
   createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  updatedAt       DateTime  @updatedAt 
+}
+
+model Account {
+
+  id              Int      @id @default(autoincrement())
+  bankingName     String?
+  currency        String?
+  clientName      String?
+  ibanNumber      String? 
+  balance         Float? @default(0)
+  realBalance     Float? @default(0)
+  accountNumber   String?
+  accountName     String?
+  bankingAddress  String?
   
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model KYC {
+  id              Int      @id @default(autoincrement())
+  email           String
+  type            String?
+  name            String?
+  phone           String?
+  agentId         Int?
+  status          String?  @default("pending")
+  reason          String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model OnBoarding {
+  id                    Int      @id @default(autoincrement())
+  clientName            String?
+  accountErrorMessage   String?
+  bankAccountStatusMsg  String?
+  reason                String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model VA {
+  id             Int      @id @default(autoincrement())
+  purpose       String?
+  currency      String?
+  paymentMethod String?
+  headquaters   String?
+  state      String?
+  city       String?
+  street    String?
+  postalCode String?
+  businessCategory String?
+  region         String?
+  fundingSource  String?
+  storePhotos    String[] @default([])
+  declineReason  String?
+  status         String?  @default("pending")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model client {
+  id            Int      @id @default(autoincrement())
+  name          String?
+  loginTime    DateTime?
+  type          String?
+  country      String?
+  email        String?
+  agentName   String?
+  bankAccountNumber String?
+  description String?
+  invitationCode String?
+  accountInfo String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
