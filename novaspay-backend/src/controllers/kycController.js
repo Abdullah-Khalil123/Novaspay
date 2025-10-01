@@ -22,11 +22,26 @@ const getKYCById = async (req, res) => {
 };
 
 const getAllKYCs = async (req, res) => {
+  const { limit, page } = req.query;
+  const { email, name, status } = req.query;
   try {
-    const kycs = await prisma.kYC.findMany();
+    const kycs = await prisma.kYC.findMany({
+      take: parseInt(limit) || 10,
+      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+      where: {
+        email: email ? { contains: email } : undefined,
+        name: name ? { contains: name } : undefined,
+        status: status ? { equals: status } : undefined,
+      },
+    });
     return res.status(200).json({
       message: 'KYC records retrieved successfully',
       data: kycs,
+      pagination: {
+        limit: parseInt(limit) || 10,
+        page: parseInt(page) || 1,
+        total: await prisma.kYC.count(),
+      },
     });
   } catch (error) {
     return res.status(500).json({

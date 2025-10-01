@@ -22,11 +22,21 @@ const getOnBoardingById = async (req, res) => {
 
 // Get all OnBoarding records
 const getAllOnBoardings = async (req, res) => {
+  const { limit, page } = req.query;
   try {
-    const records = await prisma.onBoarding.findMany();
-    return res
-      .status(200)
-      .json({ message: 'OnBoardings retrieved successfully', data: records });
+    const records = await prisma.onBoarding.findMany({
+      take: parseInt(limit) || 10,
+      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+    });
+    return res.status(200).json({
+      message: 'OnBoardings retrieved successfully',
+      data: records,
+      pagination: {
+        limit: parseInt(limit) || 10,
+        page: parseInt(page) || 1,
+        total: await prisma.onBoarding.count(),
+      },
+    });
   } catch (error) {
     return res
       .status(500)
@@ -77,12 +87,10 @@ const updateOnBoarding = async (req, res) => {
       where: { id: parseInt(id) },
       data,
     });
-    return res
-      .status(200)
-      .json({
-        message: 'OnBoarding updated successfully',
-        data: updatedRecord,
-      });
+    return res.status(200).json({
+      message: 'OnBoarding updated successfully',
+      data: updatedRecord,
+    });
   } catch (error) {
     return res
       .status(500)

@@ -1,11 +1,31 @@
 import prisma from '../../prisma/client.js';
 
 const getAllTransactions = async (req, res) => {
+  const { limit, page } = req.query;
+  const { orderId, receiverName, receiverNumber, orderType, status } =
+    req.query;
   try {
-    const transactions = await prisma.transaction.findMany();
+    const transactions = await prisma.transaction.findMany({
+      take: parseInt(limit) || 10,
+      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+      where: {
+        orderId: orderId ? { contains: orderId } : undefined,
+        receiverName: receiverName ? { contains: receiverName } : undefined,
+        receiverNumber: receiverNumber
+          ? { contains: receiverNumber }
+          : undefined,
+        orderType: orderType ? { equals: orderType } : undefined,
+        status: status ? { equals: status } : undefined,
+      },
+    });
     return res.status(200).json({
       message: 'Transactions retrieved successfully',
       data: transactions,
+      pagination: {
+        limit: parseInt(limit) || 10,
+        page: parseInt(page) || 1,
+        total: await prisma.transaction.count(),
+      },
     });
   } catch (error) {
     return res

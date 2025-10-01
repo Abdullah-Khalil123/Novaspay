@@ -16,11 +16,21 @@ const getVAById = async (req, res) => {
 };
 
 const getAllVAs = async (req, res) => {
+  const { limit, page } = req.query;
   try {
-    const records = await prisma.vA.findMany();
-    return res
-      .status(200)
-      .json({ message: 'VAs retrieved successfully', data: records });
+    const records = await prisma.vA.findMany({
+      take: parseInt(limit) || 10,
+      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+    });
+    return res.status(200).json({
+      message: 'VAs retrieved successfully',
+      data: records,
+      pagination: {
+        limit: parseInt(limit) || 10,
+        page: parseInt(page) || 1,
+        total: await prisma.vA.count(),
+      },
+    });
   } catch (error) {
     return res
       .status(500)

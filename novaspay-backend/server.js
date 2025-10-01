@@ -11,6 +11,7 @@ import kycRoutes from './src/routes/kycRoute.js';
 import onboardingRoutes from './src/routes/onboardingRoute.js';
 import vaRoutes from './src/routes/vaController.js';
 import clientRoute from './src/routes/clientRoute.js';
+import { protect } from './src/middleware/auth.js';
 
 // Initialize express app
 const app = express();
@@ -33,13 +34,15 @@ app.use(cookieParser());
 // app.use(setLanguage);
 
 // Use routes
-app.use('/api/user', userRoutes);
-app.use('/api/transaction', transactionRoutes);
-app.use('/api/account', accountRoutes);
-app.use('/api/kyc', kycRoutes);
-app.use('/api/onboarding', onboardingRoutes);
-app.use('/api/va', vaRoutes);
-app.use('/api/client', clientRoute);
+app.use('/api/auth', userRoutes);
+
+app.use(protect);
+app.use('/admin/transaction', transactionRoutes);
+app.use('/admin/account', accountRoutes);
+app.use('/admin/kyc', kycRoutes);
+app.use('/admin/onboarding', onboardingRoutes);
+app.use('/admin/va', vaRoutes);
+app.use('/admin/client', clientRoute);
 
 connectDB().then(() => {
   app.listen(5000, () => {

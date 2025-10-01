@@ -18,11 +18,27 @@ const getClientById = async (req, res) => {
 };
 
 const getAllClients = async (req, res) => {
+  const { limit, page } = req.query;
+  const { clientName, country, email } = req.query;
   try {
-    const clients = await prisma.client.findMany();
-    return res
-      .status(200)
-      .json({ message: 'Clients retrieved successfully', data: clients });
+    const clients = await prisma.client.findMany({
+      take: parseInt(limit) || 10,
+      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+      where: {
+        name: clientName ? { contains: clientName } : undefined,
+        country: country ? { contains: country } : undefined,
+        email: email ? { contains: email } : undefined,
+      },
+    });
+    return res.status(200).json({
+      message: 'Clients retrieved successfully',
+      data: clients,
+      pagination: {
+        limit: parseInt(limit) || 10,
+        page: parseInt(page) || 1,
+        total: await prisma.client.count(),
+      },
+    });
   } catch (error) {
     return res
       .status(500)

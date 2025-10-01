@@ -7,13 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+// ADMINS
 model User {
   id              Int       @id @default(autoincrement())
   email           String    @unique
   password        String
   name            String?
 
-  totalReviews    Int       @default(0)
   lastActive      DateTime?
   
   @@index([email])
@@ -31,6 +32,10 @@ model Transaction {
   status          String?
   orderType       String?
   reason          String?
+
+  clientId        Int?
+  client          client?   @relation(fields: [clientId], references: [id])
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt 
 }
@@ -47,6 +52,9 @@ model Account {
   accountNumber   String?
   accountName     String?
   bankingAddress  String?
+
+  clientId        Int?
+  client          client?  @relation(fields: [clientId], references: [id])
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -95,6 +103,7 @@ model VA {
   updatedAt      DateTime @updatedAt
 }
 
+// CLIENTS
 model client {
   id            Int      @id @default(autoincrement())
   name          String?
@@ -109,4 +118,7 @@ model client {
   accountInfo String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  accounts    Account[]
+  transactions Transaction[]
 }

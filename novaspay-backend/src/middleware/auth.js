@@ -16,7 +16,7 @@ export const protect = async (req, res, next) => {
       req.user = {
         id: decoded.id,
         name: decoded.name,
-        role: decoded.role,
+        email: decoded.email,
       };
 
       if (!req.user) {

@@ -22,11 +22,36 @@ const getAccountById = async (req, res) => {
 };
 
 const getAllAccounts = async (req, res) => {
+  const { limit, page } = req.query;
+  const {
+    accountNumber,
+    bankingName,
+    ibanNumber,
+    accountName,
+    currency,
+    status,
+  } = req.query;
   try {
-    const accounts = await prisma.account.findMany();
+    const accounts = await prisma.account.findMany({
+      take: parseInt(limit) || 10,
+      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+      where: {
+        accountNumber: accountNumber ? { contains: accountNumber } : undefined,
+        bankingName: bankingName ? { contains: bankingName } : undefined,
+        ibanNumber: ibanNumber ? { contains: ibanNumber } : undefined,
+        accountName: accountName ? { contains: accountName } : undefined,
+        currency: currency ? { contains: currency } : undefined,
+        status: status ? { equals: status } : undefined,
+      },
+    });
     return res.status(200).json({
       message: 'Accounts retrieved successfully',
       data: accounts,
+      pagination: {
+        limit: parseInt(limit) || 10,
+        page: parseInt(page) || 1,
+        total: await prisma.account.count(),
+      },
     });
   } catch (error) {
     return res.status(500).json({
