@@ -9,10 +9,10 @@ import { queryClient } from '@/providers/react-query';
 import type { Account } from '@/types/accounts';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-const useAccounts = () => {
+const useAccounts = (params?: any) => {
   return useQuery({
     queryKey: ['accounts'],
-    queryFn: async () => getAllAccounts(),
+    queryFn: async () => getAllAccounts(params),
   });
 };
 

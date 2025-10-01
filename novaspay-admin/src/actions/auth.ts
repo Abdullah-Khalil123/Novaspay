@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/utils/axios';
+import { axiosAuth } from '@/utils/axios';
 
 const login = async ({
   email,
@@ -8,7 +8,7 @@ const login = async ({
   password: string;
 }) => {
   try {
-    const response = await axiosInstance.post('/user/login', {
+    const response = await axiosAuth.post('api/auth/login', {
       email: email,
       password: password,
     });
@@ -19,24 +19,4 @@ const login = async ({
   }
 };
 
-// const me = async () => {
-//   try {
-//     const response = await axiosInstance.get('/auth/me');
-//     return response.data;
-//   } catch (error) {
-//     console.error('Failed to fetch user data:', error);
-//     throw error;
-//   }
-// };
-
-// const logout = async () => {
-//   try {
-//     const response = await axiosInstance.delete('/auth/logout');
-//     return response.data;
-//   } catch (error) {
-//     console.error('Logout failed:', error);
-//     throw error;
-//   }
-// };
-
-export { login /* me, logout */ };
+export { login };

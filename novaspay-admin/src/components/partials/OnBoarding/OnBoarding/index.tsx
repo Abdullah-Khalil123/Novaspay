@@ -3,9 +3,13 @@ import OnboardingTable from './OnBoardingTable';
 import type { OnBoarding } from '@/types/onBoarding';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { PaginationComp } from '@/components/custom/pagination';
+import { usePagination } from '@/hooks/usePagination';
 
 const Onboardings = () => {
   const navigate = useNavigate();
+
+  const { page, setPage, pageSize, setPageSize } = usePagination();
 
   const { data } = useOnboardings();
   const onboardings: OnBoarding[] = data?.data || [];
@@ -22,6 +26,13 @@ const Onboardings = () => {
         </Button>
       </div>
       <OnboardingTable onboardings={onboardings} />
+      <PaginationComp
+        currentPage={page}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+        pageSize={pageSize}
+        totalPages={data?.pagination.total / data?.pagination?.limit || 1}
+      />
     </div>
   );
 };

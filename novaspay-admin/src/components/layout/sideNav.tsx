@@ -22,10 +22,12 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 // import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 // import { logout } from '@/actions/auth';
 import { toast } from 'sonner';
+import { useDispatch } from 'react-redux';
+import { logout } from '@/store/slices/authSlice';
 
 const sidebarData = [
   {
@@ -54,57 +56,15 @@ const sidebarData = [
     label: 'Onboarding',
     items: [{ title: 'Onboarding List', icon: Users, url: 'onboardings' }],
   },
-  // {
-  //   label: 'Website Settings',
-  //   items: [
-  //     {
-  //       title: 'Coupon Settings',
-  //       icon: Puzzle,
-  //       url: '/admin/settings/coupons',
-  //     },
-  //     {
-  //       title: 'Slideshow Settings',
-  //       icon: FileText,
-  //       url: '/admin/settings/banner',
-  //     },
-  //     {
-  //       title: 'Currency Settings',
-  //       icon: Settings,
-  //       url: '/admin/settings/currency',
-  //     },
-  //   ],
-  // },
-  // {
-  //   label: 'Game',
-  //   items: [{ title: 'Game List', icon: Puzzle, url: '/admin/games' }],
-  // },
-  // {
-  //   label: 'Service',
-  //   items: [
-  //     { title: 'Category List', icon: Users, url: '/admin/categorys' },
-  //     { title: 'Service List', icon: FileText, url: '/admin/services' },
-  //   ],
-  // },
-  // {
-  //   label: 'Supplier & Order',
-  //   items: [
-  //     {
-  //       title: 'Order List',
-  //       icon: FileText,
-  //       url: '/admin/orders',
-  //     },
-  //     { title: 'Supplier List', icon: Users, url: '/admin/suppliers' },
-  //   ],
-  // },
   {
-    label: 'User Management',
-    items: [{ title: 'User List', icon: Users, url: '/admin/users' }],
+    label: 'Application',
+    items: [{ title: 'App List', icon: Users, url: 'applications' }],
   },
 ];
 
 export function AppSidebar() {
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     Articles: false,
     'Website Settings': false,
@@ -174,12 +134,7 @@ export function AppSidebar() {
         <Button
           onClick={async () => {
             try {
-              // await logout()
-              //   .then(() => dispatch({ type: 'auth/logout' }))
-              //   .finally(() => {
-              //     toast.success('Logged out successfully');
-              //     navigate('/auth/login');
-              //   });
+              dispatch(logout());
             } catch (error) {
               toast.error('Logout failed');
               console.error(error);

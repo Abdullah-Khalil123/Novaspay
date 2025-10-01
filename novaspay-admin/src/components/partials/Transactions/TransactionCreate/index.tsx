@@ -44,10 +44,9 @@ const TransactionCreate = ({
   const navigate = useNavigate();
   const { mutate: createTransaction, isPending: isCreating } =
     useCreateTransaction();
-  const {
-    mutate: updateTransaction,
-    // isPending: isUpdating
-  } = useUpdateTransaction(transactionId as number);
+  const { mutate: updateTransaction } = useUpdateTransaction(
+    transactionId as number
+  );
   const transaction: Transaction = transactionData?.data;
 
   const {
@@ -145,8 +144,8 @@ const TransactionCreate = ({
                   <Label htmlFor="orderId">Order ID</Label>
                   <Input
                     id="orderId"
-                    type="number"
-                    {...register('orderId', { valueAsNumber: true })}
+                    type="text"
+                    {...register('orderId')}
                     placeholder="12345"
                   />
                 </div>
@@ -157,18 +156,31 @@ const TransactionCreate = ({
                 )}
               </div>
 
-              <div>
-                <div className="space-y-2">
-                  <Label htmlFor="orderType">Order Type</Label>
-                  <Input
-                    id="orderType"
-                    {...register('orderType')}
-                    placeholder="e.g., purchase, refund"
-                  />
-                </div>
-                {errors.orderType && (
+              <div className="space-y-2">
+                <Label htmlFor="status">Order Type</Label>
+                <Controller
+                  name="orderType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value as string}
+                    >
+                      <SelectTrigger id="status">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Transfer">Transfer</SelectItem>
+                        <SelectItem value="Withdrawal">Withdrawal</SelectItem>
+                        <SelectItem value="Deposit">Deposit</SelectItem>
+                        <SelectItem value="None">None</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.status && (
                   <p className="text-sm text-red-500">
-                    {errors.orderType.message}
+                    {errors.status.message}
                   </p>
                 )}
               </div>
@@ -244,9 +256,9 @@ const TransactionCreate = ({
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="completed">Completed</SelectItem>
-                        <SelectItem value="failed">Failed</SelectItem>
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="Inactive">Inactive</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

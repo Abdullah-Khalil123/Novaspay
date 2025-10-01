@@ -10,6 +10,13 @@ export const axiosInstance = axios.create({
   },
 });
 
+export const axiosAuth = axios.create({
+  baseURL: import.meta.env.VITE_AUTH_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 export const axiosUpload = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });

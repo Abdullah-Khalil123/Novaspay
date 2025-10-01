@@ -1,9 +1,9 @@
 import type { Transaction } from '@/types/transaction';
 import { axiosInstance } from '@/utils/axios';
 
-const getAllTransactions = async () => {
+const getAllTransactions = async (params?: any) => {
   try {
-    const response = await axiosInstance.get('/transaction');
+    const response = await axiosInstance.get('/transaction', { params });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch transactions:', error);

@@ -9,6 +9,8 @@ import { kycRoutes } from './routes/kyc';
 import { clientRoute } from './routes/client';
 import { vaRoutes } from './routes/va';
 import { onBoardingRoutes } from './routes/onBoarding';
+import { userRoute } from './routes/users';
+import { applicationsRouter } from './routes/applications';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,8 @@ const router = createBrowserRouter([
       clientRoute,
       vaRoutes,
       onBoardingRoutes,
+      userRoute,
+      applicationsRouter,
     ],
   },
 
