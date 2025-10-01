@@ -7,7 +7,7 @@ import ClientPage from '../pages/Client';
 import UserPage from '../pages/Users';
 import LoginPage from '@/pages/Login';
 import ApplicationList from '@/pages/Application';
-import CryptoBuySell from '@/pages/Buy/Sell';
+import CryptoBuySell from '@/pages/BuySell';
 
 const router = createBrowserRouter([
   {

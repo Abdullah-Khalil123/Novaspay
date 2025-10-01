@@ -113,7 +113,7 @@ const HistoryPage = () => {
                     <td className="px-2 py-2">{tx.reason}</td>
                     <td className="px-2 py-2">{tx.createdAt}</td>
                     <td className="px-2 py-2">{tx.updatedAt}</td>
-                    <td className="w-[40px] sticky right-0 bg-background text-sidebar-bg text-center space-y-4">
+                    <td className="w-[40px] sticky right-0 bg-background text-text-primary text-center space-y-2">
                       <p className="hover:text-[#60831a] cursor-pointer">
                         Credential
                       </p>

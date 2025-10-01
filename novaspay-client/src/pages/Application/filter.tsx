@@ -17,46 +17,25 @@ const AccountsFilters = ({
   return (
     <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border">
       <Input
-        label="Account Number"
-        value={filters.accountNumber}
+        label="Application No"
+        value={filters.applicationNo}
         onChange={(e) =>
           setFilters((prev: any) => ({
             ...prev,
-            accountNumber: e.target.value,
+            applicationNo: e.target.value,
           }))
-        }
-      />
-      <Input
-        label="Banking Name"
-        value={filters.bankingName}
-        onChange={(e) =>
-          setFilters((prev: any) => ({ ...prev, bankingName: e.target.value }))
-        }
-      />
-      <Input
-        label="IBAN Number"
-        value={filters.ibanNumber}
-        onChange={(e) =>
-          setFilters((prev: any) => ({ ...prev, ibanNumber: e.target.value }))
-        }
-      />
-      <Input
-        label="Account Name"
-        value={filters.accountName}
-        onChange={(e) =>
-          setFilters((prev: any) => ({ ...prev, accountName: e.target.value }))
-        }
-      />
-      <Input
-        label="Currency"
-        value={filters.currency}
-        onChange={(e) =>
-          setFilters((prev: any) => ({ ...prev, currency: e.target.value }))
         }
       />
       <Select
         label="Status"
-        options={['Active', 'Inactive', 'Pending']}
+        options={[
+          'Pending approval',
+          'Approved',
+          'Transaction successful',
+          'Reject',
+          'Cancel transaction',
+          'Transaction failed',
+        ]}
         value={filters.status}
         onChange={(e) => setFilters((prev: any) => ({ ...prev, status: e }))}
       />
