@@ -1,19 +1,41 @@
 import UserFilters from './UserFilter';
-import PageFilters from '../Account/pagination';
+import PageFilters from '../../components/custom/pagination';
 import Checkbox from '../../components/custom/CheckBox';
 import { useClients } from '@/hooks/useClient';
 import type { Client } from '@/types/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePagination } from '@/hooks/usePagination';
 
 const UserPage = () => {
-  const [filters, setFilters] = useState({ email: '' });
-  const { data, isLoading, refetch } = useClients({
-    ...filters,
-    page: 1,
-    limit: 10,
+  const {
+    currentPage,
+    pageSize,
+    totalPages,
+    setTotalItems,
+    setCurrentPage,
+    setPageSize,
+  } = usePagination({
+    totalItems: 0,
+    initialPage: 1,
+    initialPageSize: 10,
   });
 
+  const [filters, setFilters] = useState({ email: '' });
+
+  const { data, isLoading, refetch } = useClients({
+    ...filters,
+    page: currentPage,
+    limit: pageSize,
+  });
+
+  const totalApiItems = data?.pagination?.total || 0;
+
+  useEffect(() => {
+    setTotalItems(totalApiItems);
+  }, [totalApiItems, setTotalItems]);
+
   const users: Client[] = data?.data || [];
+
   return (
     <div className="px-padding mt-2">
       <UserFilters
@@ -46,13 +68,13 @@ const UserPage = () => {
             <tbody className="text-center text-text-primary">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="py-10">
+                  <td colSpan={7} className="py-10">
                     Loading...
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-10">
+                  <td colSpan={7} className="py-10">
                     No users found.
                   </td>
                 </tr>
@@ -93,8 +115,15 @@ const UserPage = () => {
             </tbody>
           </table>
         </div>
+
+        <PageFilters
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          totalPages={totalPages || 1}
+        />
       </div>
-      <PageFilters />
     </div>
   );
 };

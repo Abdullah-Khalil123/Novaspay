@@ -1,7 +1,6 @@
-// import { store } from '@/store/store';
+import { store } from '@/store';
 
 export const getToken = () => {
-  // const state = store.getState();
-  // return state.auth?.token || null;
-  return 'test-token';
+  const state = store.getState();
+  return state.auth?.token || null;
 };

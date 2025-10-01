@@ -1,10 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccounts } from '@/hooks/useAccounts';
 import AccountsFilters from './filter';
-import PageFilters from './pagination';
+import PageFilters from '../../components/custom/pagination';
 import type { Account } from '@/types/accounts';
+import { usePagination } from '@/hooks/usePagination';
 
 const ReceiveAccount = () => {
+  const {
+    currentPage,
+    pageSize,
+    totalPages,
+    setTotalItems,
+    setCurrentPage,
+    setPageSize,
+  } = usePagination({
+    totalItems: 0,
+    initialPage: 1,
+    initialPageSize: 10,
+  });
+
   // State for filters
   const [filters, setFilters] = useState({
     accountNumber: '',
@@ -14,13 +28,18 @@ const ReceiveAccount = () => {
     currency: '',
     status: '',
   });
-
   // Pass filters as params to the hook
   const { data, isLoading, refetch } = useAccounts({
-    page: 1,
-    limit: 10,
+    page: currentPage,
+    limit: pageSize,
     ...filters,
   });
+
+  const totalApiItems = data?.pagination?.total || 0;
+
+  useEffect(() => {
+    setTotalItems(totalApiItems);
+  }, [totalApiItems, setTotalItems]);
 
   const accounts: Account[] = data?.data || [];
 
@@ -80,7 +99,7 @@ const ReceiveAccount = () => {
                         : 'border-t border-t-border'
                     }
                   >
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td className="w-[80px] h-16 min-w-[80px] px-2 py-4 truncate">
                       {acc.bankingName}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
@@ -111,7 +130,7 @@ const ReceiveAccount = () => {
                       {acc.updatedAt}
                     </td>
                     <td className="w-[60px] sticky right-0 bg-background text-end">
-                      <p className="hover:text-[#60831a] cursor-pointer">
+                      <p className="text-[#354a0c] hover:text-[#60831a] cursor-pointer">
                         Details
                       </p>
                     </td>
@@ -122,7 +141,13 @@ const ReceiveAccount = () => {
           </table>
         </div>
 
-        <PageFilters />
+        <PageFilters
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          totalPages={totalPages || 1}
+        />
       </div>
     </div>
   );

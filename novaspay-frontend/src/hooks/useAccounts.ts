@@ -12,7 +12,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 const useAccounts = (params?: Params) => {
   return useQuery({
-    queryKey: ['accounts'],
+    queryKey: ['accounts', params?.page, params?.limit],
     queryFn: async () => getAllAccounts(params),
   });
 };

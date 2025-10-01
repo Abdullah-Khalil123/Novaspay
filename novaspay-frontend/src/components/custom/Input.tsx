@@ -8,13 +8,13 @@ const Input = ({
 }: {
   label: string;
   className?: string;
-  value?: string;
+  value?: string | number;
   defaultValue?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
 }) => {
   return (
-    <div className={`flex items-center gap-4`}>
+    <div className={`flex items-center`}>
       <p className="whitespace-nowrap">{label}</p>
       <input
         value={value}

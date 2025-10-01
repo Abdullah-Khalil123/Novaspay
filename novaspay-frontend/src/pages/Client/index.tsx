@@ -1,13 +1,39 @@
 import ClientFilter from './clientFilter';
-import PageFilters from '../Account/pagination';
+import PageFilters from '../../components/custom/pagination';
 import Checkbox from '../../components/custom/CheckBox';
 import { useClients } from '@/hooks/useClient';
 import type { Client } from '@/types/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePagination } from '@/hooks/usePagination';
 
 const ClientPage = () => {
+  const {
+    currentPage,
+    pageSize,
+    totalPages,
+    setTotalItems,
+    setCurrentPage,
+    setPageSize,
+  } = usePagination({
+    totalItems: 0,
+    initialPage: 1,
+    initialPageSize: 10,
+  });
+
   const [filters, setFilters] = useState({ clientName: '', country: '' });
-  const { data, isLoading, refetch } = useClients(filters);
+
+  const { data, isLoading, refetch } = useClients({
+    page: currentPage,
+    limit: pageSize,
+    ...filters,
+  });
+
+  const totalApiItems = data?.pagination?.total || 0;
+
+  useEffect(() => {
+    setTotalItems(totalApiItems);
+  }, [totalApiItems, setTotalItems]);
+
   const clients: Client[] = data?.data || [];
 
   return (
@@ -17,6 +43,7 @@ const ClientPage = () => {
         setFilters={setFilters}
         refetch={refetch}
       />
+
       <div className="bg-secondary border mt-4 border-border rounded-sm p-2">
         <div className="overflow-x-auto">
           <table className="table-fixed text-sm w-full border-collapse">
@@ -49,6 +76,7 @@ const ClientPage = () => {
                 </th>
               </tr>
             </thead>
+
             <tbody className="text-center text-text-primary">
               {isLoading ? (
                 <tr>
@@ -123,8 +151,15 @@ const ClientPage = () => {
             </tbody>
           </table>
         </div>
+
+        <PageFilters
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          totalPages={totalPages || 1}
+        />
       </div>
-      <PageFilters />
     </div>
   );
 };

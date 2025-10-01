@@ -9,8 +9,6 @@ const Pagination = ({
   currentPage: number;
   onPageChange: (page: number) => void;
 }) => {
-  if (totalPages <= 1) return null;
-
   return (
     <div className="flex items-center space-x-2">
       {/* Prev */}

@@ -12,7 +12,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 const useOnboardings = (params?: Params) => {
   return useQuery({
-    queryKey: ['onboardings'],
+    queryKey: ['onboardings', params?.page, params?.limit],
     queryFn: async () => getAllOnboardings(params),
   });
 };

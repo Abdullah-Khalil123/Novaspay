@@ -1,38 +1,46 @@
-import { useSearchParams } from 'react-router-dom';
+import { useState, useMemo } from 'react';
 
-interface PaginationOptions {
-  defaultPageSize?: number;
-  defaultPage?: number;
+interface UsePaginationProps {
+  totalItems: number;
+  initialPage?: number;
+  initialPageSize?: number;
+  pageSizeOptions?: number[];
 }
 
-export function usePagination(options: PaginationOptions = {}) {
-  const { defaultPage = 1, defaultPageSize = 10 } = options;
+export const usePagination = ({
+  totalItems,
+  initialPage = 1,
+  initialPageSize = 10,
+  pageSizeOptions = [10, 20, 30, 40, 50],
+}: UsePaginationProps) => {
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [pageSize, setPageSize] = useState(initialPageSize);
+  const [totalItemsState, setTotalItems] = useState(totalItems);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const totalPages = useMemo(
+    () => Math.ceil(totalItemsState / pageSize),
+    [totalItemsState, pageSize]
+  );
 
-  const page = Number(searchParams.get('page')) || defaultPage;
-  const pageSize = Number(searchParams.get('pageSize')) || defaultPageSize;
-
-  const setPage = (newPage: number) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams.entries()),
-      page: String(newPage),
-      pageSize: String(pageSize),
-    });
+  const goToPage = (page: number) => {
+    if (page < 1) page = 1;
+    else if (page > totalPages) page = totalPages;
+    setCurrentPage(page);
   };
 
-  const setPageSize = (newSize: number) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams.entries()),
-      page: '1', // reset to first page
-      pageSize: String(newSize),
-    });
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(1); // Reset to first page
   };
 
   return {
-    page,
+    currentPage,
     pageSize,
-    setPage,
-    setPageSize,
+    totalPages,
+    pageSizeOptions,
+    totalItems: totalItemsState,
+    setCurrentPage: goToPage,
+    setPageSize: handlePageSizeChange,
+    setTotalItems,
   };
-}
+};

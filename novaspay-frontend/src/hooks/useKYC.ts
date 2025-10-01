@@ -12,7 +12,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 const useKYCs = (param?: Params) => {
   return useQuery({
-    queryKey: ['kycs'],
+    queryKey: ['kycs', param?.page, param?.limit],
     queryFn: async () => getAllKYCs(param),
   });
 };

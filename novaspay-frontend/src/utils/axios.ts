@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './getToken';
-// import { store } from '@/store/store';
-// import { logout } from '@/store/slices/authSlice';
+import { store } from '@/store';
+import { logout } from '@/store/slices/auth';
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // store.dispatch(logout()); // clear redux auth state
+      store.dispatch(logout()); // clear redux auth state
       window.location.href = '/auth/login'; // force redirect
     }
     return Promise.reject(error);

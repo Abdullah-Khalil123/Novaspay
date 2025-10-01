@@ -12,7 +12,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 const useTransactions = (params?: Params) => {
   return useQuery({
-    queryKey: ['transactions'],
+    queryKey: ['transactions', params?.page, params?.limit],
     queryFn: async () => getAllTransactions(params),
   });
 };

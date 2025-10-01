@@ -8,11 +8,16 @@ import OnboardingPage from '../pages/OnBoarding';
 import VAPage from '../pages/VA';
 import ClientPage from '../pages/Client';
 import UserPage from '../pages/Users';
+import LoginPage from '@/pages/Login';
 
 const router = createBrowserRouter([
   {
     index: true,
     element: <Navigate to="/index" replace />,
+  },
+  {
+    path: 'admin/login',
+    element: <LoginPage />,
   },
   {
     path: '/index',

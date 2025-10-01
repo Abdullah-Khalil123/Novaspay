@@ -1,57 +1,100 @@
 import { useState } from 'react';
-import { House, ChevronDown, MonitorPlay } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import House from '@/assets/home';
+import Bank from '@/assets/virtualBank';
+import CounterParty from '@/assets/counterParty';
+import Client from '@/assets/client';
+
+import Recieve from '@/assets/recieve';
+import History from '@/assets/history';
+import Kyc from '@/assets/kyc';
+import OnBoarding from '@/assets/onBoarding';
+import Va from '@/assets/va';
+
+import ClientIcon from '@/assets/clientlist';
+import Users from '@/assets/users';
+import type { RootState } from '@/store';
 
 const navItems = [
-  { name: 'Home', icon: House, link: '/index' },
+  { name: 'Home', icon: <House />, link: '/index' },
   {
     name: 'Virtual Bank',
-    icon: MonitorPlay,
+    icon: <Bank />,
     children: [
       {
         name: 'Receive',
-        children: [{ name: 'Accounts', link: '/banking/receive/bankAccount' }],
+        icon: <Recieve />,
+        children: [
+          {
+            name: 'Accounts',
+            link: '/banking/receive/bankAccount',
+            icon: <House />,
+          },
+        ],
       },
       {
         name: 'History',
-        children: [{ name: 'History List', link: '/banking/history/history' }],
+        icon: <History />,
+
+        children: [
+          {
+            name: 'History List',
+            link: '/banking/history/history',
+          },
+        ],
       },
       {
         name: 'VA Applications',
+        icon: <Va />,
+
         children: [
-          { name: 'Apply Kyc Records', link: '/banking/others/profiles/index' },
+          {
+            name: 'Apply Kyc Records',
+            link: '/banking/others/profiles/index',
+            icon: <Kyc />,
+          },
           {
             name: 'Onboarding List',
             link: '/banking/others/applicationRecord',
+            icon: <OnBoarding />,
           },
-          { name: 'VA Apply History', link: '/banking/others/application' },
+          {
+            name: 'VA Apply History',
+            link: '/banking/others/application',
+            icon: <Va />,
+          },
         ],
       },
     ],
   },
-  { name: 'Counterparty', icon: MonitorPlay, children: [] },
+  { name: 'Counterparty', icon: <CounterParty />, children: [] },
   {
     name: 'Client',
-    icon: MonitorPlay,
+    icon: <Client />,
     children: [
-      { name: 'Client List', link: '/member/client' },
-      { name: 'Users', link: '/member/user' },
+      { name: 'Client List', link: '/member/client', icon: <ClientIcon /> },
+      { name: 'Users', link: '/member/user', icon: <Users /> },
     ],
   },
 ];
 
 type NavItem = {
   name: string;
-  icon?: React.ComponentType<{ size?: number }>;
-  link?: string; // ✅ add link type
+  icon?: React.ReactNode;
+  link?: string;
   children?: NavItem[];
 };
 
 const NavItemComp = ({
   item,
+  collapsed = false,
   level = 0,
 }: {
   item: NavItem;
+  collapsed?: boolean;
   level?: number;
 }) => {
   const [open, setOpen] = useState(false);
@@ -66,14 +109,14 @@ const NavItemComp = ({
           item.name === 'Home'
             ? '#60831a'
             : level > 0
-            ? '#384d04'
+            ? 'bg-sidebar-child'
             : 'transparent',
       }}
       onClick={() => hasChildren && setOpen(!open)}
     >
-      <div className="flex items-center gap-2">
-        {item.icon && <item.icon size={16} />}
-        <span>{item.name}</span>
+      <div className="flex items-center gap-2 cursor-pointer">
+        {item.icon}
+        <span>{!collapsed ? item.name : ''}</span>
       </div>
       {hasChildren && (
         <ChevronDown
@@ -112,21 +155,31 @@ const NavItemComp = ({
 };
 
 const SideNav = () => {
+  const collapsed = useSelector((state: RootState) => state.nav.isCollapsed);
   return (
-    <div className="min-w-[200px] bg-sidebar-bg text-[#cdd6bd]">
+    <div
+      className={
+        `text-[#bfcbd9] h-svh overflow-y-scroll custom-scrollbar bg-sidebar-bg ` +
+        (collapsed ? 'max-w-[60px]' : 'min-w-[220px]')
+      }
+    >
       <div className="bg-white h-[50px] flex items-center px-4">
         <h2 className="font-semibold text-black text-lg">
           <img
             src="/logo.png"
             alt="logo"
-            className="inline object-contain px-1 w-[50px] h-[200px] mr-2"
+            className={
+              `inline object-contain px-1 w-[50px] mr-2 ` +
+              (collapsed ? 'min-w-[50px] -translate-x-2' : '')
+            }
           />
-          Novaspay
+
+          {!collapsed && 'NovasPay'}
         </h2>
       </div>
       <ul className="text-[14px]">
         {navItems.map((item) => (
-          <NavItemComp key={item.name} item={item} />
+          <NavItemComp key={item.name} item={item} collapsed={collapsed} />
         ))}
       </ul>
     </div>

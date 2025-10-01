@@ -1,13 +1,49 @@
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { useVAs } from '@/hooks/useVa';
-import PageFilters from '../Account/pagination';
+import PageFilters from '../../components/custom/pagination';
 import type { VA } from '@/types/va';
+import { usePagination } from '@/hooks/usePagination';
 
 const VAPage = () => {
-  const { data, isLoading } = useVAs();
+  const {
+    currentPage,
+    pageSize,
+    totalPages,
+    setTotalItems,
+    setCurrentPage,
+    setPageSize,
+  } = usePagination({
+    totalItems: 0,
+    initialPage: 1,
+    initialPageSize: 10,
+  });
+
+  // Optional filters (if you plan to add them later)
+  const [filters] = useState({
+    purpose: '',
+    currency: '',
+    status: '',
+  });
+
+  const { data, isLoading } = useVAs({
+    page: currentPage,
+    limit: pageSize,
+    ...filters,
+  });
+
+  const totalApiItems = data?.pagination?.total || 0;
+
+  useEffect(() => {
+    setTotalItems(totalApiItems);
+  }, [totalApiItems, setTotalItems]);
+
   const vas: VA[] = data?.data || [];
 
   return (
     <div className="px-padding mt-2">
+      {/* You can later add <VAFilters filters={filters} setFilters={setFilters} refetch={refetch} /> */}
+
       <div className="bg-secondary rounded-md border border-border mt-4 p-4">
         <div className="overflow-x-auto">
           <table className="table-fixed text-sm w-full border-collapse">
@@ -36,6 +72,7 @@ const VAPage = () => {
                 ))}
               </tr>
             </thead>
+
             <tbody className="text-center text-text-primary">
               {isLoading ? (
                 <tr>
@@ -110,8 +147,15 @@ const VAPage = () => {
             </tbody>
           </table>
         </div>
+
+        <PageFilters
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          totalPages={totalPages || 1}
+        />
       </div>
-      <PageFilters />
     </div>
   );
 };

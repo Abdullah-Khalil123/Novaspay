@@ -1,13 +1,34 @@
 import { useOnboardings } from '@/hooks/useOnBoarding';
-import PageFilters from '../Account/pagination';
+import PageFilters from '../../components/custom/pagination';
 import OnboardingFilters from './OnBoardingFilters';
 import type { OnBoarding } from '@/types/onBoarding';
+import { usePagination } from '@/hooks/usePagination';
+import { useEffect } from 'react';
 
 const OnboardingPage = () => {
-  const { data, isLoading } = useOnboardings({
-    page: 1,
-    limit: 10,
+  const {
+    currentPage,
+    pageSize,
+    totalPages,
+    setTotalItems,
+    setCurrentPage,
+    setPageSize,
+  } = usePagination({
+    totalItems: 0,
+    initialPage: 1,
+    initialPageSize: 10,
   });
+
+  const { data, isLoading } = useOnboardings({
+    page: currentPage,
+    limit: pageSize,
+  });
+
+  const totalApiItems = data?.pagination?.total || 0;
+
+  useEffect(() => {
+    setTotalItems(totalApiItems);
+  }, [totalApiItems, setTotalItems]);
 
   const onboardings: OnBoarding[] = data?.data || [];
 
@@ -27,7 +48,7 @@ const OnboardingPage = () => {
                   'Creation date',
                 ].map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
-                    <div>{header}</div>
+                    {header}
                   </th>
                 ))}
                 <th className="w-[120px] sticky right-0 bg-background z-10"></th>
@@ -72,7 +93,9 @@ const OnboardingPage = () => {
                       {acc.createdAt}
                     </td>
                     <td
-                      className={`sticky right-0 font-sans text-center space-y-4 text-[#c2cb3d]`}
+                      className={`sticky right-0 font-sans text-center space-y-4 text-[#c2cb3d]${
+                        idx % 2 === 0 ? ' bg-background' : ' bg-secondary'
+                      }`}
                     >
                       <p className="hover:text-[#60831a] cursor-pointer">
                         Details
@@ -84,8 +107,14 @@ const OnboardingPage = () => {
             </tbody>
           </table>
         </div>
+        <PageFilters
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          totalPages={totalPages || 1}
+        />
       </div>
-      <PageFilters />
     </div>
   );
 };

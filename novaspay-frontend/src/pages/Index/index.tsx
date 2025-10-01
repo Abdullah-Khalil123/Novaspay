@@ -1,6 +1,7 @@
 import { useTransactions } from '@/hooks/useTransaction';
 import type { Transaction } from '@/types/transaction';
 import { Info } from 'lucide-react';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 
 const IndexPage = () => {
   const { data } = useTransactions({
@@ -20,7 +21,7 @@ const IndexPage = () => {
             <Info />
             <p>To switch wallet accounts, please click the button !</p>
           </div>
-          <button className="bg-[#384d0a] px-4 py-2 rounded-md">
+          <button className="bg-sidebar-bg text-button-text px-4 py-2 rounded-md">
             Switch wallet user funtion
           </button>
         </div>
@@ -62,7 +63,14 @@ const Table = ({ data }: { data: Transaction[] }) => {
       <tbody className="text-center text-text-primary">
         {data.map((item, index) => (
           <tr key={index} className={index % 2 === 0 ? 'bg-background' : ''}>
-            <td className="py-2">{item.orderType}</td>
+            <td className="h-10">
+              {item.orderType == 'DEPOSIT' ? (
+                <ArrowRight className="inline mr-1" color="blue" />
+              ) : (
+                <ArrowDown className="inline mr-1" color="green" />
+              )}{' '}
+              {item.orderType}
+            </td>
             <td>{item.updatedAt}</td>
             <td>{item.amount}</td>
             <td>{item.fee}</td>

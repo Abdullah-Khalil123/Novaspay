@@ -7,9 +7,11 @@ const App = () => {
     <div className="overflow-x-hidden">
       <main className="w-full flex min-h-screen">
         <SideNav />
-        <div className="bg-background flex-1 overflow-x-hidden">
+        <div className="bg-background pb-8 flex-1 overflow-x-hidden max-h-dvh">
           <Header />
-          <Outlet />
+          <div className="px-4">
+            <Outlet />
+          </div>
         </div>
       </main>
     </div>

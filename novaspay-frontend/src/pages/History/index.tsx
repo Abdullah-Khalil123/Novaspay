@@ -1,8 +1,9 @@
 import HistoryFilter from './HistoryFilter';
-import PageFilters from '../Account/pagination';
+import PageFilters from '../../components/custom/pagination';
 import { useTransactions } from '@/hooks/useTransaction';
 import type { Transaction } from '@/types/transaction';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePagination } from '@/hooks/usePagination';
 
 const HistoryPage = () => {
   const [filters, setFilters] = useState({
@@ -14,9 +15,34 @@ const HistoryPage = () => {
     status: '',
   });
 
-  const { data, isLoading, refetch } = useTransactions(filters);
+  const {
+    currentPage,
+    pageSize,
+    totalPages,
+    setTotalItems,
+    setCurrentPage,
+    setPageSize,
+  } = usePagination({
+    totalItems: 0,
+    initialPage: 1,
+    initialPageSize: 10,
+  });
+
+  // Pass filters + pagination to hook
+  const { data, isLoading, refetch } = useTransactions({
+    ...filters,
+    page: currentPage,
+    limit: pageSize,
+  });
+
+  const totalApiItems = data?.pagination?.total || 0;
+
+  useEffect(() => {
+    setTotalItems(totalApiItems);
+  }, [totalApiItems, setTotalItems]);
 
   const transactions: Transaction[] = data?.data || [];
+
   return (
     <div className="px-padding mt-2">
       <HistoryFilter
@@ -24,6 +50,7 @@ const HistoryPage = () => {
         setFilters={setFilters}
         refetch={refetch}
       />
+
       <div className="bg-secondary rounded-md border border-border mt-4 p-4">
         <div className="overflow-x-auto">
           <table className="table-fixed text-sm w-full border-collapse">
@@ -44,12 +71,13 @@ const HistoryPage = () => {
                   'Updated At',
                 ].map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
-                    <div>{header}</div>
+                    {header}
                   </th>
                 ))}
                 <th className="w-[100px] sticky right-0 bg-background z-10"></th>
               </tr>
             </thead>
+
             <tbody className="text-center text-text-primary">
               {isLoading ? (
                 <tr>
@@ -99,7 +127,14 @@ const HistoryPage = () => {
             </tbody>
           </table>
         </div>
-        <PageFilters />
+
+        <PageFilters
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          totalPages={totalPages || 1}
+        />
       </div>
     </div>
   );
