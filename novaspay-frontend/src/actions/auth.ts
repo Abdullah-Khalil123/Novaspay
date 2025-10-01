@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/utils/axios';
+import { axiosPublic } from '@/utils/axios';
 
 const login = async ({
   email,
@@ -8,7 +8,7 @@ const login = async ({
   password: string;
 }) => {
   try {
-    const response = await axiosInstance.post('/user/login', {
+    const response = await axiosPublic.post('/auth/login', {
       email: email,
       password: password,
     });

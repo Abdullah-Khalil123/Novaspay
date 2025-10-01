@@ -3,6 +3,13 @@ import { getToken } from './getToken';
 import { store } from '@/store';
 import { logout } from '@/store/slices/auth';
 
+export const axiosPublic = axios.create({
+  baseURL: import.meta.env.VITE_PUBLIC_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -36,7 +43,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       store.dispatch(logout()); // clear redux auth state
-      window.location.href = '/auth/login'; // force redirect
+      window.location.href = '/admin/login'; // force redirect
     }
     return Promise.reject(error);
   }

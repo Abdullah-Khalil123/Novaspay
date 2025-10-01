@@ -1,5 +1,4 @@
 import type { SVGProps } from '@/types/svg';
-import * as React from 'react';
 const SVGComponent = (props: SVGProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

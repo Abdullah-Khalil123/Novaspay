@@ -3,12 +3,11 @@ import IndexPage from '../pages/Index';
 import Layout from '../layout';
 import ReceiveAccount from '../pages/Account';
 import HistoryPage from '../pages/History';
-import KYCPage from '../pages/KYC';
-import OnboardingPage from '../pages/OnBoarding';
-import VAPage from '../pages/VA';
 import ClientPage from '../pages/Client';
 import UserPage from '../pages/Users';
 import LoginPage from '@/pages/Login';
+import ApplicationList from '@/pages/Application';
+import CryptoBuySell from '@/pages/Buy/Sell';
 
 const router = createBrowserRouter([
   {
@@ -42,16 +41,12 @@ const router = createBrowserRouter([
         element: <HistoryPage />,
       },
       {
-        path: 'others/profiles/index',
-        element: <KYCPage />,
+        path: 'crypto/crypto',
+        element: <ApplicationList />,
       },
       {
-        path: 'others/applicationRecord',
-        element: <OnboardingPage />,
-      },
-      {
-        path: 'others/application',
-        element: <VAPage />,
+        path: 'crypto/cryptoBuySell',
+        element: <CryptoBuySell />,
       },
     ],
   },

@@ -42,11 +42,11 @@ const navItems = [
         children: [
           {
             name: 'Buy/Sell',
-            link: '/',
+            link: '/banking/crypto/cryptoBuySell',
           },
           {
             name: 'Application List',
-            link: '/',
+            link: '/banking/crypto/crypto',
           },
         ],
       },

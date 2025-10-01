@@ -34,7 +34,7 @@ model Transaction {
   reason          String?
 
   clientId        Int?
-  client          client?   @relation(fields: [clientId], references: [id])
+  client          Client?   @relation(fields: [clientId], references: [id])
 
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt 
@@ -54,7 +54,7 @@ model Account {
   bankingAddress  String?
 
   clientId        Int?
-  client          client?  @relation(fields: [clientId], references: [id])
+  client          Client?  @relation(fields: [clientId], references: [id])
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -104,13 +104,14 @@ model VA {
 }
 
 // CLIENTS
-model client {
+model Client {
   id            Int      @id @default(autoincrement())
   name          String?
   loginTime    DateTime?
+  password      String?
   type          String?
   country      String?
-  email        String?
+  email        String? @unique
   agentName   String?
   bankAccountNumber String?
   description String?

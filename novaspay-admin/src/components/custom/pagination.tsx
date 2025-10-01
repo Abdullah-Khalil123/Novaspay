@@ -36,7 +36,7 @@ export function PaginationComp({
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex items-center justify-between gap-4 mt-4">
       {/* Page Size Selector */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">Rows per page:</span>

@@ -112,27 +112,27 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const updateUserRole = async (req, res) => {
-  const { userId, role } = req.body;
-  if (!userId || !role) {
-    return res.status(400).json({ message: 'Please provide userId and role' });
-  }
-  try {
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { role },
-    });
-    return res.status(200).json({
-      message: 'User role updated successfully',
-      user: updatedUser,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Server error',
-      error: error.message,
-    });
-  }
-};
+// const updateUserRole = async (req, res) => {
+//   const { userId, role } = req.body;
+//   if (!userId || !role) {
+//     return res.status(400).json({ message: 'Please provide userId and role' });
+//   }
+//   try {
+//     const updatedUser = await prisma.user.update({
+//       where: { id: userId },
+//       data: { role },
+//     });
+//     return res.status(200).json({
+//       message: 'User role updated successfully',
+//       user: updatedUser,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: 'Server error',
+//       error: error.message,
+//     });
+//   }
+// };
 
 const createUser = async (req, res) => {
   const { email, password, name, role } = req.body;
@@ -261,7 +261,7 @@ export {
   register,
   login,
   getAllUsers,
-  updateUserRole,
+  // updateUserRole,
   createUser,
   getUser,
   updateUser,

@@ -9,10 +9,10 @@ import { queryClient } from '@/providers/react-query';
 import type { KYC } from '@/types/kyc';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-const useKYCs = () => {
+const useKYCs = (params?: any) => {
   return useQuery({
-    queryKey: ['kycs'],
-    queryFn: async () => getAllKYCs(),
+    queryKey: ['kycs', params],
+    queryFn: async () => getAllKYCs(params),
   });
 };
 
