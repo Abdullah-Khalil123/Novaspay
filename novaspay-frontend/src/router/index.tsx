@@ -9,6 +9,7 @@ import VAPage from '../pages/VA';
 import ClientPage from '../pages/Client';
 import UserPage from '../pages/Users';
 import LoginPage from '@/pages/Login';
+import UserProfile from '@/pages/Profile';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,16 @@ const router = createBrowserRouter([
   {
     path: 'admin/login',
     element: <LoginPage />,
+  },
+  {
+    path: 'admin/profile',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <UserProfile />,
+      },
+    ],
   },
   {
     path: '/index',

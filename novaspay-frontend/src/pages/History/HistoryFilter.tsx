@@ -1,6 +1,6 @@
 import Button from '../../components/custom/Button';
 import Input from '../../components/custom/Input';
-import Select from '../../components/custom/Select';
+import Select from '../../components/custom/SelectG';
 import { Search, RotateCcwIcon, Download } from 'lucide-react';
 
 interface HistoryFiltersProps {
@@ -57,7 +57,7 @@ const HistoryFilter = ({
       />
       <Select
         label="Order Type"
-        options={['PAYMENT', 'TRANSFER', 'EXCHANGE', 'DEPOSIT', 'FEE']}
+        options={['Payment', 'Transfer', 'Exchange', 'Deposit', 'Fee']}
         value={filters.orderType}
         onChange={(e) => setFilters((prev: any) => ({ ...prev, orderType: e }))}
       />

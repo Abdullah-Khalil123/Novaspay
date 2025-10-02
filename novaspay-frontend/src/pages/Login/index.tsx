@@ -39,6 +39,7 @@ const LoginPage = () => {
         setCredentials({
           token: response.token,
           isAuthenticated: true,
+          user: response.user,
         })
       );
       toast.success('Login successful!');

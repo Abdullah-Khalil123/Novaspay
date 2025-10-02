@@ -1,6 +1,6 @@
 import Button from '../../components/custom/Button';
-import { Search, RotateCcwIcon, Upload } from 'lucide-react';
-import Select from '../../components/custom/Select';
+import { Search, RotateCcwIcon } from 'lucide-react';
+import Select from '../../components/custom/SelectG';
 
 const OnboardingFilters = () => {
   return (
