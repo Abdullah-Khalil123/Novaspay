@@ -5,16 +5,18 @@ import Select from '@/components/custom/SelectG';
 import { useCreateApplication } from '@/hooks/useApplications';
 import { applicationSchema, type Application } from '@/types/application';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 
 const CryptoBuySell = () => {
   const { mutate: createApplication } = useCreateApplication();
   const {
     register,
+    setValue,
+    getValues,
     handleSubmit,
     control,
-    // formState: { errors },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
@@ -32,6 +34,7 @@ const CryptoBuySell = () => {
     },
   });
 
+  console.log(errors);
   const [transactionType, setTransactionType] = useState<'buy' | 'sell'>('buy');
 
   const onSubmit = (data: Application) => {
@@ -53,6 +56,10 @@ const CryptoBuySell = () => {
       },
     });
   };
+
+  useEffect(() => {
+    setValue('toCurrency', '');
+  }, [transactionType, setValue]);
 
   return (
     <div className="flex justify-center items-center py-4">
@@ -76,11 +83,7 @@ const CryptoBuySell = () => {
             name="vaBankAccount"
             control={control}
             render={({ field }) => (
-              <Select
-                {...field}
-                options={['HSBC', 'Barclays']}
-                className="w-full mb-4"
-              />
+              <Select {...field} options={[]} className="w-full mb-4" />
             )}
           />
 
@@ -107,18 +110,17 @@ const CryptoBuySell = () => {
             render={({ field }) => (
               <Select
                 {...field}
-                options={
-                  transactionType === 'buy'
-                    ? ['USDT', 'BTC', 'ETH']
-                    : ['USD', 'EUR']
-                }
+                options={transactionType === 'buy' ? ['USDT'] : ['EUR']}
                 className="w-full mb-2"
               />
             )}
           />
 
           {/* Amount */}
-          <p className="text-sm mb-2 font-bold">Amount (EUR)</p>
+          <p className="text-sm mb-2 font-bold">
+            Amount
+            {transactionType === 'buy' ? ' (EUR)' : ' (USDT)'}
+          </p>
           <Input
             type="number"
             {...register('amount', { valueAsNumber: true })}
@@ -142,7 +144,10 @@ const CryptoBuySell = () => {
           />
 
           {/* Total Amount */}
-          <p className="text-sm mb-2 font-bold">Total Amount (USDT)</p>
+          <p className="text-sm mb-2 font-bold">
+            Total Amount
+            {transactionType === 'sell' ? ' (EUR)' : ' (USDT)'}
+          </p>
           <Input
             type="number"
             {...register('totalAmount', { valueAsNumber: true })}
@@ -151,7 +156,10 @@ const CryptoBuySell = () => {
           />
 
           {/* Estimated Fee */}
-          <p className="text-sm mb-2 font-bold">Estimated Fee Amount (USDT)</p>
+          <p className="text-sm mb-2 font-bold">
+            Estimated Fee Amount
+            {transactionType === 'sell' ? ' (EUR)' : ' (USDT)'}
+          </p>
           <Input
             type="number"
             {...register('estimatedFee', { valueAsNumber: true })}
@@ -160,7 +168,10 @@ const CryptoBuySell = () => {
           />
 
           {/* Estimated Amount */}
-          <p className="text-sm mb-2 font-bold">Estimated Amount (USDT)</p>
+          <p className="text-sm mb-2 font-bold">
+            Estimated Amount
+            {transactionType === 'sell' ? ' (EUR)' : ' (USDT)'}
+          </p>
           <Input
             type="number"
             {...register('estimatedAmount', { valueAsNumber: true })}

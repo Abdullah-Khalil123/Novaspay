@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface SelectProps<T> {
   label?: string;
@@ -19,14 +19,31 @@ function Select<T>({
   getOptionLabel = (opt) => String(opt), // default stringify
 }: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSelect = (option: T) => {
+    setIsOpen(true);
     onChange?.(option);
-    setIsOpen(false);
   };
 
   return (
     <div
+      ref={wrapperRef}
       className={
         'flex items-center h-8 w-64 space-x-4 cursor-pointer ' +
         (className ? ` ${className}` : '')
@@ -37,7 +54,7 @@ function Select<T>({
 
       {/* Main Select */}
       <div
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
         className="relative border flex justify-between items-center border-border w-full px-2 py-1 rounded-sm"
       >
         <span>{value ? getOptionLabel(value) : 'Select an option'}</span>
@@ -54,7 +71,7 @@ function Select<T>({
             {/* Small Triangle */}
             <div
               className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 
-  border-l-6 border-r-6 border-b-8 border-transparent border-b-border"
+              border-l-6 border-r-6 border-b-8 border-transparent border-b-border"
             ></div>
 
             {/* Options List */}

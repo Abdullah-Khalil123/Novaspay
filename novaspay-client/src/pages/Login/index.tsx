@@ -39,6 +39,7 @@ const LoginPage = () => {
         setCredentials({
           token: response.token,
           isAuthenticated: true,
+          user: response.user || null,
         })
       );
       toast.success('Login successful!');
@@ -102,7 +103,7 @@ const LoginPage = () => {
                   <input
                     {...register('password')}
                     type="password"
-                    placeholder="Please Input your Email"
+                    placeholder="Please Input your Password"
                     className="border h-9 rounded-sm border-border pl-8 w-full"
                   />
                 </div>
@@ -121,6 +122,13 @@ const LoginPage = () => {
               </div>
               <button className="rounded-sm w-full bg-sidebar-bg py-1">
                 {_isLoading ? 'Loading...' : 'Sign in'}
+              </button>
+
+              <button
+                onClick={() => navigate('/company/create-account-login')}
+                className="rounded-sm mt-4 w-full bg-sidebar-bg py-1"
+              >
+                Sign Up
               </button>
             </form>
           </div>

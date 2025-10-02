@@ -129,7 +129,7 @@ const ReceiveAccount = () => {
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {acc.updatedAt}
                     </td>
-                    <td className="w-[60px] sticky right-0 bg-background text-end">
+                    <td className="w-[60px] sticky right-0 bg-background text-center">
                       <p className="text-[#354a0c] hover:text-[#60831a] cursor-pointer">
                         Details
                       </p>

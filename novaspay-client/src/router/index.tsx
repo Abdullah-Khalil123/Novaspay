@@ -8,6 +8,8 @@ import UserPage from '../pages/Users';
 import LoginPage from '@/pages/Login';
 import ApplicationList from '@/pages/Application';
 import CryptoBuySell from '@/pages/BuySell';
+import UserProfile from '@/pages/Profile';
+import SignUpPage from '@/pages/SignUp';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,20 @@ const router = createBrowserRouter([
   {
     path: 'user/login',
     element: <LoginPage />,
+  },
+  {
+    path: 'user/profile',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <UserProfile />,
+      },
+    ],
+  },
+  {
+    path: 'company/create-account-login',
+    element: <SignUpPage />,
   },
   {
     path: '/index',

@@ -21,12 +21,16 @@ export const applicationSchema = z.object({
   updatedAt: z.string().optional(),
   vaBankAccount: z.string().nullable().optional(),
 
-  client: z.object({
-    name: z.string().optional(),
-  }),
-  approver: z.object({
-    name: z.string().optional(),
-  }),
+  client: z
+    .object({
+      name: z.string().optional(),
+    })
+    .optional(),
+  approver: z
+    .object({
+      name: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type Application = z.infer<typeof applicationSchema>;
