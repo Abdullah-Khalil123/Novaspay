@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -17,6 +17,13 @@ import { useCreateVA, useVAById, useUpdateVA } from '@/hooks/useVa';
 import { toast } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type VAFormValues = z.infer<typeof vaSchema>;
 
@@ -36,6 +43,7 @@ const VACreate = ({ action = 'create' }: { action?: 'create' | 'edit' }) => {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -182,7 +190,25 @@ const VACreate = ({ action = 'create' }: { action?: 'create' | 'edit' }) => {
 
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
-                <Input id="status" {...register('status')} />
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || 'pending'}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="Inactive">Inactive</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
             </div>
           </CardContent>

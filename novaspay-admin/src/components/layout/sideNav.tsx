@@ -135,6 +135,7 @@ export function AppSidebar() {
           onClick={async () => {
             try {
               dispatch(logout());
+              navigate('/auth/login');
             } catch (error) {
               toast.error('Logout failed');
               console.error(error);
