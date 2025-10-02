@@ -19,7 +19,11 @@ const getAccounts = async (req, res) => {
         ibanNumber: ibanNumber ? { contains: ibanNumber } : undefined,
         accountName: accountName ? { contains: accountName } : undefined,
         currency: currency ? { contains: currency } : undefined,
-        status: status ? { equals: status } : undefined,
+        status: status
+          ? {
+              contains: status,
+            }
+          : undefined,
       },
       take: parseInt(limit) || 10,
       skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),

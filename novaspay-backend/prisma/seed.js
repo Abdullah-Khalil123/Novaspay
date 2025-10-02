@@ -4,10 +4,8 @@ import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
-// Helper function to get random item from array
+// Helpers
 const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-// Helper function to get random number in range
 const randomNumber = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -16,6 +14,7 @@ async function main() {
 
   // Clear existing data
   console.log('🗑️  Clearing existing data...');
+  await prisma.applications.deleteMany();
   await prisma.transaction.deleteMany();
   await prisma.account.deleteMany();
   await prisma.kYC.deleteMany();
@@ -64,52 +63,8 @@ async function main() {
   ];
   const clientTypes = ['individual', 'business', 'corporate', 'enterprise'];
 
-  // Create specific test clients first
-  const specificClients = [
-    {
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      type: 'individual',
-      country: 'USA',
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      type: 'business',
-      country: 'UK',
-    },
-    {
-      name: 'Test Client',
-      email: 'test@example.com',
-      type: 'individual',
-      country: 'Canada',
-    },
-  ];
-
   const clients = [];
-
-  // Create specific clients
-  for (const clientData of specificClients) {
-    const client = await prisma.client.create({
-      data: {
-        name: clientData.name,
-        loginTime: faker.date.recent({ days: 7 }),
-        password: hashedPassword,
-        type: clientData.type,
-        country: clientData.country,
-        email: clientData.email,
-        agentName: faker.person.fullName(),
-        bankAccountNumber: faker.finance.accountNumber(12),
-        description: faker.company.catchPhrase(),
-        invitationCode: faker.string.alphanumeric(8).toUpperCase(),
-        accountInfo: faker.lorem.sentence(),
-      },
-    });
-    clients.push(client);
-  }
-
-  // Create random clients
-  for (let i = 0; i < 17; i++) {
+  for (let i = 0; i < 10; i++) {
     const client = await prisma.client.create({
       data: {
         name: faker.person.fullName(),
@@ -127,7 +82,6 @@ async function main() {
     });
     clients.push(client);
   }
-
   console.log(`✅ Created ${clients.length} clients`);
 
   // Seed Accounts
@@ -155,7 +109,7 @@ async function main() {
           clientName: client.name,
           ibanNumber: faker.finance.iban(),
           balance: balance,
-          realBalance: balance * (0.95 + Math.random() * 0.1), // Real balance slightly different
+          realBalance: balance * (0.95 + Math.random() * 0.1),
           accountNumber: faker.finance.accountNumber(10),
           accountName: `${client.name} ${randomItem([
             'Savings',
@@ -175,20 +129,12 @@ async function main() {
   console.log('💸 Seeding transactions...');
   const statuses = ['completed', 'pending', 'failed', 'cancelled'];
   const orderTypes = ['deposit', 'withdrawal', 'transfer', 'payment'];
-  const reasons = [
-    'Payment for services',
-    'Refund',
-    'Salary payment',
-    'Invoice settlement',
-    'Bank transfer',
-    null,
-  ];
 
   const transactions = [];
   for (const client of clients) {
-    const numTransactions = randomNumber(5, 15);
+    const numTransactions = randomNumber(3, 10);
     for (let i = 0; i < numTransactions; i++) {
-      const amount = parseFloat(faker.finance.amount(10, 10000, 2));
+      const amount = parseFloat(faker.finance.amount(10, 5000, 2));
       const transaction = await prisma.transaction.create({
         data: {
           orderId: `ORD-${faker.string.alphanumeric(10).toUpperCase()}`,
@@ -197,10 +143,9 @@ async function main() {
           receiverName: faker.person.fullName(),
           receiverNumber: faker.finance.accountNumber(10),
           amount: amount,
-          fee: parseFloat((amount * 0.02).toFixed(2)), // 2% fee
+          fee: parseFloat((amount * 0.02).toFixed(2)),
           status: randomItem(statuses),
           orderType: randomItem(orderTypes),
-          reason: randomItem(reasons),
           clientId: client.id,
           createdAt: faker.date.recent({ days: 90 }),
         },
@@ -210,22 +155,50 @@ async function main() {
   }
   console.log(`✅ Created ${transactions.length} transactions`);
 
+  // Seed Applications
+  console.log('📄 Seeding applications...');
+  const appStatuses = ['pending', 'approved', 'rejected'];
+  const applications = [];
+  for (const client of clients) {
+    const numApps = randomNumber(1, 5);
+    for (let i = 0; i < numApps; i++) {
+      const app = await prisma.applications.create({
+        data: {
+          clientId: client.id,
+          area: faker.location.city(),
+          vaBankAccount: faker.finance.accountNumber(12),
+          transactionType: randomItem(['buy', 'sell']),
+          toCurrency: randomItem(currencies),
+          amount: parseFloat(faker.finance.amount(100, 5000, 2)),
+          cryptoAddress: faker.finance.ethereumAddress(),
+          referenceRate: parseFloat(faker.finance.amount(0.5, 1.5, 4)),
+          totalAmount: parseFloat(faker.finance.amount(200, 10000, 2)),
+          estimatedFee: parseFloat(faker.finance.amount(5, 100, 2)),
+          estimatedAmount: parseFloat(faker.finance.amount(100, 5000, 2)),
+          approverId: Math.random() > 0.5 ? randomItem(users).id : null,
+          approvalComments: Math.random() > 0.5 ? faker.lorem.sentence() : null,
+          remark: faker.lorem.sentence(),
+          status: randomItem(appStatuses),
+        },
+      });
+      applications.push(app);
+    }
+  }
+  console.log(`✅ Created ${applications.length} applications`);
+
   // Seed KYC
   console.log('📋 Seeding KYC records...');
-  const kycTypes = ['individual', 'business', 'corporate'];
-  const kycStatuses = ['pending', 'approved', 'rejected', 'under_review'];
-
   const kycs = await Promise.all(
-    Array.from({ length: 15 }, () =>
+    Array.from({ length: 10 }, () =>
       prisma.kYC.create({
         data: {
           email: faker.internet.email(),
-          type: randomItem(kycTypes),
+          type: randomItem(['individual', 'business']),
           name: faker.person.fullName(),
           phone: faker.phone.number(),
           agentId: randomNumber(1000, 9999),
-          status: randomItem(kycStatuses),
-          reason: Math.random() > 0.7 ? faker.lorem.sentence() : null,
+          status: randomItem(['pending', 'approved', 'rejected']),
+          reason: Math.random() > 0.5 ? faker.lorem.sentence() : null,
         },
       })
     )
@@ -234,8 +207,8 @@ async function main() {
 
   // Seed OnBoarding
   console.log('🚀 Seeding onboarding records...');
-  const onboardings = await Promise.all(
-    Array.from({ length: 10 }, () =>
+  await Promise.all(
+    Array.from({ length: 5 }, () =>
       prisma.onBoarding.create({
         data: {
           clientName: faker.person.fullName(),
@@ -250,54 +223,39 @@ async function main() {
       })
     )
   );
-  console.log(`✅ Created ${onboardings.length} onboarding records`);
+  console.log(`✅ Created onboarding records`);
 
-  // Seed VA (Virtual Accounts)
+  // Seed VA
   console.log('🏦 Seeding virtual accounts...');
-  const purposes = [
-    'business_operations',
-    'payment_collection',
-    'payroll',
-    'vendor_payments',
-  ];
-  const paymentMethods = ['bank_transfer', 'card', 'wire', 'ach'];
-  const businessCategories = [
-    'retail',
-    'technology',
-    'healthcare',
-    'finance',
-    'education',
-    'manufacturing',
-  ];
-  const vaStatuses = ['pending', 'approved', 'rejected', 'under_review'];
-  const fundingSources = ['revenue', 'investment', 'loan', 'grant'];
-
-  const vas = await Promise.all(
-    Array.from({ length: 12 }, () => {
-      const numPhotos = randomNumber(0, 5);
-      return prisma.vA.create({
+  await Promise.all(
+    Array.from({ length: 8 }, () =>
+      prisma.vA.create({
         data: {
-          purpose: randomItem(purposes),
+          purpose: randomItem([
+            'business_operations',
+            'payment_collection',
+            'payroll',
+          ]),
           currency: randomItem(currencies),
-          paymentMethod: randomItem(paymentMethods),
+          paymentMethod: randomItem(['bank_transfer', 'card', 'wire']),
           headquaters: faker.location.country(),
           state: faker.location.state(),
           city: faker.location.city(),
           street: faker.location.streetAddress(),
           postalCode: faker.location.zipCode(),
-          businessCategory: randomItem(businessCategories),
+          businessCategory: randomItem(['retail', 'technology', 'finance']),
           region: faker.location.state(),
-          fundingSource: randomItem(fundingSources),
-          storePhotos: Array.from({ length: numPhotos }, () =>
+          fundingSource: randomItem(['revenue', 'investment', 'loan']),
+          storePhotos: Array.from({ length: randomNumber(0, 3) }, () =>
             faker.image.url()
           ),
           declineReason: Math.random() > 0.8 ? faker.lorem.sentence() : null,
-          status: randomItem(vaStatuses),
+          status: randomItem(['pending', 'approved', 'rejected']),
         },
-      });
-    })
+      })
+    )
   );
-  console.log(`✅ Created ${vas.length} virtual account records`);
+  console.log(`✅ Created virtual accounts`);
 
   console.log('🎉 Database seeding completed successfully!');
   console.log('\n📊 Summary:');
@@ -305,12 +263,7 @@ async function main() {
   console.log(`  Clients: ${clients.length}`);
   console.log(`  Accounts: ${accounts.length}`);
   console.log(`  Transactions: ${transactions.length}`);
-  console.log(`  KYC Records: ${kycs.length}`);
-  console.log(`  Onboarding Records: ${onboardings.length}`);
-  console.log(`  Virtual Accounts: ${vas.length}`);
-  console.log('\n🔑 Default admin credentials:');
-  console.log('  Email: admin@example.com');
-  console.log('  Password: password123');
+  console.log(`  Applications: ${applications.length}`);
 }
 
 main()
