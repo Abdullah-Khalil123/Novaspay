@@ -7,6 +7,20 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Select from '@/components/custom/SelectG';
 import { countries } from '@/utils/country';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const registerSchema = z.object({
+  accountType: z.string().nonempty('Account type is required'),
+  name: z.string().min(2, 'Company name must be at least 2 characters'),
+  country: z.string().nonempty('Country is required'),
+  email: z.string().email('Invalid email address'),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .max(20, 'Password must be at most 20 characters'),
+  // verificationCode: z.string().length(6, 'Verification code must be 6 digits'),
+});
 
 const EnterpriseRegisterPage = () => {
   useSelector((state: RootState) => state.auth); // Still including but might not be directly relevant for a pure register page
@@ -18,6 +32,7 @@ const EnterpriseRegisterPage = () => {
     control,
     formState: { errors },
   } = useForm({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       accountType: '',
       name: '',

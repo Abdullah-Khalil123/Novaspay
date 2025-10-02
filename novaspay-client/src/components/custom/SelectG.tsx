@@ -7,7 +7,7 @@ interface SelectProps<T> {
   className?: string;
   value?: T | null;
   onChange?: (val: T) => void;
-  getOptionLabel?: (option: T) => string; // custom label renderer
+  getOptionLabel?: (option: T) => string;
 }
 
 function Select<T>({
@@ -16,10 +16,11 @@ function Select<T>({
   options,
   value,
   onChange,
-  getOptionLabel = (opt) => String(opt), // default stringify
+  getOptionLabel = (opt) => String(opt),
 }: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
 
   // Close when clicking outside
   useEffect(() => {
@@ -36,8 +37,30 @@ function Select<T>({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Keyboard navigation
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!/[a-zA-Z]/.test(e.key)) return;
+
+      const searchKey = e.key.toLowerCase();
+      const idx = options.findIndex((opt) =>
+        getOptionLabel(opt).toLowerCase().startsWith(searchKey)
+      );
+
+      if (idx >= 0 && optionsRef.current) {
+        const optionEl = optionsRef.current.children[idx] as HTMLElement;
+        optionEl.scrollIntoView({ block: 'start' });
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, options, getOptionLabel]);
+
   const handleSelect = (option: T) => {
-    setIsOpen(true);
+    setIsOpen(false); // close after select
     onChange?.(option);
   };
 
@@ -75,7 +98,10 @@ function Select<T>({
             ></div>
 
             {/* Options List */}
-            <div className="bg-secondary border border-border rounded-sm max-h-60 overflow-y-auto">
+            <div
+              ref={optionsRef}
+              className="bg-secondary border border-border rounded-sm max-h-60 overflow-y-auto"
+            >
               {options.map((option, idx) => (
                 <div
                   key={idx}
