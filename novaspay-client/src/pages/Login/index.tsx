@@ -113,20 +113,20 @@ const LoginPage = () => {
                   </p>
                 )}
               </div>
-              <div className="flex justify-between text-sm text-[#6b6868] my-4">
+              <div className="flex justify-between text-sm my-4">
                 <label className="flex items-center cursor-pointer">
                   <input type="checkbox" />
                   <span className="ml-2 select-none">Remember me</span>
                 </label>
                 <p>Forgot Password</p>
               </div>
-              <button className="rounded-sm w-full bg-sidebar-bg py-1">
+              <button className="rounded-sm w-full bg-sidebar-bg text-button-text py-1">
                 {_isLoading ? 'Loading...' : 'Sign in'}
               </button>
 
               <button
                 onClick={() => navigate('/company/create-account-login')}
-                className="rounded-sm mt-4 w-full bg-sidebar-bg py-1"
+                className="rounded-sm mt-4 w-full text-button-text bg-sidebar-bg py-1"
               >
                 Sign Up
               </button>

@@ -75,12 +75,12 @@ const EnterpriseRegisterPage = () => {
   return (
     <div className="flex min-h-screen">
       {/* Left Section: Welcome Message (Dark Background) */}
-      <div className="w-1/2 bg-gray-900 text-white flex items-center justify-center p-8">
+      <div className="w-1/2 text-text-primary flex items-center justify-center p-8">
         <h1 className="text-3xl font-bold">Welcome to the system</h1>
       </div>
 
       {/* Right Section: Enterprise Account Registration Form (Darker Background) */}
-      <div className="w-1/2 bg-gray-800 text-white flex flex-col justify-between p-8">
+      <div className="w-1/2 bg-login-bg text-text-primary flex flex-col justify-between p-8">
         <div className="flex justify-end w-full">
           {/* <Switch /> */}{' '}
           {/* You can uncomment if you want the theme toggle here */}
@@ -97,14 +97,14 @@ const EnterpriseRegisterPage = () => {
               <div className="flex flex-col">
                 <label
                   htmlFor="accountType"
-                  className="text-sm text-gray-300 mb-1"
+                  className="text-sm text-text-primary mb-1"
                 >
                   <span className="text-red-500">*</span> Account type
                 </label>
                 <select
                   {...register('accountType')}
                   id="accountType"
-                  className="p-2 border border-gray-600 rounded-sm bg-gray-700 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="p-2 border border-gray-600 text-gray-400 rounded-sm bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">Please select a Account type</option>
                   <option value="individual">Individual</option>
@@ -121,7 +121,7 @@ const EnterpriseRegisterPage = () => {
               <div className="flex flex-col">
                 <label
                   htmlFor="companyName"
-                  className="text-sm text-gray-300 mb-1"
+                  className="text-sm text-text-primary mb-1"
                 >
                   <span className="text-red-500">*</span> Company name
                 </label>
@@ -141,7 +141,10 @@ const EnterpriseRegisterPage = () => {
 
               {/* Country */}
               <div className="flex flex-col">
-                <label htmlFor="country" className="text-sm text-gray-300 mb-1">
+                <label
+                  htmlFor="country"
+                  className="text-sm text-text-primary mb-1"
+                >
                   <span className="text-red-500">*</span> Country
                 </label>
                 <Controller
@@ -151,7 +154,7 @@ const EnterpriseRegisterPage = () => {
                     <Select
                       {...field}
                       options={countries}
-                      className="w-full bg-gray-700 py-5 text-gray-300 rounded-sm"
+                      className="w-full bg-gray-700 py-5 text-gray-400 rounded-sm"
                     />
                   )}
                 />
@@ -165,7 +168,10 @@ const EnterpriseRegisterPage = () => {
 
               {/* Email */}
               <div className="flex flex-col">
-                <label htmlFor="email" className="text-sm text-gray-300 mb-1">
+                <label
+                  htmlFor="email"
+                  className="text-sm text-text-primary mb-1"
+                >
                   <span className="text-red-500">*</span> Email
                 </label>
                 <input
@@ -186,7 +192,7 @@ const EnterpriseRegisterPage = () => {
               <div className="flex flex-col">
                 <label
                   htmlFor="password"
-                  className="text-sm text-gray-300 mb-1"
+                  className="text-sm text-text-primary mb-1"
                 >
                   <span className="text-red-500">*</span> Password
                 </label>
@@ -208,7 +214,7 @@ const EnterpriseRegisterPage = () => {
               <div className="flex flex-col">
                 <label
                   htmlFor="invitationCode"
-                  className="text-sm text-gray-300 mb-1"
+                  className="text-sm text-text-primary mb-1"
                 >
                   <span className="text-red-500">*</span> Invitation code
                 </label>
@@ -230,7 +236,7 @@ const EnterpriseRegisterPage = () => {
               {/* <div className="flex flex-col">
                 <label
                   htmlFor="verificationCode"
-                  className="text-sm text-gray-300 mb-1"
+                  className="text-sm text-text-primary mb-1"
                 >
                   <span className="text-red-500">*</span> Verification code
                 </label>

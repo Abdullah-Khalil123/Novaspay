@@ -60,7 +60,7 @@ function Select<T>({
   }, [isOpen, options, getOptionLabel]);
 
   const handleSelect = (option: T) => {
-    setIsOpen(false); // close after select
+    setIsOpen(true); // close after select
     onChange?.(option);
   };
 
