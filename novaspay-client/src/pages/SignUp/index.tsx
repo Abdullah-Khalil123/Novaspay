@@ -3,7 +3,7 @@ import { registerUser } from '@/actions/auth'; // Assuming a new action for regi
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import Select from '@/components/custom/SelectG';
 import { countries } from '@/utils/country';
@@ -19,10 +19,13 @@ const registerSchema = z.object({
     .string()
     .min(6, 'Password must be at least 6 characters')
     .max(20, 'Password must be at most 20 characters'),
-  // verificationCode: z.string().length(6, 'Verification code must be 6 digits'),
+  invitationCode: z.string().min(6, 'Invitation code must be 6 characters'),
 });
 
 const EnterpriseRegisterPage = () => {
+  const [searchParams] = useSearchParams();
+  const invitationCode = searchParams.get('invitationCode') || '';
+
   useSelector((state: RootState) => state.auth); // Still including but might not be directly relevant for a pure register page
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false); // Changed _isLoading to isLoading for consistency
@@ -39,6 +42,7 @@ const EnterpriseRegisterPage = () => {
       country: '',
       email: '',
       password: '',
+      invitationCode: invitationCode || '',
     },
   });
 
@@ -52,6 +56,7 @@ const EnterpriseRegisterPage = () => {
         password: data.password,
         country: data.country,
         accountType: data.accountType,
+        invitationCode: data.invitationCode,
       });
       toast.success('Registration successful!');
       new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
@@ -195,6 +200,28 @@ const EnterpriseRegisterPage = () => {
                 {errors.password && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Invitation Code */}
+              <div className="flex flex-col">
+                <label
+                  htmlFor="invitationCode"
+                  className="text-sm text-gray-300 mb-1"
+                >
+                  <span className="text-red-500">*</span> Invitation code
+                </label>
+                <input
+                  {...register('invitationCode')}
+                  type="text"
+                  id="invitationCode"
+                  placeholder="Invitation Code"
+                  className="p-2 border border-gray-600 rounded-sm bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+                {errors.invitationCode && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.invitationCode.message}
                   </p>
                 )}
               </div>

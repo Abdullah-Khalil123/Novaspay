@@ -72,6 +72,7 @@ const Header = () => {
 
         {/* 🔹 User Dropdown */}
         <Dropdown
+          className={'hover:bg-background '}
           label={
             <div className="flex items-center gap-1 pr-2">
               <div className="bg-background flex items-center justify-center size-10 rounded-full">

@@ -15,7 +15,7 @@ const Input = ({
 }) => {
   return (
     <div className={`flex items-center`}>
-      <p className="whitespace-nowrap">{label}</p>
+      {label && <div className="whitespace-nowrap pr-2">{label}</div>}
       <input
         value={value}
         defaultValue={defaultValue}

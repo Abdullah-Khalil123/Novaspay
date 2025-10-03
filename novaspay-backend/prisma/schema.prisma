@@ -127,6 +127,14 @@ model Client {
   applications Applications[]
 }
 
+model Invite {
+  id        String   @id @default(cuid())
+  code      String   @unique // store plain UUID-like code
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  usedAt    DateTime?
+}
+
 model Applications {
   id         Int      @id @default(autoincrement())
   clientId   Int?

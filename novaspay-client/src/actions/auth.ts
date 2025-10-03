@@ -44,12 +44,14 @@ const registerUser = async ({
   password,
   country,
   accountType,
+  invitationCode,
 }: {
   name: string;
   email: string;
   password: string;
   country: string;
   accountType: string;
+  invitationCode?: string;
 }) => {
   try {
     const response = await axiosInstance.post('/user/register', {
@@ -58,6 +60,7 @@ const registerUser = async ({
       password,
       country,
       accountType,
+      invitationCode,
     });
     return response.data;
   } catch (error) {

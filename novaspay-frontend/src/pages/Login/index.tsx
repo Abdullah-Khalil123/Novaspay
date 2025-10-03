@@ -120,7 +120,7 @@ const LoginPage = () => {
                 </label>
                 <p>Forgot Password</p>
               </div>
-              <button className="rounded-sm w-full bg-sidebar-bg py-1">
+              <button className="rounded-sm w-full bg-sidebar-bg text-button-text py-1">
                 {_isLoading ? 'Loading...' : 'Sign in'}
               </button>
             </form>

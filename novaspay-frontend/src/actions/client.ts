@@ -54,4 +54,21 @@ const updateClient = async (id: number, data: Client) => {
   }
 };
 
-export { getAllClients, getClient, createClient, deleteClient, updateClient };
+const createInviteLink = async () => {
+  try {
+    const response = await axiosInstance.post('/client/invite');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to create invite link:', error);
+    throw error;
+  }
+};
+
+export {
+  getAllClients,
+  getClient,
+  createClient,
+  deleteClient,
+  updateClient,
+  createInviteLink,
+};

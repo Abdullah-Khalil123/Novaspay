@@ -1,4 +1,5 @@
 import prisma from '../../prisma/client.js';
+import generateAlphaNumericCode from '../utils/generateCode.js';
 
 const getClientById = async (req, res) => {
   const { id } = req.params;
@@ -140,10 +141,27 @@ const deleteClient = async (req, res) => {
   }
 };
 
+const createInvite = async (req, res) => {
+  const code = generateAlphaNumericCode();
+  try {
+    const newInvite = await prisma.invite.create({
+      data: { code },
+    });
+    return res
+      .status(201)
+      .json({ message: 'Invite created successfully', data: newInvite });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: 'Server error', error: error.message });
+  }
+};
+
 export {
   getClientById,
   getAllClients,
   createClient,
   updateClient,
   deleteClient,
+  createInvite,
 };

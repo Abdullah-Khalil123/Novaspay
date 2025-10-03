@@ -91,7 +91,8 @@ const clientResetPassword = async (req, res) => {
 };
 
 const clientRegister = async (req, res) => {
-  const { name, email, password, country, accountType } = req.body;
+  const { name, email, password, country, accountType, invitationCode } =
+    req.body;
   try {
     const existingClient = await prisma.client.findUnique({
       where: { email },
@@ -99,12 +100,27 @@ const clientRegister = async (req, res) => {
     if (existingClient) {
       return res.status(400).json({ message: 'Client already exists' });
     }
+
+    const invite = await prisma.invite.findUnique({
+      where: { code: invitationCode },
+    });
+
+    if (!invite || invite.used) {
+      return res.status(400).json({ error: 'Invalid or already used invite' });
+    }
+
+    await prisma.invite.update({
+      where: { id: invite.id },
+      data: { used: true, usedAt: new Date() },
+    });
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newClient = await prisma.client.create({
       data: {
         name,
         email,
         password: hashedPassword,
+        invitationCode,
         country,
         type: accountType,
       },
