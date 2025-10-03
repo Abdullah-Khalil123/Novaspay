@@ -3,9 +3,12 @@ import PageFilters from '../../components/custom/pagination';
 import OnboardingFilters from './OnBoardingFilters';
 import type { OnBoarding } from '@/types/onBoarding';
 import { usePagination } from '@/hooks/usePagination';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Draggable from '@/components/custom/dragable';
 
 const OnboardingPage = () => {
+  const [showDetails, setShowDetails] = useState<OnBoarding | null>(null);
+
   const {
     currentPage,
     pageSize,
@@ -97,7 +100,10 @@ const OnboardingPage = () => {
                         idx % 2 === 0 ? ' bg-background' : ' bg-secondary'
                       }`}
                     >
-                      <p className="hover:text-[#60831a] cursor-pointer">
+                      <p
+                        onClick={() => setShowDetails(acc)}
+                        className="hover:text-[#60831a] text-sidebar-child cursor-pointer"
+                      >
                         Details
                       </p>
                     </td>
@@ -114,6 +120,38 @@ const OnboardingPage = () => {
           pageSize={pageSize}
           totalPages={totalPages || 1}
         />
+        {showDetails && (
+          <Draggable
+            Open={setShowDetails}
+            title="Onboarding Details"
+            className="px-8 min-w-[600px] space-y-1 py-6 bg-background shadow-lg rounded-md"
+          >
+            <p>
+              Client Name:{' '}
+              <span className="text-gray-500">{showDetails.clientName}</span>
+            </p>
+            <p>
+              Account Error Message:{' '}
+              <span className="text-gray-500">
+                {showDetails.accountErrorMessage}
+              </span>
+            </p>
+            <p>
+              Bank Account Status Message:{' '}
+              <span className="text-gray-500">
+                {showDetails.bankAccountStatusMsg}
+              </span>
+            </p>
+            <p>
+              Reason:{' '}
+              <span className="text-gray-500">{showDetails.reason}</span>
+            </p>
+            <p>
+              Creation Date:{' '}
+              <span className="text-gray-500">{showDetails.createdAt}</span>
+            </p>
+          </Draggable>
+        )}
       </div>
     </div>
   );

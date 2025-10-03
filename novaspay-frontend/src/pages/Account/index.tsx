@@ -4,6 +4,7 @@ import AccountsFilters from './filter';
 import PageFilters from '../../components/custom/pagination';
 import type { Account } from '@/types/accounts';
 import { usePagination } from '@/hooks/usePagination';
+import Draggable from '@/components/custom/dragable';
 
 const ReceiveAccount = () => {
   const {
@@ -19,6 +20,7 @@ const ReceiveAccount = () => {
     initialPageSize: 10,
   });
 
+  const [showDetails, setShowDetails] = useState<Account | null>();
   // State for filters
   const [filters, setFilters] = useState({
     accountNumber: '',
@@ -129,7 +131,10 @@ const ReceiveAccount = () => {
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {acc.updatedAt}
                     </td>
-                    <td className="w-[60px] sticky right-0 bg-background text-end">
+                    <td
+                      onClick={() => setShowDetails(acc)}
+                      className="w-[60px] sticky right-0 bg-background text-center"
+                    >
                       <p className="text-[#354a0c] hover:text-[#60831a] cursor-pointer">
                         Details
                       </p>
@@ -149,6 +154,42 @@ const ReceiveAccount = () => {
           totalPages={totalPages || 1}
         />
       </div>
+      {showDetails && (
+        <Draggable
+          className="px-8 min-w-[500px] space-y-1 py-6 bg-background shadow-lg rounded-md"
+          title="Account Details"
+          Open={setShowDetails}
+        >
+          <p>
+            Account Balance:{' '}
+            <span className="text-gray-500">{showDetails.balance}</span>
+          </p>
+          <p>
+            Bank Name:{' '}
+            <span className="text-gray-500">{showDetails.bankingName}</span>
+          </p>
+          <p>
+            Banking Address:{' '}
+            <span className="text-gray-500">{showDetails.bankingAddress}</span>
+          </p>
+          <p>
+            Baneficiary Name:{' '}
+            <span className="text-gray-500">{showDetails.accountName}</span>
+          </p>
+          <p>
+            IBAN Number:{' '}
+            <span className="text-gray-500">{showDetails.ibanNumber}</span>
+          </p>
+          <p>
+            Account Number:{' '}
+            <span className="text-gray-500">{showDetails.accountNumber}</span>
+          </p>
+          <p>
+            Currency:{' '}
+            <span className="text-gray-500">{showDetails.currency}</span>
+          </p>
+        </Draggable>
+      )}
     </div>
   );
 };

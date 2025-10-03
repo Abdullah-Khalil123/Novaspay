@@ -137,10 +137,18 @@ const ClientPage = () => {
                     </td>
 
                     <td className="sticky right-0 bg-background text-sidebar-bg flex gap-2 flex-wrap justify-center py-4 font-sans border border-border">
-                      <p>KYB Record</p>
-                      <p>Users</p>
-                      <p>Details</p>
-                      <p>See account</p>
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        KYB Record
+                      </p>
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        Users
+                      </p>
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        Details
+                      </p>
+                      <p className="hover:text-[#60831a] cursor-pointer">
+                        See account
+                      </p>
                       <p className="hover:text-[#60831a] cursor-pointer">
                         Details
                       </p>

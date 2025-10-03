@@ -115,11 +115,11 @@ const KYCPage = () => {
                       {acc.updatedAt}
                     </td>
                     <td
-                      className={`w-[40px] sticky right-0 font-sans text-end space-y-4 text-[#c2cb3d]${
+                      className={`w-[40px] sticky right-0 font-sans text-center space-y-4 text-[#c2cb3d]${
                         idx % 2 === 0 ? ' bg-background' : ' bg-secondary'
                       }`}
                     >
-                      <p className="hover:text-[#60831a] cursor-pointer">
+                      <p className="hover:text-[#60831a] text-sidebar-child cursor-pointer">
                         Update
                       </p>
                     </td>
