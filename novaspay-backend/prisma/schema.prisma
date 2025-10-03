@@ -30,7 +30,7 @@ model Transaction {
   receiverNumber  String?
   amount          Float?
   fee             Float?
-  status          String?
+  status          Status @default(PENDING)
   orderType       String?
   reason          String?
 
@@ -53,7 +53,7 @@ model Account {
   accountNumber   String?
   accountName     String?
   bankingAddress  String?
-  status          String?  @default("active")
+  status          AccountStatus @default(ACTIVE)
 
   clientId        Int?
   client          Client?  @relation(fields: [clientId], references: [id])
@@ -69,7 +69,7 @@ model KYC {
   name            String?
   phone           String?
   agentId         Int?
-  status          String?  @default("pending")
+  status          Status @default(PENDING)
   reason          String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -100,7 +100,7 @@ model VA {
   fundingSource  String?
   storePhotos    String[] @default([])
   declineReason  String?
-  status         String?  @default("pending")
+  status         Status @default(PENDING)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
@@ -150,8 +150,22 @@ model Applications {
 
   approvalComments String?
   remark   String?
-  status   String?  @default("pending")
+  status   Status @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Status {
+  SUCCESS
+  PENDING
+  FAILED
+  CANCELED
+  IN_REVIEW
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }
