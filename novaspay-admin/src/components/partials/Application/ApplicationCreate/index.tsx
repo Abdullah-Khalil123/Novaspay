@@ -189,20 +189,11 @@ const ApplicationCreate = ({
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Pending approval">
-                          Pending
-                        </SelectItem>
-                        <SelectItem value="Approved">Approved</SelectItem>
-                        <SelectItem value="Transaction successful">
-                          Successful
-                        </SelectItem>
-                        <SelectItem value="Reject">Rejected</SelectItem>
-                        <SelectItem value="Cancel transaction">
-                          Cancelled
-                        </SelectItem>
-                        <SelectItem value="Transaction Failed">
-                          Failed
-                        </SelectItem>
+                        <SelectItem value="SUCCESS">SUCCESS</SelectItem>
+                        <SelectItem value="PENDING">PENDING</SelectItem>
+                        <SelectItem value="FAILED">FAILED</SelectItem>
+                        <SelectItem value="CANCELED">CANCELED</SelectItem>
+                        <SelectItem value="IN_REVIEW">IN_REVIEW</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

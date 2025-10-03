@@ -11,7 +11,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 const useAccounts = (params?: any) => {
   return useQuery({
-    queryKey: ['accounts'],
+    queryKey: ['accounts', params],
     queryFn: async () => getAllAccounts(params),
   });
 };

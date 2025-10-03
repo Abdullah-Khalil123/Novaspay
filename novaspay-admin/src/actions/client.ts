@@ -1,9 +1,11 @@
 import type { Client } from '@/types/client';
 import { axiosInstance } from '@/utils/axios';
 
-const getAllClients = async () => {
+const getAllClients = async (params?: any) => {
   try {
-    const response = await axiosInstance.get('/client');
+    const response = await axiosInstance.get('/client', {
+      params,
+    });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch clients:', error);

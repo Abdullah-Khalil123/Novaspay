@@ -12,6 +12,18 @@ const userRoute: RouteObject = {
       index: true,
       element: <UsersPage />,
     },
+    {
+      path: 'edit/:userId',
+      element: <CreateUserPage action="edit" />,
+    },
+    {
+      path: ':userId/funds',
+      element: <UserFunds />,
+    },
+    {
+      path: ':userId/transactions',
+      element: <UserTransactions />,
+    },
   ],
 };
 
