@@ -1,15 +1,30 @@
+import Draggable from '@/components/custom/dragable';
+import { useAccounts } from '@/hooks/useAccounts';
 import { useTransactions } from '@/hooks/useTransaction';
+import type { Account } from '@/types/accounts';
 // import router from '@/router';
 import type { Transaction } from '@/types/transaction';
 import { ArrowDown, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const maskAccountNumber = (accountNumber: string) => {
+  if (!accountNumber) return '';
+  const visiblePart = accountNumber.slice(-5); // last 5 characters
+  const maskedPart = '*'.repeat(Math.max(0, accountNumber.length - 5));
+  return maskedPart + visiblePart;
+};
+
 const IndexPage = () => {
+  const [showDetails, setShowDetails] = useState<Account | null>();
+
   const navigate = useNavigate();
   const { data } = useTransactions({
     page: 1,
     limit: 10,
   });
+  const { data: accountData } = useAccounts();
+  const account: Account = accountData?.data[0];
 
   const transactions: Transaction[] = data?.data || [];
   return (
@@ -46,12 +61,22 @@ const IndexPage = () => {
             <div className="bg-[#dbeafd] text-[#2463eb] w-fit p-1 px-2 text-2xl rounded-md">
               $
             </div>
+            <p>{maskAccountNumber(account.accountNumber as string)}</p>
             <p>USD Account</p>
           </div>
-
-          <button className='className="text-center w-full text-red-500'>
-            Views
-          </button>
+          <div className="flex">
+            <h1 className="text-3xl font-bold text-black my-4">
+              ${account.balance}
+            </h1>
+            <button
+              onClick={() => {
+                setShowDetails(account);
+              }}
+              className='className="text-center w-full text-red-500'
+            >
+              Views
+            </button>
+          </div>
         </div>
 
         <div className="bg-secondary mt-8 p-3.5 rounded-md border-gray-500 border-[1px]">
@@ -59,6 +84,42 @@ const IndexPage = () => {
           <Table data={transactions} />
         </div>
       </div>
+      {showDetails && (
+        <Draggable
+          className="px-8 min-w-[500px] space-y-1 py-6 bg-background shadow-lg rounded-md"
+          title="Account Details"
+          Open={setShowDetails}
+        >
+          <p>
+            Account Balance:{' '}
+            <span className="text-gray-500">{showDetails.balance}</span>
+          </p>
+          <p>
+            Bank Name:{' '}
+            <span className="text-gray-500">{showDetails.bankingName}</span>
+          </p>
+          <p>
+            Banking Address:{' '}
+            <span className="text-gray-500">{showDetails.bankingAddress}</span>
+          </p>
+          <p>
+            Baneficiary Name:{' '}
+            <span className="text-gray-500">{showDetails.accountName}</span>
+          </p>
+          <p>
+            IBAN Number:{' '}
+            <span className="text-gray-500">{showDetails.ibanNumber}</span>
+          </p>
+          <p>
+            Account Number:{' '}
+            <span className="text-gray-500">{showDetails.accountNumber}</span>
+          </p>
+          <p>
+            Currency:{' '}
+            <span className="text-gray-500">{showDetails.currency}</span>
+          </p>
+        </Draggable>
+      )}
     </div>
   );
 };

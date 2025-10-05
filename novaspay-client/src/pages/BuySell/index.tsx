@@ -1,8 +1,11 @@
+import { getCurrencyRates } from '@/actions/currency';
 import Button from '@/components/custom/Button';
 import Input from '@/components/custom/Input';
 import RadioGroup from '@/components/custom/radio';
 import Select from '@/components/custom/SelectG';
+import { useAccounts } from '@/hooks/useAccounts';
 import { useCreateApplication } from '@/hooks/useApplications';
+import type { Account } from '@/types/accounts';
 import { applicationSchema, type Application } from '@/types/application';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
@@ -10,12 +13,16 @@ import { useForm, Controller } from 'react-hook-form';
 
 const CryptoBuySell = () => {
   const { mutate: createApplication } = useCreateApplication();
+  const { data } = useAccounts();
+  const [transactionType, setTransactionType] = useState<'buy' | 'sell'>('buy');
+  const accounts: Account[] = data?.data || [];
   const {
     register,
     setValue,
-    getValues,
     handleSubmit,
+    watch,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(applicationSchema),
@@ -35,19 +42,69 @@ const CryptoBuySell = () => {
   });
 
   console.log(errors);
-  const [transactionType, setTransactionType] = useState<'buy' | 'sell'>('buy');
+  const amountWatch = watch('amount');
+  const toCurrencyWatch = watch('toCurrency');
+  useEffect(() => {
+    async function getCurrency() {
+      let response;
+
+      if (transactionType === 'buy') {
+        setValue('fromCurrency', 'EUR');
+        setValue('transactionType', 'buy');
+        response = await getCurrencyRates({ symbol: 'EUR' });
+
+        const quote = response?.data?.quotes?.find(
+          (q: any) => q.targetSymbol === toCurrencyWatch
+        );
+
+        if (quote) {
+          const price = quote.price;
+          setValue('referenceRate', price);
+          setValue('totalAmount', amountWatch * price);
+          setValue('estimatedFee', amountWatch * price * 0.002);
+          setValue('estimatedAmount', amountWatch * price * (1 - 0.002));
+        } else {
+          console.warn('No quote found for', toCurrencyWatch);
+        }
+      }
+
+      if (transactionType === 'sell') {
+        setValue('fromCurrency', 'USDT');
+        setValue('transactionType', 'sell');
+        response = await getCurrencyRates({ symbol: 'USDT' });
+
+        const quote = response?.data?.quotes?.find(
+          (q: any) => q.targetSymbol === toCurrencyWatch
+        );
+
+        if (quote) {
+          const price = quote.price;
+          setValue('referenceRate', price);
+          setValue('totalAmount', amountWatch * price);
+          setValue('estimatedFee', amountWatch * price * 0.002);
+          setValue('estimatedAmount', amountWatch * price * (1 - 0.002));
+        } else {
+          console.warn('No quote found for', toCurrencyWatch);
+        }
+      }
+    }
+
+    if (!toCurrencyWatch) {
+      reset({
+        referenceRate: undefined,
+        totalAmount: undefined,
+        estimatedFee: undefined,
+        estimatedAmount: undefined,
+      });
+    }
+    getCurrency();
+  }, [transactionType, amountWatch, toCurrencyWatch]);
 
   const onSubmit = (data: Application) => {
-    // Attach the current transactionType
     const finalData = {
       ...data,
       transactionType,
-      fromCurrency:
-        data.transactionType === 'buy'
-          ? 'EUR'
-          : data.toCurrency === 'USDT'
-          ? 'USDT'
-          : 'BTC',
+      fromCurrency: data.transactionType === 'buy' ? 'EUR' : 'USDT',
     };
 
     createApplication(finalData, {
@@ -58,8 +115,8 @@ const CryptoBuySell = () => {
   };
 
   useEffect(() => {
-    setValue('toCurrency', '');
-  }, [transactionType, setValue]);
+    setValue('toCurrency', null);
+  }, [transactionType]);
 
   return (
     <div className="flex justify-center items-center py-4">
@@ -83,7 +140,11 @@ const CryptoBuySell = () => {
             name="vaBankAccount"
             control={control}
             render={({ field }) => (
-              <Select {...field} options={[]} className="w-full mb-4" />
+              <Select
+                {...field}
+                options={[...accounts.map((acc) => acc.accountNumber)]}
+                className="w-full mb-4"
+              />
             )}
           />
 

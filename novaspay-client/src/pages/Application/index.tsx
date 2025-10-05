@@ -101,7 +101,7 @@ const ApplicationList = () => {
                     }
                   >
                     <td className="w-[80px] h-16 min-w-[80px] px-2 py-4 truncate">
-                      {app.client.name}
+                      {app?.client?.name}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {app.clientId}
@@ -110,7 +110,7 @@ const ApplicationList = () => {
                       {app.area}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
-                      {app.toCurrency}
+                      {app.fromCurrency}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {app.transactionType}
