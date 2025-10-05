@@ -10,6 +10,7 @@ import ApplicationList from '@/pages/Application';
 import CryptoBuySell from '@/pages/BuySell';
 import UserProfile from '@/pages/Profile';
 import SignUpPage from '@/pages/SignUp';
+import DocumentForm from '@/pages/DocumentForm';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,16 @@ const router = createBrowserRouter([
   {
     path: 'company/create-account-login',
     element: <SignUpPage />,
+  },
+  {
+    path: 'member/client/documentForm',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <DocumentForm />,
+      },
+    ],
   },
   {
     path: '/index',

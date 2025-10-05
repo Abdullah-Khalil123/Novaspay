@@ -1,9 +1,11 @@
 import { useTransactions } from '@/hooks/useTransaction';
+// import router from '@/router';
 import type { Transaction } from '@/types/transaction';
-import { Info } from 'lucide-react';
 import { ArrowDown, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const IndexPage = () => {
+  const navigate = useNavigate();
   const { data } = useTransactions({
     page: 1,
     limit: 10,
@@ -13,10 +15,23 @@ const IndexPage = () => {
   return (
     <div className="px-padding pt-2">
       <div>
-        <div className="flex justify-end w-full">
-          <p className="text-red-400 text-sm underline">Invite to Register</p>
+        {/* KYC AUDIT */}
+        <div className="p-5 mt-4 flex items-center justify-between bg-[#fce2e2] rounded-lg">
+          <div className="gap-5 text-[#f36b6e] ">
+            <h3 className="text-xl font-bold">KYC Audit Failed</h3>
+            <p>To switch wallet accounts, please click the button !</p>
+          </div>
+          <button
+            onClick={() => {
+              navigate('/member/client/documentForm');
+            }}
+            className="bg-sidebar-bg cursor-pointer text-button-text px-4 py-2 rounded-md"
+          >
+            Update Account
+          </button>
         </div>
-        <div className="p-5 mt-4 flex items-center justify-between bg-[#d6d6da] rounded-lg">
+
+        {/* <div className="p-5 mt-4 flex items-center justify-between bg-[#d6d6da] rounded-lg">
           <div className="flex gap-5 text-[#6b6868]">
             <Info />
             <p>To switch wallet accounts, please click the button !</p>
@@ -24,7 +39,7 @@ const IndexPage = () => {
           <button className="bg-sidebar-bg text-button-text px-4 py-2 rounded-md">
             Switch wallet user funtion
           </button>
-        </div>
+        </div> */}
 
         <div className="bg-white p-6 w-[356px] mt-8 rounded-lg text-[#6B7280]">
           <div className="flex items-center justify-between">
