@@ -6,10 +6,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
   type?: string;
   placeholder?: string;
+  error?: string; // Prop for validation error message
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, className, type, placeholder, ...rest }, ref) => {
+  ({ label, className, type, placeholder, error, ...rest }, ref) => {
     return (
       <div className="flex flex-col">
         {label && <div className="w-30 mb-1 font-bold mr-4">{label}</div>}
@@ -17,12 +18,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           ref={ref}
           placeholder={placeholder}
-          //   defaultValue={0}
-          {...rest} // <-- spread register props here
+          {...rest}
           className={`bg-white px-2 py-3 text-gray-600 rounded-md ${
             className ?? ''
-          }`}
+          } ${error ? 'border-red-500 border' : ''}`}
         />
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}{' '}
+        {/* Display error */}
       </div>
     );
   }

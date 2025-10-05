@@ -52,4 +52,34 @@ const updateKYC = async (id: number, kycData: KYC) => {
   }
 };
 
-export { getAllKYCs, getKYC, createKYC, deleteKYC, updateKYC };
+// Client Know Your Customer (KYC) Form
+
+const createClientKYC = async (kycData: KYC) => {
+  try {
+    const response = await axiosInstance.put('/kyc', kycData);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to create Client KYC:', error);
+    throw error;
+  }
+};
+
+const getClientKYC = async () => {
+  try {
+    const response = await axiosInstance.get(`/kyc`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch Client KYC:', error);
+    throw error;
+  }
+};
+
+export {
+  getAllKYCs,
+  getKYC,
+  createKYC,
+  deleteKYC,
+  updateKYC,
+  createClientKYC,
+  getClientKYC,
+};

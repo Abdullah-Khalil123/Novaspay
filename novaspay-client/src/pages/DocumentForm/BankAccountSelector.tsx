@@ -1,17 +1,21 @@
 import React from 'react';
+import type { UseFormSetValue } from 'react-hook-form';
+import type { DocumentFormData } from '@/types/documentForm'; // Import your form data type
 
 interface BankAccountSelectorProps {
   nextStep: () => void;
   selected: string;
   setSelected: (val: string) => void;
-  setValue?: any;
+  setValue: UseFormSetValue<DocumentFormData>; // Type setValue correctly
+  error?: string; // Prop for validation error message
 }
 
 const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
-  nextStep,
   selected,
   setSelected,
   setValue,
+  error,
+  nextStep,
 }) => {
   const options = [
     {
@@ -33,8 +37,7 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
   const handleSelect = (title: string, disabled: boolean) => {
     if (disabled) return;
     setSelected(title);
-    setValue?.('area', title);
-    console.log(title);
+    setValue('area', title, { shouldValidate: true });
   };
 
   return (
@@ -49,13 +52,7 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
           </p>
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (selected) nextStep();
-          }}
-          className="mt-6 flex flex-col gap-4 w-full max-w-md"
-        >
+        <div className="mt-6 flex flex-col gap-4 w-full max-w-md">
           {options.map((opt) => (
             <label
               key={opt.id}
@@ -89,9 +86,12 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
               </div>
             </label>
           ))}
-
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}{' '}
+          {/* Display error */}
           <button
-            type="submit"
+            onClick={() => {
+              nextStep();
+            }}
             disabled={!selected}
             className={`mt-4 px-4 py-2 rounded-lg text-white ${
               selected
@@ -101,7 +101,7 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
           >
             Next
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

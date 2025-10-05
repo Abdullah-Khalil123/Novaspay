@@ -84,7 +84,7 @@ const IndexPage = () => {
           children={
             <div className="p-6 rounded-xl shadow-lg flex flex-col items-center gap-4 w-[280px] text-center">
               {/* QR Code */}
-              <QRCodeSVG value={inviteLink} size={180} />
+              <QRCodeSVG value={inviteLink} size={230} />
 
               {/* Code (optional) */}
               <code className="bg-[#f3f4f6] p-2 rounded-md w-full break-all">

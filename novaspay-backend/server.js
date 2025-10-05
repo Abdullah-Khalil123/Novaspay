@@ -21,6 +21,7 @@ import { protect } from './src/middleware/auth.js';
 import clientTransactionRoutes from './src/routes/client/transactions.js';
 import clientAccountRoutes from './src/routes/client/acounts.js';
 import clientApplicationRoutes from './src/routes/client/applications.js';
+import clientKycRoutes from './src/routes/client/kyc.js';
 
 // Initialize express app
 const app = express();
@@ -48,6 +49,7 @@ app.use('/api/user', clientAuth);
 app.use('/api/transaction', clientTransactionRoutes);
 app.use('/api/account', clientAccountRoutes);
 app.use('/api/application', clientApplicationRoutes);
+app.use('/api/kyc', clientKycRoutes);
 
 // Admin Routes (Protected)
 app.use(protect);

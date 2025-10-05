@@ -1,12 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 interface DropdownProps {
   label?: string;
   options: { label: string; value: string }[];
-  value?: string;
-  onChange?: (value: string) => void;
+  value: string; // Make value required to be controlled
+  onChange: (value: string) => void; // Make onChange required
   className?: string;
+  defaultValue?: string;
   disabled?: boolean;
+  error?: string; // Prop for validation error message
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -16,33 +18,34 @@ const Dropdown: React.FC<DropdownProps> = ({
   onChange,
   className,
   disabled = false,
+  error,
 }) => {
   const dropdownRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (val: string) => {
-    onChange?.(val);
+    onChange(val);
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
+  //   useEffect(() => {
+  //     const handleClickOutside = (event: MouseEvent) => {
+  //       if (
+  //         dropdownRef.current &&
+  //         !dropdownRef.current.contains(event.target as Node)
+  //       ) {
+  //         setIsOpen(false);
+  //       }
+  //     };
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
+  //     if (isOpen) {
+  //       document.addEventListener('mousedown', handleClickOutside);
+  //     } else {
+  //       document.removeEventListener('mousedown', handleClickOutside);
+  //     }
 
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
+  //     return () => document.removeEventListener('mousedown', handleClickOutside);
+  //   }, [isOpen]);
 
   const selectedLabel =
     options.find((opt) => opt.value === value)?.label || 'Select';
@@ -50,14 +53,13 @@ const Dropdown: React.FC<DropdownProps> = ({
   return (
     <div className="flex flex-col relative">
       {label && <div className="mb-1 font-bold">{label}</div>}
-
       <button
         ref={dropdownRef}
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         className={`bg-white text-gray-600 px-3 py-3 rounded-md w-full text-left flex justify-between items-center ${
           disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
-        } ${className ?? ''}`}
+        } ${className ?? ''} ${error ? 'border-red-500 border' : ''}`}
       >
         <span>{selectedLabel}</span>
         <svg
@@ -76,9 +78,8 @@ const Dropdown: React.FC<DropdownProps> = ({
           />
         </svg>
       </button>
-
       {isOpen && (
-        <div className="absolute w-1/2 top-full left-0 mt-1 bg-white rounded-md shadow-lg z-10">
+        <div className="absolute w-full top-full left-0 mt-1 bg-white rounded-md shadow-lg z-10">
           {options.map((opt) => (
             <div
               key={opt.value}
@@ -92,6 +93,8 @@ const Dropdown: React.FC<DropdownProps> = ({
           ))}
         </div>
       )}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}{' '}
+      {/* Display error */}
     </div>
   );
 };

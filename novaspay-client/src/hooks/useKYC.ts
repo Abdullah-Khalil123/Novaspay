@@ -1,7 +1,9 @@
 import {
+  createClientKYC,
   createKYC,
   deleteKYC,
   getAllKYCs,
+  getClientKYC,
   getKYC,
   updateKYC,
 } from '@/actions/kyc';
@@ -55,4 +57,30 @@ const useUpdateKYC = (id: number) => {
   });
 };
 
-export { useKYCs, useKYCById, useCreateKYC, useDeleteKYC, useUpdateKYC };
+const useGetClientKYC = () => {
+  return useQuery({
+    queryKey: ['clientKYC'],
+    queryFn: async () => getClientKYC(),
+    enabled: true,
+  });
+};
+
+const useCreateClientKYC = () => {
+  return useMutation({
+    mutationKey: ['createClientKYC'],
+    mutationFn: async (kycData: KYC) => createClientKYC(kycData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientKYC'] });
+    },
+  });
+};
+
+export {
+  useKYCs,
+  useKYCById,
+  useCreateKYC,
+  useDeleteKYC,
+  useUpdateKYC,
+  useGetClientKYC,
+  useCreateClientKYC,
+};

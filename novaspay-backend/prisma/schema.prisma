@@ -55,9 +55,10 @@ model Account {
   bankingAddress  String?
   status          AccountStatus @default(ACTIVE)
 
-  clientId        Int?
-  client          Client?  @relation(fields: [clientId], references: [id])
   
+  clientId        Int      @unique
+  client          Client   @relation(fields: [clientId], references: [id])
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -66,11 +67,35 @@ model KYC {
   id              Int      @id @default(autoincrement())
   email           String
   type            String?
-  name            String?
+
+  firstName       String?
+  lastName        String?
+  middleName      String?
+
   phone           String?
   agentId         Int?
   status          Status @default(PENDING)
   reason          String?
+
+  area            String?
+  corporateEmail  String?
+  dateOfBirth     DateTime?
+  contactNumber   String?
+  companyCountry  String?
+  companyAddress  String?
+
+  city            String?
+  postalCode      String?
+
+  headquarters    String?
+  state           String?
+  companyCity     String?
+  companyStreet   String?  
+
+  clientId        Int      @unique
+  client          Client   @relation(fields: [clientId], references: [id])
+
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -122,7 +147,9 @@ model Client {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  accounts    Account[]
+  account         Account?
+  kyc             KYC?
+
   transactions Transaction[]
   applications Applications[]
 }
