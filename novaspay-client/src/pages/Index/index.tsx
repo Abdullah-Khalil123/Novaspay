@@ -1,7 +1,9 @@
 import Draggable from '@/components/custom/dragable';
 import { useAccounts } from '@/hooks/useAccounts';
+import { useGetClientKYC } from '@/hooks/useKYC';
 import { useTransactions } from '@/hooks/useTransaction';
 import type { Account } from '@/types/accounts';
+import type { KYC } from '@/types/kyc';
 // import router from '@/router';
 import type { Transaction } from '@/types/transaction';
 import { ArrowDown, ArrowRight } from 'lucide-react';
@@ -17,6 +19,9 @@ const maskAccountNumber = (accountNumber: string) => {
 
 const IndexPage = () => {
   const [showDetails, setShowDetails] = useState<Account | null>();
+  const { data: kycData } = useGetClientKYC();
+  const Kyc: KYC = kycData?.data;
+  console.log(Kyc);
 
   const navigate = useNavigate();
   const { data } = useTransactions({
@@ -31,20 +36,22 @@ const IndexPage = () => {
     <div className="px-padding pt-2">
       <div>
         {/* KYC AUDIT */}
-        <div className="p-5 mt-4 flex items-center justify-between bg-[#fce2e2] rounded-lg">
-          <div className="gap-5 text-[#f36b6e] ">
-            <h3 className="text-xl font-bold">KYC Audit Failed</h3>
-            <p>To switch wallet accounts, please click the button !</p>
+        {Kyc?.status !== 'SUCCESS' && (
+          <div className="p-5 mt-4 flex items-center justify-between bg-[#fce2e2] rounded-lg">
+            <div className="gap-5 text-[#f36b6e] ">
+              <h3 className="text-xl font-bold">KYC Audit {Kyc?.status}</h3>
+              <p>{Kyc?.reason}</p>
+            </div>
+            <button
+              onClick={() => {
+                navigate('/member/client/documentForm');
+              }}
+              className="bg-sidebar-bg cursor-pointer text-button-text px-4 py-2 rounded-md"
+            >
+              Update Account
+            </button>
           </div>
-          <button
-            onClick={() => {
-              navigate('/member/client/documentForm');
-            }}
-            className="bg-sidebar-bg cursor-pointer text-button-text px-4 py-2 rounded-md"
-          >
-            Update Account
-          </button>
-        </div>
+        )}
 
         {/* <div className="p-5 mt-4 flex items-center justify-between bg-[#d6d6da] rounded-lg">
           <div className="flex gap-5 text-[#6b6868]">
@@ -61,12 +68,12 @@ const IndexPage = () => {
             <div className="bg-[#dbeafd] text-[#2463eb] w-fit p-1 px-2 text-2xl rounded-md">
               $
             </div>
-            <p>{maskAccountNumber(account.accountNumber as string)}</p>
+            <p>{maskAccountNumber(account?.accountNumber as string)}</p>
             <p>USD Account</p>
           </div>
           <div className="flex">
             <h1 className="text-3xl font-bold text-black my-4">
-              ${account.balance}
+              ${account?.balance}
             </h1>
             <button
               onClick={() => {

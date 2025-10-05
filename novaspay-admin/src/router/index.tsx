@@ -11,6 +11,7 @@ import { vaRoutes } from './routes/va';
 import { onBoardingRoutes } from './routes/onBoarding';
 import { userRoute } from './routes/users';
 import { applicationsRouter } from './routes/applications';
+import { currencyRoutes } from './routes/currency';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       transactionRoute,
       accountRoutes,
       kycRoutes,
+      currencyRoutes,
       clientRoute,
       vaRoutes,
       onBoardingRoutes,

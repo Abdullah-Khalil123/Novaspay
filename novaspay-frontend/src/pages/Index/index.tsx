@@ -54,12 +54,15 @@ const IndexPage = () => {
             <Info />
             <p>To switch wallet accounts, please click the button !</p>
           </div>
-          <button className="bg-sidebar-bg text-button-text px-4 py-2 rounded-md">
+          <a
+            href={import.meta.env.VITE_CLIENT_URL + '/user/login'}
+            className="bg-sidebar-bg cursor-pointer text-button-text px-4 py-2 rounded-md"
+          >
             Switch wallet user function
-          </button>
+          </a>
         </div>
 
-        <div className="bg-white p-6 w-[356px] mt-8 rounded-lg text-[#6B7280]">
+        {/* <div className="bg-white p-6 w-[356px] mt-8 rounded-lg text-[#6B7280]">
           <div className="flex items-center justify-between">
             <div className="bg-[#dbeafd] text-[#2463eb] w-fit p-1 px-2 text-2xl rounded-md">
               $
@@ -68,7 +71,7 @@ const IndexPage = () => {
           </div>
 
           <button className="text-center w-full text-red-500">Views</button>
-        </div>
+        </div> */}
 
         <div className="bg-secondary mt-8 p-3.5 rounded-md border-gray-500 border-[1px]">
           <h2 className="text-3xl font-bold mb-4">Recent Transactions</h2>

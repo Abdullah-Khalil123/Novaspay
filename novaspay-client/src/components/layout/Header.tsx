@@ -15,6 +15,7 @@ import type { RootState } from '@/store';
 import { useState, useEffect } from 'react';
 import Dropdown from '../custom/dropdown'; // ⬅️ import reusable dropdown
 import { useNavigate } from 'react-router-dom';
+import BreadCrumb from '../custom/BreadCrumb';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const Header = () => {
         >
           <Menu size={18} />
         </div>
-        Header
+        <BreadCrumb />
       </div>
 
       <div className="flex items-center gap-2 h-full">

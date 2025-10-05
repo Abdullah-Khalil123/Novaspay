@@ -60,6 +60,10 @@ const sidebarData = [
     label: 'Application',
     items: [{ title: 'App List', icon: Users, url: 'applications' }],
   },
+  {
+    label: 'Currency',
+    items: [{ title: 'Currency List', icon: Users, url: 'currencies' }],
+  },
 ];
 
 export function AppSidebar() {

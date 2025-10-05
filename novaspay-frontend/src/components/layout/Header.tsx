@@ -3,9 +3,9 @@ import { logout } from '@/store/slices/auth';
 import {
   Menu,
   Fullscreen,
-  Languages,
-  SlidersHorizontalIcon,
-  Bell,
+  // Languages,
+  // SlidersHorizontalIcon,
+  // Bell,
   LogOut,
   User,
 } from 'lucide-react';
@@ -15,6 +15,7 @@ import type { RootState } from '@/store';
 import { useState, useEffect } from 'react';
 import Dropdown from '../custom/dropdown'; // ⬅️ import reusable dropdown
 import { useNavigate } from 'react-router-dom';
+import Breadcrumbs from '../custom/Breadcrumbs';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const Header = () => {
         >
           <Menu size={18} />
         </div>
-        Header
+        <Breadcrumbs />
       </div>
 
       <div className="flex items-center gap-2 h-full">
@@ -60,7 +61,7 @@ const Header = () => {
         >
           <Fullscreen size={18} />
         </div>
-        <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
+        {/* <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
           <SlidersHorizontalIcon size={18} />
         </div>
         <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
@@ -68,7 +69,7 @@ const Header = () => {
         </div>
         <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
           <Bell size={18} />
-        </div>
+        </div> */}
 
         {/* 🔹 User Dropdown */}
         <Dropdown
@@ -89,7 +90,7 @@ const Header = () => {
         >
           <div className="flex flex-col">
             <button
-              onClick={() => navigate('/admin/profile')}
+              onClick={() => navigate('/user/profile')}
               className="flex gap-2 px-4 cursor-pointer py-2 text-left hover:bg-header-hover"
             >
               <User />
@@ -98,7 +99,7 @@ const Header = () => {
             <button
               onClick={() => {
                 dispatch(logout());
-                navigate('/admin/login');
+                navigate('/user/login');
               }}
               className="flex gap-2 px-4 cursor-pointer py-2 text-left hover:bg-header-hover"
             >

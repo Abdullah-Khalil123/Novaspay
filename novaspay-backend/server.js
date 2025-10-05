@@ -15,6 +15,7 @@ import onboardingRoutes from './src/routes/onboardingRoute.js';
 import vaRoutes from './src/routes/vaController.js';
 import clientRoute from './src/routes/clientRoute.js';
 import applicationRoute from './src/routes/application.js';
+import currencyRoute from './src/routes/currency.js';
 import { protect } from './src/middleware/auth.js';
 
 // Client Routes
@@ -22,6 +23,7 @@ import clientTransactionRoutes from './src/routes/client/transactions.js';
 import clientAccountRoutes from './src/routes/client/acounts.js';
 import clientApplicationRoutes from './src/routes/client/applications.js';
 import clientKycRoutes from './src/routes/client/kyc.js';
+import clientCurrencyRoute from './src/routes/client/currency.js';
 
 // Initialize express app
 const app = express();
@@ -50,6 +52,7 @@ app.use('/api/transaction', clientTransactionRoutes);
 app.use('/api/account', clientAccountRoutes);
 app.use('/api/application', clientApplicationRoutes);
 app.use('/api/kyc', clientKycRoutes);
+app.use('/api/currency', clientCurrencyRoute);
 
 // Admin Routes (Protected)
 app.use(protect);
@@ -60,6 +63,7 @@ app.use('/admin/onboarding', onboardingRoutes);
 app.use('/admin/va', vaRoutes);
 app.use('/admin/client', clientRoute);
 app.use('/admin/application', applicationRoute);
+app.use('/admin/currency', currencyRoute);
 
 connectDB().then(() => {
   app.listen(5000, () => {

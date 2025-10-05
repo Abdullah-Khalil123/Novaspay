@@ -191,6 +191,26 @@ model Applications {
   updatedAt DateTime @updatedAt
 }
 
+model Currency {
+  id           Int       @id @default(autoincrement())
+  symbol       String // e.g., "EUR"
+  name         String // e.g., "Euro"
+  amount       Float  // e.g., 1.0
+  lastUpdated  DateTime  @map("last_updated")
+  quotes       Quote[]
+}
+
+model Quote {
+  id           Int       @id @default(autoincrement())
+  baseSymbol   String   // e.g., "EUR"
+  targetSymbol String   // e.g., "USDT"
+  price        Float    // 1 EUR to USDT rate
+  lastUpdated  DateTime  @map("last_updated")
+
+  currency     Currency  @relation(fields: [currencyId], references: [id])
+  currencyId   Int
+}
+
 enum Status {
   SUCCESS
   PENDING
