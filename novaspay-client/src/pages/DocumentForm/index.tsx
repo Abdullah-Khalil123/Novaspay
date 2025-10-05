@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { documentFormSchema } from '@/types/documentForm';
 
 const DocumentForm = () => {
-  const { setValue, register, getValues } = useForm({
+  const { setValue, register } = useForm({
     resolver: zodResolver(documentFormSchema),
   });
   const [step, setStep] = useState(1);
