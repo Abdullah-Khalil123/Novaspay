@@ -11,6 +11,7 @@ import CryptoBuySell from '@/pages/BuySell';
 import UserProfile from '@/pages/Profile';
 import SignUpPage from '@/pages/SignUp';
 import DocumentForm from '@/pages/DocumentForm';
+import DetailOpenDeposit from '@/pages/DetailOpenDeposit';
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
       {
         path: 'crypto/cryptoBuySell',
         element: <CryptoBuySell />,
+      },
+      {
+        path: 'history/DetailOpenDeposit',
+        element: <DetailOpenDeposit />,
       },
     ],
   },

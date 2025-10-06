@@ -36,21 +36,65 @@ const getAllTransactions = async (req, res) => {
 
 const getTransactionById = async (req, res) => {
   const { id } = req.params;
+
   try {
     const transaction = await prisma.transaction.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(id, 10) },
+      include: {
+        client: {
+          include: {
+            account: true,
+            kyc: true,
+          },
+        },
+      },
     });
+
     if (!transaction) {
       return res.status(404).json({ message: 'Transaction not found' });
     }
+
+    // structure response to match your frontend needs
+    const response = {
+      id: transaction.id,
+      orderId: transaction.orderId || '--',
+      status: transaction.status || 'PENDING',
+      amount: transaction.amount || 0,
+      createdAt: transaction.createdAt,
+      updatedAt: transaction.updatedAt,
+      orderType: transaction.orderType || '--',
+      reason: transaction.reason || '--',
+      receiverName: transaction.receiverName || '--',
+      receiverNumber: transaction.receiverNumber || '--',
+      accountName: transaction.accountName || '--',
+      paymentAccount: transaction.paymentAccount || '--',
+
+      // extended data
+      fromAccountId: transaction.paymentAccount || '--',
+      customerName: transaction.client?.name || '--',
+      customerAddress:
+        transaction.client?.kyc?.companyAddress ||
+        transaction.client?.kyc?.city ||
+        '--',
+      iban: transaction.client?.account?.ibanNumber || '--',
+      bankName: transaction.client?.account?.bankingName || '--',
+      bankCurrency: transaction.client?.account?.currency || '--',
+      city: transaction.client?.account?.city || '--',
+      street: transaction.client?.account?.bankingAddress || '--',
+      postalCode: transaction.client?.kyc?.postalCode || '--',
+      orderingCustomer: transaction.client?.email || '--',
+    };
+
     return res.status(200).json({
       message: 'Transaction retrieved successfully',
-      data: transaction,
+      data: response,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: 'Server error', error: error.message });
+    console.error(error);
+    return res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
   }
 };
 

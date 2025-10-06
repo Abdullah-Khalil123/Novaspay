@@ -5,8 +5,10 @@ import type { Transaction } from '@/types/transaction';
 import { useState, useEffect } from 'react';
 import { usePagination } from '@/hooks/usePagination';
 import Draggable from '@/components/custom/dragable';
+import { useNavigate } from 'react-router-dom';
 
 const HistoryPage = () => {
+  const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState<Transaction | null>(null);
   const [filters, setFilters] = useState({
     orderId: '',
@@ -116,7 +118,15 @@ const HistoryPage = () => {
                     <td className="px-2 py-2">{tx.createdAt}</td>
                     <td className="px-2 py-2">{tx.updatedAt}</td>
                     <td className="w-[40px] sticky right-0 bg-background text-text-primary text-center space-y-2">
-                      <p className="hover:text-[#60831a] cursor-pointer">
+                      <p
+                        onClick={() =>
+                          navigate(
+                            '/banking/history/DetailOpenDeposit' +
+                              `?id=${tx.id}`
+                          )
+                        }
+                        className="hover:text-[#60831a] cursor-pointer"
+                      >
                         Credential
                       </p>
                       <p

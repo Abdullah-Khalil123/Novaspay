@@ -10,6 +10,7 @@ import ClientPage from '../pages/Client';
 import UserPage from '../pages/Users';
 import LoginPage from '@/pages/Login';
 import UserProfile from '@/pages/Profile';
+import DetailOpenDeposit from '@/pages/DetailOpenDeposit';
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: 'others/application',
         element: <VAPage />,
+      },
+      {
+        path: 'history/DetailOpenDeposit',
+        element: <DetailOpenDeposit />,
       },
     ],
   },
