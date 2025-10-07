@@ -30,6 +30,7 @@ const getAllAccounts = async (req, res) => {
     accountName,
     currency,
     status,
+    userId,
   } = req.query;
   try {
     const accounts = await prisma.account.findMany({
@@ -42,6 +43,7 @@ const getAllAccounts = async (req, res) => {
         accountName: accountName ? { contains: accountName } : undefined,
         currency: currency ? { contains: currency } : undefined,
         status: status ? { equals: status } : undefined,
+        clientId: userId ? { equals: parseInt(userId) } : undefined,
       },
     });
     return res.status(200).json({

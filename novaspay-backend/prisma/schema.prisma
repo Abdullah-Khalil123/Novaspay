@@ -31,7 +31,7 @@ model Transaction {
   amount          Float?
   fee             Float?
   status          Status @default(PENDING)
-  orderType       String?
+  orderType       OrderType?
   reason          String?
 
   clientId        Int?
@@ -223,4 +223,12 @@ enum AccountStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+}
+enum OrderType {
+  TRANSFER
+  WITHDRAWAL
+  DEPOSIT
+  PAYMENT
+  EXCHANGE
+  NONE
 }

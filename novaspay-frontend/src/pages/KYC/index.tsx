@@ -4,10 +4,12 @@ import { useKYCs } from '@/hooks/useKYC';
 import type { KYC } from '@/types/kyc';
 import { useState, useEffect } from 'react';
 import { usePagination } from '@/hooks/usePagination';
+import { useSearchParams } from 'react-router-dom';
 
 const KYCPage = () => {
+  const params = useSearchParams();
+  const userId = params[0].get('userId') || '';
   const [filters, setFilters] = useState({ email: '', name: '', status: '' });
-
   const {
     currentPage,
     pageSize,
@@ -24,6 +26,7 @@ const KYCPage = () => {
   // hook with pagination + filters
   const { data, isLoading, refetch } = useKYCs({
     ...filters,
+    userId,
     page: currentPage,
     limit: pageSize,
   });

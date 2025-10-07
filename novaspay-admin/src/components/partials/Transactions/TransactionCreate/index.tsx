@@ -170,9 +170,11 @@ const TransactionCreate = ({
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Transfer">Transfer</SelectItem>
-                        <SelectItem value="Withdrawal">Withdrawal</SelectItem>
-                        <SelectItem value="Deposit">Deposit</SelectItem>
+                        <SelectItem value="TRANSFER">Transfer</SelectItem>
+                        <SelectItem value="WITHDRAWAL">Withdrawal</SelectItem>
+                        <SelectItem value="DEPOSIT">Deposit</SelectItem>
+                        <SelectItem value="PAYMENT">Payment</SelectItem>
+                        <SelectItem value="EXCHANGE">Exchange</SelectItem>
                         <SelectItem value="None">None</SelectItem>
                       </SelectContent>
                     </Select>

@@ -5,8 +5,11 @@ import PageFilters from '../../components/custom/pagination';
 import type { Account } from '@/types/accounts';
 import { usePagination } from '@/hooks/usePagination';
 import Draggable from '@/components/custom/dragable';
+import { useSearchParams } from 'react-router-dom';
 
 const ReceiveAccount = () => {
+  const params = useSearchParams();
+  const userId = params[0].get('userId') || '';
   const {
     currentPage,
     pageSize,
@@ -34,6 +37,7 @@ const ReceiveAccount = () => {
   const { data, isLoading, refetch } = useAccounts({
     page: currentPage,
     limit: pageSize,
+    userId,
     ...filters,
   });
 

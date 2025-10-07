@@ -23,7 +23,7 @@ const getKYCById = async (req, res) => {
 
 const getAllKYCs = async (req, res) => {
   const { limit, page } = req.query;
-  const { email, name, status } = req.query;
+  const { email, name, status, userId } = req.query;
   try {
     const kycs = await prisma.kYC.findMany({
       take: parseInt(limit) || 10,
@@ -32,6 +32,7 @@ const getAllKYCs = async (req, res) => {
         email: email ? { contains: email } : undefined,
         name: name ? { contains: name } : undefined,
         status: status ? { equals: status } : undefined,
+        clientId: userId ? { equals: parseInt(userId) } : undefined,
       },
     });
     return res.status(200).json({

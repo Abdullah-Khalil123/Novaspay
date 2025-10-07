@@ -1,4 +1,4 @@
-import { PrismaClient, Status, AccountStatus } from '@prisma/client';
+import { PrismaClient, Status, AccountStatus, OrderType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
 
@@ -22,6 +22,8 @@ async function main() {
   await prisma.invite.deleteMany();
   await prisma.client.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.quote.deleteMany();
+  await prisma.currency.deleteMany();
 
   // Seed Admin Users
   console.log('👤 Seeding users...');
@@ -114,7 +116,7 @@ async function main() {
   }
   console.log(`✅ Created ${accounts.length} accounts`);
 
-  // Seed Transactions
+  // Seed Transactions with OrderType enum
   console.log('💸 Seeding transactions...');
   const transactions = [];
   for (const client of clients) {
@@ -137,7 +139,14 @@ async function main() {
             Status.CANCELED,
             Status.IN_REVIEW,
           ]),
-          orderType: randomItem(['deposit', 'withdrawal', 'transfer']),
+          orderType: randomItem([
+            OrderType.TRANSFER,
+            OrderType.WITHDRAWAL,
+            OrderType.DEPOSIT,
+            OrderType.PAYMENT,
+            OrderType.EXCHANGE,
+            OrderType.NONE,
+          ]),
           reason: Math.random() > 0.7 ? faker.lorem.sentence() : null,
           clientId: client.id,
           createdAt: faker.date.recent({ days: 30 }),
@@ -193,11 +202,25 @@ async function main() {
       data: {
         email: faker.internet.email(),
         type: randomItem(['individual', 'business']),
-        name: faker.person.fullName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        middleName: Math.random() > 0.5 ? faker.person.middleName() : null,
         phone: faker.phone.number(),
         agentId: randomNumber(1000, 9999),
         status: randomItem(Object.values(Status)),
         reason: Math.random() > 0.6 ? faker.lorem.sentence() : null,
+        area: faker.location.state(),
+        corporateEmail: Math.random() > 0.5 ? faker.internet.email() : null,
+        dateOfBirth: faker.date.birthdate({ min: 18, max: 70, mode: 'age' }),
+        contactNumber: faker.phone.number(),
+        companyCountry: randomItem(countries),
+        companyAddress: faker.location.streetAddress(),
+        city: faker.location.city(),
+        postalCode: faker.location.zipCode(),
+        headquarters: faker.location.city(),
+        state: faker.location.state(),
+        companyCity: faker.location.city(),
+        companyStreet: faker.location.street(),
         clientId: client.id,
       },
     });
@@ -277,6 +300,46 @@ async function main() {
   );
   console.log(`✅ Created ${invites.length} invites`);
 
+  // Seed Currency and Quotes
+  console.log('💱 Seeding currencies and quotes...');
+  const currencyData = [
+    { symbol: 'USD', name: 'US Dollar' },
+    { symbol: 'EUR', name: 'Euro' },
+    { symbol: 'GBP', name: 'British Pound' },
+    { symbol: 'CAD', name: 'Canadian Dollar' },
+    { symbol: 'AUD', name: 'Australian Dollar' },
+  ];
+
+  const createdCurrencies = [];
+  for (const curr of currencyData) {
+    const currency = await prisma.currency.create({
+      data: {
+        symbol: curr.symbol,
+        name: curr.name,
+        amount: 1.0,
+        lastUpdated: new Date(),
+      },
+    });
+    createdCurrencies.push(currency);
+
+    // Create quotes for each currency
+    const cryptoTargets = ['USDT', 'BTC', 'ETH'];
+    for (const target of cryptoTargets) {
+      await prisma.quote.create({
+        data: {
+          baseSymbol: curr.symbol,
+          targetSymbol: target,
+          price: parseFloat(
+            faker.finance.amount({ min: 0.5, max: 50000, dec: 4 })
+          ),
+          lastUpdated: new Date(),
+          currencyId: currency.id,
+        },
+      });
+    }
+  }
+  console.log(`✅ Created ${createdCurrencies.length} currencies with quotes`);
+
   console.log('\n🎉 Seeding completed successfully!');
   console.table({
     Users: users.length,
@@ -288,6 +351,7 @@ async function main() {
     OnBoardings: onboardings.length,
     VAs: vas.length,
     Invites: invites.length,
+    Currencies: createdCurrencies.length,
   });
   console.log('\n🔐 Test credentials: admin@example.com / password123');
 }
