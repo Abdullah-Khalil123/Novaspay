@@ -144,7 +144,23 @@ const Table = ({ data }: { data: Transaction[] }) => {
             <td>{item.updatedAt}</td>
             <td>{item.amount}</td>
             <td>{item.fee}</td>
-            <td>{item.status}</td>
+            <td>
+              <div className="text-sm flex justify-center">
+                <p
+                  className={`w-fit px-2 rounded-sm ${
+                    item.status === 'SUCCESS'
+                      ? 'bg-[#69c242] '
+                      : item.status === 'PENDING'
+                      ? 'bg-yellow-700 '
+                      : item.status === 'FAILED'
+                      ? 'bg-red-700 '
+                      : ''
+                  }`}
+                >
+                  {item.status}
+                </p>
+              </div>
+            </td>
           </tr>
         ))}
       </tbody>
