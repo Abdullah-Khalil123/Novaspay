@@ -21,11 +21,19 @@ const ApplicationTable = ({
   const navigate = useNavigate();
 
   async function handleUpdateApplication(id: number, status: string) {
-    updateApplication(id, { status }).then(() => {
-      queryClient.invalidateQueries({
-        queryKey: ['applications'],
+    updateApplication(id, { status })
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['applications'],
+        });
+      })
+      .then(() => {
+        toast.success(`Application ${status.toLowerCase()} successfully!`);
+      })
+      .catch((error) => {
+        console.error('Failed to update application:', error);
+        toast.error(`Failed to update application: ${error.message}`);
       });
-    });
   }
 
   return (
@@ -86,7 +94,6 @@ const ApplicationTable = ({
                         // call your update hook here
                         console.log('Approve', app.id);
                         handleUpdateApplication(app.id as number, 'Approved');
-                        toast.success('Application Approved');
                       },
                     },
                     {
@@ -95,7 +102,6 @@ const ApplicationTable = ({
                       onClick: () => {
                         console.log('Reject', app.id);
                         handleUpdateApplication(app.id as number, 'Rejected');
-                        toast.success('Application Rejected');
                       },
                     },
                     {

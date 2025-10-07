@@ -145,16 +145,16 @@ const Table = ({ data }: { data: Transaction[] }) => {
             <td>{item.amount}</td>
             <td>{item.fee}</td>
             <td>
-              <div className="text-sm flex justify-center">
+              <div className="text-sm text-white flex justify-center">
                 <p
-                  className={`w-fit px-2 rounded-sm ${
+                  className={`w-fit min-w-26 px-2 rounded-sm ${
                     item.status === 'SUCCESS'
                       ? 'bg-[#69c242] '
                       : item.status === 'PENDING'
                       ? 'bg-yellow-700 '
                       : item.status === 'FAILED'
                       ? 'bg-red-700 '
-                      : ''
+                      : 'bg-orange-700/80'
                   }`}
                 >
                   {item.status}

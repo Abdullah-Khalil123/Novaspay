@@ -3,6 +3,9 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './src/config/db.js';
 
+// Cron jobs
+import './src/jobs/cleanupOTP.js';
+
 // Import routes
 import adminAuth from './src/routes/adminAuth.js';
 import clientAuth from './src/routes/client/clientAuthRoute.js';

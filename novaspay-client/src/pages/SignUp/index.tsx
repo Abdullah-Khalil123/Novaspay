@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form';
-import { registerUser } from '@/actions/auth'; // Assuming a new action for registration
+import { registerUser, sendVerificationOTP } from '@/actions/auth'; // Assuming a new action for registration
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store';
 import { toast } from 'sonner';
@@ -15,16 +15,19 @@ const registerSchema = z.object({
   name: z.string().min(2, 'Company name must be at least 2 characters'),
   country: z.string().nonempty('Country is required'),
   email: z.string().email('Invalid email address'),
+
   password: z
     .string()
     .min(6, 'Password must be at least 6 characters')
     .max(20, 'Password must be at most 20 characters'),
   invitationCode: z.string().min(6, 'Invitation code must be 6 characters'),
+  verificationCode: z.string().min(6, 'Verification code must be 6 characters'),
 });
 
 const EnterpriseRegisterPage = () => {
   const [searchParams] = useSearchParams();
   const invitationCode = searchParams.get('invitationCode') || '';
+  const [isOTPSent, setIsOTPSent] = useState(false);
 
   useSelector((state: RootState) => state.auth); // Still including but might not be directly relevant for a pure register page
   const navigate = useNavigate();
@@ -34,6 +37,7 @@ const EnterpriseRegisterPage = () => {
     handleSubmit,
     control,
     formState: { errors },
+    watch,
   } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -63,12 +67,25 @@ const EnterpriseRegisterPage = () => {
         navigate('/user/login');
       });
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
       toast.error(
-        'Registration failed. Please check your details and try again.'
+        error?.response?.data?.error || 'Registration failed. Please try again.'
       );
       console.error('Registration failed:', error);
+    }
+  }
+
+  const watchedEmail = watch('email');
+  async function sendOTP() {
+    setIsOTPSent(true);
+    try {
+      await sendVerificationOTP(watchedEmail);
+      toast.success('OTP sent to your email!');
+    } catch (error) {
+      setIsOTPSent(false);
+      toast.error('Failed to send OTP. Please try again.');
+      console.error('Sending OTP failed:', error);
     }
   }
 
@@ -233,24 +250,27 @@ const EnterpriseRegisterPage = () => {
               </div>
 
               {/* Verification Code */}
-              {/* <div className="flex flex-col">
+              <div className="flex flex-col">
                 <label
                   htmlFor="verificationCode"
                   className="text-sm text-text-primary mb-1"
                 >
                   <span className="text-red-500">*</span> Verification code
                 </label>
-                <div className="flex gap-2">
+                <div className="flex">
                   <input
                     {...register('verificationCode')}
                     type="text"
                     id="verificationCode"
                     placeholder="Input OTP"
-                    className="flex-grow p-2 border border-gray-600 rounded-sm bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="flex-grow p-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   <button
                     type="button"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    onClick={() => {
+                      isOTPSent ? toast('OTP already sent') : sendOTP();
+                    }}
+                    className="px-4 bg-gray-600 font-sans py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     Send OTP
                   </button>
@@ -260,7 +280,7 @@ const EnterpriseRegisterPage = () => {
                     {errors.verificationCode.message}
                   </p>
                 )}
-              </div> */}
+              </div>
 
               {/* Register Button */}
               <button

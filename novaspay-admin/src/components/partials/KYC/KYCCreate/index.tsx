@@ -25,6 +25,7 @@ import { useEffect } from 'react';
 
 import { KYCschema, type KYC } from '@/types/kyc';
 import { useCreateKYC, useKYCById, useUpdateKYC } from '@/hooks/useKYC';
+import SelectClient from '@/components/custom/SelectClient';
 
 type KYCFormValues = z.infer<typeof KYCschema>;
 
@@ -39,21 +40,14 @@ const KYCForm = ({ action = 'create' }: { action?: 'create' | 'edit' }) => {
 
   const kyc: KYC = kycData?.data;
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    // formState: { errors },
-  } = useForm<KYCFormValues>({
+  const { register, control, handleSubmit, reset } = useForm<KYCFormValues>({
     resolver: zodResolver(KYCschema),
     defaultValues: {
       email: '',
       type: '',
-      name: '',
       phone: '',
       agentId: null,
-      status: 'pending',
+      status: 'PENDING',
       reason: '',
     },
   });
@@ -88,106 +82,187 @@ const KYCForm = ({ action = 'create' }: { action?: 'create' | 'edit' }) => {
         });
       }
     } catch (error: any) {
-      toast.error(`An unexpected error occurred: ${error.message}`);
+      toast.error(`Unexpected error: ${error.message}`);
     }
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-8">
+    <div className="max-w-5xl mx-auto p-6 space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
           {action === 'edit' ? 'Edit KYC' : 'Create KYC'}
         </h1>
         <p className="text-muted-foreground mt-2">
           {action === 'edit'
-            ? 'Update the details of this KYC record.'
-            : 'Fill in the details below to create a new KYC record.'}
+            ? 'Update this KYC record.'
+            : 'Fill in all required details to create a new KYC record.'}
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        {/* Basic KYC Info */}
         <Card>
           <CardHeader>
-            <CardTitle>KYC Details</CardTitle>
-            <CardDescription>Provide KYC information</CardDescription>
+            <CardTitle>Basic Information</CardTitle>
+            <CardDescription>General KYC details</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  {...register('email')}
-                  placeholder="user@email.com"
-                />
-              </div>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label>Email</Label>
+              <Input {...register('email')} placeholder="user@email.com" />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" {...register('name')} placeholder="John Doe" />
-              </div>
+            {/* <div>
+              <Label>Full Name</Label>
+              <Input {...register('name')} placeholder="John Doe" />
+            </div> */}
 
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  {...register('phone')}
-                  placeholder="+92 300 1234567"
-                />
-              </div>
+            <div>
+              <Label>Phone</Label>
+              <Input {...register('phone')} placeholder="+92 300 1234567" />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="type">Type</Label>
-                <Input
-                  id="type"
-                  {...register('type')}
-                  placeholder="Individual / Business"
-                />
-              </div>
+            <div>
+              <Label>Type</Label>
+              <Input
+                {...register('type')}
+                placeholder="Individual / Business"
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="agentId">Agent ID</Label>
-                <Input
-                  id="agentId"
-                  type="number"
-                  {...register('agentId', { valueAsNumber: true })}
-                  placeholder="123"
-                />
-              </div>
+            <div>
+              <Label>Agent ID</Label>
+              <Input
+                type="number"
+                {...register('agentId', { valueAsNumber: true })}
+                placeholder="123"
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || 'pending'}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="SUCCESS">SUCCESS</SelectItem>
-                        <SelectItem value="PENDING">PENDING</SelectItem>
-                        <SelectItem value="FAILED">FAILED</SelectItem>
-                        <SelectItem value="CANCELED">CANCELED</SelectItem>
-                        <SelectItem value="IN_REVIEW">IN_REVIEW</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </div>
+            <div>
+              <Label>Status</Label>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value || 'PENDING'}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="SUCCESS">SUCCESS</SelectItem>
+                      <SelectItem value="PENDING">PENDING</SelectItem>
+                      <SelectItem value="FAILED">FAILED</SelectItem>
+                      <SelectItem value="CANCELED">CANCELED</SelectItem>
+                      <SelectItem value="IN_REVIEW">IN_REVIEW</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
 
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="reason">Reason</Label>
-                <Input
-                  id="reason"
-                  {...register('reason')}
-                  placeholder="Reason (optional)"
-                />
-              </div>
+            <div>
+              <Label>Client</Label>
+              <Controller
+                name="clientId"
+                control={control}
+                render={({ field }) => (
+                  <SelectClient value={field.value} onChange={field.onChange} />
+                )}
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <Label>Reason</Label>
+              <Input {...register('reason')} placeholder="Reason (optional)" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Personal Info */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+            <CardDescription>Individual details</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label>First Name</Label>
+              <Input {...register('firstName')} placeholder="John" />
+            </div>
+            <div>
+              <Label>Middle Name</Label>
+              <Input {...register('middleName')} placeholder="A." />
+            </div>
+            <div>
+              <Label>Last Name</Label>
+              <Input {...register('lastName')} placeholder="Doe" />
+            </div>
+            <div>
+              <Label>Date of Birth</Label>
+              <Input type="date" {...register('dateOfBirth')} />
+            </div>
+            <div>
+              <Label>Contact Number</Label>
+              <Input
+                {...register('contactNumber')}
+                placeholder="+92 301 9876543"
+              />
+            </div>
+            <div>
+              <Label>Address</Label>
+              <Input
+                {...register('companyAddress')}
+                placeholder="123 Street, Sector G-11"
+              />
+            </div>
+            <div>
+              <Label>City</Label>
+              <Input {...register('city')} placeholder="Islamabad" />
+            </div>
+            <div>
+              <Label>State</Label>
+              <Input {...register('state')} placeholder="Punjab" />
+            </div>
+            <div>
+              <Label>Postal Code</Label>
+              <Input {...register('postalCode')} placeholder="44000" />
+            </div>
+            <div>
+              <Label>Country</Label>
+              <Input {...register('companyCountry')} placeholder="Pakistan" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Company Info */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Information</CardTitle>
+            <CardDescription>Business-related details</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label>Company Street</Label>
+              <Input
+                {...register('companyStreet')}
+                placeholder="Street 12, I-8"
+              />
+            </div>
+            <div>
+              <Label>Company City</Label>
+              <Input {...register('companyCity')} placeholder="Islamabad" />
+            </div>
+            <div>
+              <Label>Headquarters</Label>
+              <Input {...register('headquarters')} placeholder="Main Office" />
+            </div>
+            <div>
+              <Label>Area</Label>
+              <Input {...register('area')} placeholder="Corporate Zone" />
             </div>
           </CardContent>
         </Card>

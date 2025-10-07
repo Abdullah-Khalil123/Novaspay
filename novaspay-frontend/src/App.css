@@ -35,6 +35,14 @@
   --header-hover: #2a2b2c;
 }
 
+.font-size-small {
+  font-size: 14px;
+}
+
+.font-size-large {
+  font-size: 18px;
+}
+
 /* Base styles */
 @layer base {
   html,

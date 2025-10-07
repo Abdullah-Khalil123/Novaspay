@@ -56,19 +56,19 @@ const Transactions = () => {
             options: [
               {
                 label: 'Transfer',
-                value: 'Transfer',
+                value: 'TRANSFER',
               },
               {
                 label: 'Withdrawal',
-                value: 'Withdrawal',
+                value: 'WITHDRAWAL',
               },
               {
                 label: 'Deposit',
-                value: 'Deposit',
+                value: 'DEPOSIT',
               },
               {
                 label: 'None',
-                value: 'None',
+                value: 'NONE',
               },
             ],
           },

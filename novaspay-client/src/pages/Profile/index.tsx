@@ -48,7 +48,7 @@ const UserProfile = () => {
         {/* Left Section: Personal Information */}
         <div className="w-1/3 border-r border-gray-200 p-6">
           <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
-          <div className="flex items-center mb-4">
+          <div className="flex border border-y border-x-0 py-1 items-center mb-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 text-gray-500 mr-2"

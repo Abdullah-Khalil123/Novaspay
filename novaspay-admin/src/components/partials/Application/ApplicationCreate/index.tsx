@@ -189,11 +189,10 @@ const ApplicationCreate = ({
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="SUCCESS">SUCCESS</SelectItem>
-                        <SelectItem value="PENDING">PENDING</SelectItem>
-                        <SelectItem value="FAILED">FAILED</SelectItem>
-                        <SelectItem value="CANCELED">CANCELED</SelectItem>
-                        <SelectItem value="IN_REVIEW">IN_REVIEW</SelectItem>
+                        <SelectItem value="Approved">Approved</SelectItem>
+                        <SelectItem value="Rejected">Rejected</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="InReview">In Review</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

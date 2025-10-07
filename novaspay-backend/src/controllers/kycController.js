@@ -53,10 +53,56 @@ const getAllKYCs = async (req, res) => {
 };
 
 const createKYC = async (req, res) => {
-  const { email, type, name, phone, agentId, status, reason } = req.body;
+  const {
+    email,
+    type,
+    name,
+    phone,
+    agentId,
+    status,
+    reason,
+    firstName,
+    middleName,
+    lastName,
+    dateOfBirth,
+    contactNumber,
+    address,
+    city,
+    state,
+    postalCode,
+    country,
+    companyStreet,
+    companyCity,
+    headquaters,
+    area,
+    clientId,
+  } = req.body;
   try {
     const newKYC = await prisma.kYC.create({
-      data: { email, type, name, phone, agentId, status, reason },
+      data: {
+        email,
+        type,
+        name,
+        phone,
+        agentId,
+        status,
+        reason,
+        clientId: clientId ? clientId : null,
+        firstName,
+        middleName,
+        lastName,
+        dateOfBirth: new Date(dateOfBirth),
+        contactNumber,
+        address,
+        city,
+        state,
+        postalCode,
+        country,
+        companyStreet,
+        companyCity,
+        headquaters,
+        area,
+      },
     });
     return res.status(201).json({
       message: 'KYC record created successfully',
@@ -74,25 +120,53 @@ const updateKYC = async (req, res) => {
   const { id } = req.params;
   const data = {};
 
-  ['email', 'type', 'name', 'phone', 'agentId', 'status', 'reason'].forEach(
-    (field) => {
-      if (req.body[field] !== undefined) {
+  [
+    'email',
+    'type',
+    'name',
+    'phone',
+    'agentId',
+    'status',
+    'reason',
+    'firstName',
+    'middleName',
+    'lastName',
+    'dateOfBirth',
+    'contactNumber',
+    'address',
+    'city',
+    'state',
+    'postalCode',
+    'country',
+    'companyStreet',
+    'companyCity',
+    'headquaters',
+    'area',
+    'clientId',
+  ].forEach((field) => {
+    if (req.body[field] !== undefined) {
+      if (field === 'dateOfBirth') {
+        data[field] = new Date(req.body[field]);
+      } else {
         data[field] = req.body[field];
       }
     }
-  );
+  });
 
   try {
     const kyc = await prisma.kYC.findUnique({
       where: { id: parseInt(id) },
     });
+
     if (!kyc) {
       return res.status(404).json({ message: 'KYC record not found' });
     }
+
     const updatedKYC = await prisma.kYC.update({
       where: { id: parseInt(id) },
       data,
     });
+
     return res.status(200).json({
       message: 'KYC record updated successfully',
       data: updatedKYC,

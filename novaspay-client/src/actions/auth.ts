@@ -69,4 +69,14 @@ const registerUser = async ({
   }
 };
 
-export { login, resetPassword, registerUser };
+const sendVerificationOTP = async (email: string) => {
+  try {
+    const response = await axiosInstance.post('/user/send-otp', { email });
+    return response.data;
+  } catch (error) {
+    console.error('Sending OTP failed:', error);
+    throw error;
+  }
+};
+
+export { login, resetPassword, registerUser, sendVerificationOTP };

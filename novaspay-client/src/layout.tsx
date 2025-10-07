@@ -12,8 +12,15 @@ const App = () => {
           <Header />
 
           {/* Content area */}
-          <div className="px-4 flex-1 overflow-y-auto">
-            <Outlet />
+          <div className="px-4 flex flex-col flex-1 overflow-y-auto">
+            <div className="flex-1">
+              <Outlet />
+            </div>
+
+            {/* Footer pinned to bottom */}
+            <div className="flex justify-center mt-auto py-4 text-sm text-gray-500">
+              <p>Copyright © {new Date().getFullYear()}</p>
+            </div>
           </div>
         </div>
       </main>

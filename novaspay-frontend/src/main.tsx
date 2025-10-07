@@ -7,16 +7,19 @@ import QueryProvider from './providers/react-query.tsx';
 import ReduxProvider from './providers/redux.tsx';
 import { Toaster } from 'sonner';
 import ThemeProvider from './providers/ThemeProvider.tsx';
+import FontProvider from './providers/FontProvider.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ReduxProvider>
-      <ThemeProvider>
-        <QueryProvider>
-          <RouterProvider router={router} />
-          <Toaster />
-        </QueryProvider>
-      </ThemeProvider>
+      <FontProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+          </QueryProvider>
+        </ThemeProvider>
+      </FontProvider>
     </ReduxProvider>
   </StrictMode>
 );

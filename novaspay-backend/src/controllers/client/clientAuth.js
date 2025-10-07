@@ -1,6 +1,8 @@
 import prisma from '../../../prisma/client.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import { sendEmail } from '../../utils/mailer.js';
 
 const clientLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -91,9 +93,18 @@ const clientResetPassword = async (req, res) => {
 };
 
 const clientRegister = async (req, res) => {
-  const { name, email, password, country, accountType, invitationCode } =
-    req.body;
+  const {
+    name,
+    email,
+    password,
+    country,
+    accountType,
+    invitationCode,
+    verificationCode, // OTP from frontend
+  } = req.body;
+
   try {
+    // 1️⃣ Check if client already exists
     const existingClient = await prisma.client.findUnique({
       where: { email },
     });
@@ -101,6 +112,30 @@ const clientRegister = async (req, res) => {
       return res.status(400).json({ message: 'Client already exists' });
     }
 
+    // 2️⃣ Check OTP record for this email
+    const otpRecord = await prisma.emailVerification.findUnique({
+      where: { email },
+    });
+
+    if (!otpRecord) {
+      return res.status(400).json({ message: 'No OTP found for this email' });
+    }
+
+    // 3️⃣ Validate OTP
+    if (otpRecord.otp !== verificationCode) {
+      return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    if (new Date() > otpRecord.expiresAt) {
+      return res.status(400).json({ message: 'Verification code expired' });
+    }
+
+    // 4️⃣ Delete OTP after successful verification
+    await prisma.emailVerification.delete({
+      where: { email },
+    });
+
+    // 5️⃣ Validate invitation code
     const invite = await prisma.invite.findUnique({
       where: { code: invitationCode },
     });
@@ -114,6 +149,7 @@ const clientRegister = async (req, res) => {
       data: { used: true, usedAt: new Date() },
     });
 
+    // 6️⃣ Hash password and create user
     const hashedPassword = await bcrypt.hash(password, 10);
     const newClient = await prisma.client.create({
       data: {
@@ -125,6 +161,7 @@ const clientRegister = async (req, res) => {
         type: accountType,
       },
     });
+
     return res.status(201).json({
       message: 'Client registered successfully',
       data: newClient,
@@ -136,4 +173,101 @@ const clientRegister = async (req, res) => {
     });
   }
 };
-export { clientLogin, clientResetPassword, clientRegister };
+
+const sendVerificationOTP = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+
+    // Check if already registered
+    const existingClient = await prisma.client.findUnique({ where: { email } });
+    if (existingClient) {
+      return res.status(400).json({ message: 'Email already registered' });
+    }
+
+    // Check if OTP was sent recently (within 1 minute)
+    const lastOTP = await prisma.emailVerification.findFirst({
+      where: { email },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (lastOTP && Date.now() - lastOTP.createdAt.getTime() < 60 * 1000) {
+      const secondsLeft = Math.ceil(
+        (60 * 1000 - (Date.now() - lastOTP.createdAt.getTime())) / 1000
+      );
+      return res.status(429).json({
+        message: `Please wait ${secondsLeft}s before requesting a new OTP.`,
+      });
+    }
+
+    // Generate new 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+
+    // Delete old OTPs
+    await prisma.emailVerification.deleteMany({ where: { email } });
+
+    // Save new OTP (expires in 5 mins)
+    await prisma.emailVerification.create({
+      data: {
+        email,
+        otp,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+        createdAt: new Date(), // ensure model includes this field
+      },
+    });
+
+    // Send OTP Email
+    await sendEmail(
+      email,
+      'Verify Your Email',
+      `<p>Your verification code is <b>${otp}</b>. It expires in 5 minutes.</p>`
+    );
+
+    return res.status(200).json({ message: 'OTP sent successfully' });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+};
+
+const verifyEmailOTP = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const record = await prisma.emailVerification.findUnique({
+      where: { email },
+    });
+    if (!record) {
+      return res.status(400).json({ message: 'No OTP found for this email' });
+    }
+
+    if (record.otp !== otp) {
+      return res.status(400).json({ message: 'Invalid OTP' });
+    }
+
+    if (new Date() > record.expiresAt) {
+      return res.status(400).json({ message: 'OTP expired' });
+    }
+
+    // Delete OTP after success
+    await prisma.emailVerification.delete({ where: { email } });
+
+    return res.status(200).json({ message: 'Email verified successfully' });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+};
+
+export {
+  clientLogin,
+  clientResetPassword,
+  clientRegister,
+  verifyEmailOTP,
+  sendVerificationOTP,
+};

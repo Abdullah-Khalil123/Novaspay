@@ -5,9 +5,15 @@ interface DropdownProps {
   label: string | ReactNode;
   children: ReactNode;
   className?: string;
+  showArrow?: boolean; // ⬅️ new prop to control arrow display
 }
 
-const Dropdown = ({ label, children, className }: DropdownProps) => {
+const Dropdown = ({
+  label,
+  children,
+  className,
+  showArrow = true,
+}: DropdownProps) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,20 +44,28 @@ const Dropdown = ({ label, children, className }: DropdownProps) => {
       {/* Button / Trigger */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-md shadow-sm"
+        className={
+          'flex cursor-pointer items-center gap-2 shadow-sm' +
+          (showArrow ? ' px-2 rounded-md py-2' : ' h-full')
+        }
       >
         {label}
-        <ChevronDown
-          className={`w-4 h-4 transition-transform ${
-            open ? 'rotate-180' : 'rotate-0'
-          }`}
-        />
+        {showArrow && (
+          <ChevronDown
+            className={`w-4 h-4 transition-transform ${
+              open ? 'rotate-180' : 'rotate-0'
+            }`}
+          />
+        )}
       </button>
 
       {/* Dropdown Content */}
       {open && (
         <div
-          className="absolute bg-background mt-2 w-48 rounded-md shadow-lg z-50"
+          className={
+            'absolute bg-background mt-2 rounded-md shadow-lg z-50' +
+            (showArrow ? '  w-48' : '')
+          }
           onClick={handleOptionClick} // ⬅️ close when selecting any child
         >
           {children}
