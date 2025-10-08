@@ -191,21 +191,217 @@ const UserProfile = () => {
 
             {activeTab === 'setFundPassword' && (
               <div>
-                {/* Content for Set Fund Password tab */}
-                <p className="text-gray-600">
-                  This is where you can set your fund password.
-                </p>
-                {/* Add your form or content for setting the fund password here */}
+                <div className="flex flex-col items-center justify-center px-4">
+                  <div className="max-w-[600px] w-full space-y-8">
+                    <div className="rounded-md shadow-sm -space-y-px">
+                      <div className="mb-4">
+                        <label htmlFor="email-address" className="sr-only">
+                          Email address
+                        </label>
+                        <p className="text-white text-left text-sm">
+                          Email:{' '}
+                          <span className="text-gray-400">{user?.email}</span>
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2 mb-4">
+                        <label
+                          htmlFor="verification-code"
+                          className="sr-only w-20"
+                        >
+                          Verification code
+                        </label>
+                        <span className="text-white w-32 text-sm whitespace-nowrap">
+                          Verification code
+                        </span>
+                        <div className="relative flex-grow rounded-sm overflow-hidden border border-gray-300/30">
+                          <input
+                            id="verification-code"
+                            name="verification-code"
+                            type="text"
+                            autoComplete="off"
+                            required
+                            className="appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Verification code"
+                          />
+                          <div className="absolute inset-y-0 right-0 flex items-center px-2 border-l border-gray-300/30  bg-[#262727] text-sm text-white">
+                            Send OTP
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <label htmlFor="password" className="sr-only">
+                          Password
+                        </label>
+                        <div className="min-w-32">
+                          <span className="text-red-500 text-sm">*</span>
+                          <span className="text-white text-sm whitespace-nowrap">
+                            Password
+                          </span>
+                        </div>
+                        <input
+                          id="password"
+                          name="password"
+                          type="password"
+                          autoComplete="current-password"
+                          required
+                          className="appearance-none relative block w-full px-3 py-2 border border-gray-300/30 rounded-sm placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          placeholder="password"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center space-x-4 mt-6">
+                      <button
+                        type="submit"
+                        className="group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-sm text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        className="group relative flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
             {activeTab === 'updateFundPassword' && (
               <div>
-                {/* Content for Update Fund Password tab */}
-                <p className="text-gray-600">
-                  This is where you can update your fund password.
-                </p>
-                {/* Add your form or content for updating the fund password here */}
+                <div className="flex flex-col items-center justify-center px-4">
+                  <div className="max-w-[600px] w-full space-y-8">
+                    <div className="rounded-md shadow-sm -space-y-px">
+                      <div className="mb-4">
+                        <label htmlFor="email-address" className="sr-only">
+                          Email address
+                        </label>
+                        <p className="text-white text-left text-sm">
+                          Email:{' '}
+                          <span className="text-gray-400">{user?.email}</span>
+                        </p>
+                      </div>
+
+                      {/* Verification Code */}
+                      <div className="flex items-center space-x-2 mb-4">
+                        <div className="min-w-[150px] flex items-baseline">
+                          {' '}
+                          {/* Adjusted min-w for consistent alignment */}
+                          <span className="text-red-500 text-sm mr-1">*</span>
+                          <label
+                            htmlFor="verification-code"
+                            className="text-white text-sm whitespace-nowrap"
+                          >
+                            Verification code
+                          </label>
+                        </div>
+                        <div className="border border-gray-300/30 relative flex-grow rounded-sm overflow-hidden">
+                          <input
+                            id="verification-code"
+                            name="verification-code"
+                            type="text"
+                            autoComplete="off"
+                            required
+                            className="appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Verification code"
+                          />
+                          <div className="absolute inset-y-0 right-0 flex items-center px-4 text-white bg-[#262727] border-l border-gray-300/30 text-sm">
+                            Send OTP
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Old Password */}
+                      <div className="flex items-center space-x-2 mb-4">
+                        <div className="min-w-[150px] flex items-baseline">
+                          {' '}
+                          {/* Adjusted min-w for consistent alignment */}
+                          <span className="text-red-500 text-sm mr-1">*</span>
+                          <label
+                            htmlFor="old-password"
+                            className="text-white text-sm whitespace-nowrap"
+                          >
+                            Old Password
+                          </label>
+                        </div>
+                        <input
+                          id="old-password"
+                          name="old-password"
+                          type="password"
+                          autoComplete="current-password"
+                          required
+                          className="appearance-none relative block w-full px-3 py-2 border border-gray-300/30 rounded-sm placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          placeholder="password"
+                        />
+                      </div>
+
+                      {/* New Password */}
+                      <div className="flex items-center space-x-2 mb-4">
+                        <div className="min-w-[150px] flex items-baseline">
+                          {' '}
+                          {/* Adjusted min-w for consistent alignment */}
+                          <span className="text-red-500 text-sm mr-1">*</span>
+                          <label
+                            htmlFor="new-password"
+                            className="text-white text-sm whitespace-nowrap"
+                          >
+                            New Password
+                          </label>
+                        </div>
+                        <input
+                          id="new-password"
+                          name="new-password"
+                          type="password"
+                          autoComplete="new-password"
+                          required
+                          className="appearance-none border-gray-300/30 rounded-sm relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          placeholder="New password"
+                        />
+                      </div>
+
+                      {/* Confirm Password */}
+                      <div className="flex items-center space-x-2">
+                        <div className="min-w-[150px] flex items-baseline">
+                          {' '}
+                          {/* Adjusted min-w for consistent alignment */}
+                          <span className="text-red-500 text-sm mr-1">*</span>
+                          <label
+                            htmlFor="confirm-password"
+                            className="text-white text-sm whitespace-nowrap"
+                          >
+                            Confirm Password
+                          </label>
+                        </div>
+                        <input
+                          id="confirm-password"
+                          name="confirm-password"
+                          type="password"
+                          autoComplete="new-password"
+                          required
+                          className="appearance-none border-gray-300/30 rounded-sm relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          placeholder="Confirm password"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center space-x-4 mt-6">
+                      <button
+                        type="submit"
+                        className="group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-sm text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        className="group relative flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
