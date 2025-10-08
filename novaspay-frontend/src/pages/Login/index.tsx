@@ -6,7 +6,7 @@ import { login } from '@/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@/store';
 import { setCredentials } from '@/store/slices/auth';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Switch from '@/components/custom/toggleTheme';

@@ -154,7 +154,7 @@ const Header = () => {
             <button
               onClick={() => {
                 dispatch(logout());
-                navigate('/user/login');
+                navigate('/admin/login');
               }}
               className="flex gap-2 px-4 cursor-pointer py-2 text-left hover:bg-header-hover"
             >

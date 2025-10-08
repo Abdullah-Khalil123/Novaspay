@@ -2,7 +2,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { registerUser, sendVerificationOTP } from '@/actions/auth'; // Assuming a new action for registration
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import Select from '@/components/custom/SelectG';

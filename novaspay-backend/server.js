@@ -34,9 +34,9 @@ const app = express();
 app.use(
   cors({
     origin: [
-      'http://localhost:4000',
-      'http://localhost:3157',
-      'http://localhost:5173',
+      process.env.SUPER_ADMIN_URL,
+      process.env.CLIENT_URL,
+      process.env.ADMIN_URL,
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

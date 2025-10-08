@@ -3,7 +3,7 @@ import type { RootState } from '@/store';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState('resetPassword'); // 'resetPassword', 'setFundPassword', 'updateFundPassword'
@@ -43,12 +43,14 @@ const UserProfile = () => {
       });
   }
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="bg-secondary shadow-lg rounded-lg flex w-full max-w-5xl">
+    <div className="bg-background flex items-center justify-center p-4">
+      <div className="shadow-lg rounded-lg flex w-full gap-2">
         {/* Left Section: Personal Information */}
-        <div className="w-1/3 border-r border-gray-200 p-6">
-          <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
-          <div className="flex border border-y border-x-0 py-1 items-center mb-4">
+        <div className="w-1/3 bg-secondary border-gray-200 p-6">
+          <h2 className="border-b pb-2 border-gray-400/50 mb-6 text-center">
+            Personal Information
+          </h2>
+          <div className="flex border-y border-x-0 py-1 items-center mb-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 text-gray-500 mr-2"
@@ -70,8 +72,10 @@ const UserProfile = () => {
         </div>
 
         {/* Right Section: Basic Information with Tabs */}
-        <div className="w-2/3 p-6">
-          <h2 className="text-xl font-semibold mb-6">Basic Information</h2>
+        <div className="bg-secondary w-2/3 p-6">
+          <h2 className="text-center border-b border-gray-400/50 pb-2 mb-6">
+            Basic Information
+          </h2>
 
           {/* Tabs Menu */}
           <div className="flex border-b border-gray-200 mb-6">
@@ -111,11 +115,11 @@ const UserProfile = () => {
           <div>
             <form action="" onSubmit={resetHandleSubmit(onResetSubmit)}>
               {activeTab === 'resetPassword' && (
-                <div className="space-y-4">
-                  <div className="flex flex-col">
+                <div className="space-y-4 flex flex-col">
+                  <div className="flex flex-row items-center gap-2">
                     <label
                       htmlFor="oldPassword"
-                      className="text-sm font-medium mb-1"
+                      className="text-sm font-medium mb-1 w-30"
                     >
                       <span className="text-red-500">*</span> Old Password
                     </label>
@@ -124,7 +128,7 @@ const UserProfile = () => {
                         type="password"
                         id="oldPassword"
                         {...resetRegister('oldPassword')}
-                        className="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-sidebar-bg"
+                        className="p-2 border border-gray-300 rounded-md w-60 focus:outline-none focus:ring-2 focus:ring-sidebar-bg"
                       />
                     </div>
                     {resetErrors.oldPassword && (
@@ -134,10 +138,10 @@ const UserProfile = () => {
                     )}
                   </div>
 
-                  <div className="flex flex-col">
+                  <div className="flex flex-row items-center gap-2">
                     <label
                       htmlFor="newPassword"
-                      className="text-sm font-medium mb-1"
+                      className="text-sm font-medium mb-1 w-30"
                     >
                       <span className="text-red-500">*</span> New Password
                     </label>
@@ -146,15 +150,15 @@ const UserProfile = () => {
                         type="password"
                         id="newPassword"
                         {...resetRegister('newPassword')}
-                        className="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-sidebar-bg"
+                        className="p-2 border border-gray-300 rounded-md w-60 focus:outline-none focus:ring-2 focus:ring-sidebar-bg"
                       />
                     </div>
                   </div>
 
-                  <div className="flex flex-col">
+                  <div className="flex flex-row items-center gap-2">
                     <label
                       htmlFor="confirmPassword"
-                      className="text-sm font-medium mb-1"
+                      className="text-sm font-medium mb-1 w-30"
                     >
                       <span className="text-red-500">*</span> Confirm Password
                     </label>
@@ -163,7 +167,7 @@ const UserProfile = () => {
                         type="password"
                         id="confirmPassword"
                         {...resetRegister('confirmPassword')}
-                        className="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-sidebar-bg"
+                        className="p-2 border border-gray-300 rounded-md w-60 focus:outline-none focus:ring-2 focus:ring-sidebar-bg"
                       />
                     </div>
                     {resetErrors.confirmPassword && (
@@ -173,11 +177,11 @@ const UserProfile = () => {
                     )}
                   </div>
 
-                  <div className="flex space-x-4 mt-6">
-                    <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-sidebar-bg focus:ring-offset-2">
+                  <div className="flex space-x-4 mt-2 ml-32">
+                    <button className="px-6 py-2 bg-[#293a05] text-white rounded-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-sidebar-bg focus:ring-offset-2">
                       Save
                     </button>
-                    <button className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2">
+                    <button className="px-6 py-2 bg-[#b05153] text-white rounded-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2">
                       Cancel
                     </button>
                   </div>

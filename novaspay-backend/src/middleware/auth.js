@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import prisma from '../../prisma/client.js';
 
 export const protect = async (req, res, next) => {
   let token = req.headers.authorization?.split(' ')[1] || req.cookies.token;
@@ -13,6 +14,7 @@ export const protect = async (req, res, next) => {
   } else {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
       req.user = {
         id: decoded.id,
         name: decoded.name,

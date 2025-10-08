@@ -10,7 +10,7 @@ import {
 } from '@/types/documentForm'; // Ensure DocumentFormData is exported
 import { useCreateClientKYC, useGetClientKYC } from '@/hooks/useKYC';
 import type { KYC } from '@/types/kyc';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 
 const DocumentForm = () => {
   const { data } = useGetClientKYC();

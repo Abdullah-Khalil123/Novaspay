@@ -5,7 +5,7 @@ import Draggable from '@/components/custom/dragable';
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { createInviteLink } from '@/actions/client';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 
 const IndexPage = () => {
   const [inviteCode, setInviteCode] = useState<string | null>(null);

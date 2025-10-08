@@ -293,7 +293,7 @@ const SideNav = () => {
     <div
       className={
         `text-[#bfcbd9] h-svh overflow-y-scroll custom-scrollbar bg-sidebar-bg ` +
-        (collapsed ? 'max-w-[60px]' : 'max-w-[200px]')
+        (collapsed ? 'max-w-[60px]' : 'min-w-[200px]')
       }
     >
       <div className="bg-white overflow-x-hidden h-[50px] flex items-center px-4">
