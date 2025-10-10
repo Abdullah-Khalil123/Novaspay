@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import House from '@/assets/home';
 import Bank from '@/assets/virtualBank';
@@ -11,6 +11,7 @@ import History from '@/assets/history';
 import Va from '@/assets/va';
 
 import type { RootState } from '@/store';
+import { setSidebar } from '@/store/slices/sideNav';
 
 export type NavItem = {
   name: string;
@@ -142,7 +143,7 @@ const NavItemComp = ({
         <div
           className={`
             absolute w-[200px] z-50
-            bg-sidebar-bg border border-gray-700 rounded shadow-lg
+            bg-sidebar-bg border border-border rounded shadow-lg
             ${
               level === 0
                 ? 'left-[60px] ml-3 -translate-y-14'
@@ -170,7 +171,21 @@ const NavItemComp = ({
 
 const SideNav = () => {
   const collapsed = useSelector((state: RootState) => state.nav.isCollapsed);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        dispatch(setSidebar(true));
+      } else {
+        dispatch(setSidebar(false));
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [dispatch]);
   // const navItems: NavItem[] = [
   //   { name: 'Home', icon: <House />, link: '/index' },
   //   {

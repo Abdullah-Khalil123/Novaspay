@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import KYCFilter from './KYCFilter';
 import PageFilters from '../../components/custom/pagination';
 import { useKYCs } from '@/hooks/useKYC';
@@ -7,9 +8,11 @@ import { usePagination } from '@/hooks/usePagination';
 import { useSearchParams } from 'react-router-dom';
 
 const KYCPage = () => {
+  const { t } = useTranslation();
   const params = useSearchParams();
   const userId = params[0].get('userId') || '';
   const [filters, setFilters] = useState({ email: '', name: '', status: '' });
+
   const {
     currentPage,
     pageSize,
@@ -23,7 +26,6 @@ const KYCPage = () => {
     initialPageSize: 10,
   });
 
-  // hook with pagination + filters
   const { data, isLoading, refetch } = useKYCs({
     ...filters,
     userId,
@@ -49,15 +51,15 @@ const KYCPage = () => {
             <thead className="text-text-primary bg-background">
               <tr>
                 {[
-                  'Email',
-                  'Type',
-                  'Name',
-                  'Phone',
-                  'AgentId',
-                  'Status',
-                  'Creation Date',
-                  'Reason',
-                  'Latest Update',
+                  t('Email'),
+                  t('Type'),
+                  t('Name'),
+                  t('Phone'),
+                  t('Agent ID'),
+                  t('Status'),
+                  t('Creation Date'),
+                  t('Reason'),
+                  t('Latest Update'),
                 ].map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
                     {header}
@@ -71,13 +73,13 @@ const KYCPage = () => {
               {isLoading ? (
                 <tr>
                   <td colSpan={10} className="py-10">
-                    Loading...
+                    {t('Loading...')}
                   </td>
                 </tr>
               ) : kycData.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="py-10">
-                    No KYC records found.
+                    {t('No KYC records found.')}
                   </td>
                 </tr>
               ) : (
@@ -123,7 +125,7 @@ const KYCPage = () => {
                       }`}
                     >
                       <p className="hover:text-[#60831a] text-sidebar-child cursor-pointer">
-                        Update
+                        {t('Update')}
                       </p>
                     </td>
                   </tr>

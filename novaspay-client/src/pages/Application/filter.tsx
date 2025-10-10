@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/custom/Button';
 import Input from '../../components/custom/Input';
 import Select from '../../components/custom/SelectG';
@@ -14,10 +15,12 @@ const AccountsFilters = ({
   setFilters,
   refetch,
 }: AccountsFiltersProps) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border">
+    <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border-color">
       <Input
-        label="Application No"
+        label={t('Application No')}
         value={filters.applicationNo}
         onChange={(e) =>
           setFilters((prev: any) => ({
@@ -26,28 +29,31 @@ const AccountsFilters = ({
           }))
         }
       />
+
       <Select
-        label="Status"
+        label={t('Status')}
         options={[
-          'Pending approval',
-          'Approved',
-          'Transaction successful',
-          'Reject',
-          'Cancel transaction',
-          'Transaction failed',
+          t('Pending approval'),
+          t('Approved'),
+          t('Transaction successful'),
+          t('Reject'),
+          t('Cancel transaction'),
+          t('Transaction failed'),
         ]}
         value={filters.status}
         onChange={(e) => setFilters((prev: any) => ({ ...prev, status: e }))}
       />
+
       <div className="flex space-x-4">
         <Button
           onClick={() => refetch()}
           children={
             <p className="flex items-center gap-1">
-              <Search size={16} /> Search
+              <Search size={16} /> {t('Search')}
             </p>
           }
         />
+
         <Button
           onClick={() => {
             setFilters({
@@ -62,7 +68,7 @@ const AccountsFilters = ({
           }}
           children={
             <p className="flex items-center gap-1">
-              <RotateCcwIcon size={16} /> Reset
+              <RotateCcwIcon size={16} /> {t('Reset')}
             </p>
           }
         />

@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSidebar } from '@/store/slices/sideNav';
 
 import House from '@/assets/home';
 import Bank from '@/assets/virtualBank';
@@ -176,6 +177,21 @@ const NavItemComp = ({
 
 const SideNav = () => {
   const collapsed = useSelector((state: RootState) => state.nav.isCollapsed);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        dispatch(setSidebar(true));
+      } else {
+        dispatch(setSidebar(false));
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [dispatch]);
 
   const navItems: NavItem[] = [
     { name: 'Home', icon: <House />, link: '/index' },
@@ -244,7 +260,7 @@ const SideNav = () => {
     <div
       className={
         `text-[#bfcbd9] h-svh overflow-y-scroll custom-scrollbar bg-sidebar-bg ` +
-        (collapsed ? 'max-w-[60px]' : 'max-w-[200px]')
+        (collapsed ? 'max-w-[60px] min-w-[60px]' : 'max-w-[200px]')
       }
     >
       <div className="bg-white overflow-x-hidden h-[50px] flex items-center px-4">

@@ -15,7 +15,7 @@ const Pagination = ({
       <button
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
-        className="px-2 h-full border border-border rounded disabled:opacity-50"
+        className="px-2 h-full border border-border-color rounded disabled:opacity-50"
       >
         <ChevronLeft size={16} />
       </button>
@@ -25,7 +25,7 @@ const Pagination = ({
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`px-3 py-1 border border-border rounded ${
+          className={`px-3 py-1 border border-border-color rounded ${
             page === currentPage ? 'bg-sidebar-bg text-white' : ''
           }`}
         >
@@ -37,7 +37,7 @@ const Pagination = ({
       <button
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
-        className="px-2 h-full border border-border rounded disabled:opacity-50"
+        className="px-2 h-full border border-border-color rounded disabled:opacity-50"
       >
         <ChevronRight size={16} />
       </button>

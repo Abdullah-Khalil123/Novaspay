@@ -13,7 +13,7 @@ const Button = ({
     <button
       type={type}
       className={
-        'flex justify-center border border-border h-8 px-4 rounded-sm items-center cursor-pointer hover:bg-white hover:text-black transition ' +
+        'flex justify-center border border-border-color h-8 px-4 rounded-sm items-center cursor-pointer hover:bg-white hover:text-black transition ' +
         (className ? ` ${className}` : '')
       }
       onClick={onClick}

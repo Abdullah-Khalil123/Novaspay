@@ -16,6 +16,9 @@ export const documentFormSchema = z.object({
   state: z.string().min(1, 'State is required'),
   companyCity: z.string().min(1, 'Company city is required'),
   companyStreet: z.string().min(1, 'Company street is required'),
+
+  backFacingImage: z.any().optional(),
+  frontFacingImage: z.any().optional(),
 });
 
 export type DocumentFormData = z.infer<typeof documentFormSchema>;

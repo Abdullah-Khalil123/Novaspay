@@ -7,8 +7,10 @@ import { useState, useEffect } from 'react';
 import { usePagination } from '@/hooks/usePagination';
 import { useNavigate } from 'react-router-dom';
 import Draggable from '@/components/custom/dragable';
+import { useTranslation } from 'react-i18next';
 
 const ClientPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [showDialog, setShowDialog] = useState<Client>();
 
@@ -58,16 +60,16 @@ const ClientPage = () => {
                   <Checkbox size={15} />
                 </th>
                 {[
-                  'Client Name',
-                  'Type',
-                  'Country',
-                  'Email',
-                  'Agent Name',
-                  'Bank Account Number',
-                  'Invitation Code',
-                  'Account Info',
-                  'Creation Date',
-                  'Description',
+                  t('Client Name'),
+                  t('Type'),
+                  t('Country'),
+                  t('Email'),
+                  t('Agent Name'),
+                  t('Bank Account Number'),
+                  t('Invitation Code'),
+                  t('Account Info'),
+                  t('Creation Date'),
+                  t('Description'),
                 ].map((header, i) => (
                   <th
                     key={i}
@@ -77,7 +79,7 @@ const ClientPage = () => {
                   </th>
                 ))}
                 <th className="w-[230px] sticky right-0 bg-background z-10 border border-border">
-                  Operate
+                  {t('Operate')}
                 </th>
               </tr>
             </thead>
@@ -86,13 +88,13 @@ const ClientPage = () => {
               {isLoading ? (
                 <tr>
                   <td colSpan={12} className="py-10">
-                    Loading...
+                    {t('Loading...')}
                   </td>
                 </tr>
               ) : clients.length === 0 ? (
                 <tr>
                   <td colSpan={12} className="py-10">
-                    No client records found.
+                    {t('No client records found.')}
                   </td>
                 </tr>
               ) : (
@@ -143,43 +145,33 @@ const ClientPage = () => {
 
                     <td className="sticky right-0 bg-background text-sidebar-bg flex gap-2 flex-wrap justify-center py-4 font-sans border border-border">
                       <p
-                        onClick={() => {
+                        onClick={() =>
                           navigate(
                             '/banking/others/profiles/index?userId=' + acc.id
-                          );
-                        }}
+                          )
+                        }
                         className="hover:text-[#60831a] cursor-pointer"
                       >
-                        KYB Record
+                        {t('KYB Record')}
                       </p>
                       <p className="hover:text-[#60831a] cursor-pointer">
-                        Users
+                        {t('Users')}
                       </p>
                       <p
-                        onClick={() => {
-                          setShowDialog(acc);
-                        }}
+                        onClick={() => setShowDialog(acc)}
                         className="hover:text-[#60831a] cursor-pointer"
                       >
-                        Details
+                        {t('Details')}
                       </p>
                       <p
-                        onClick={() => {
+                        onClick={() =>
                           navigate(
                             '/banking/receive/bankAccount?userId=' + acc.id
-                          );
-                        }}
+                          )
+                        }
                         className="hover:text-[#60831a] cursor-pointer"
                       >
-                        See account
-                      </p>
-                      <p
-                        onClick={() => {
-                          setShowDialog(acc);
-                        }}
-                        className="hover:text-[#60831a] cursor-pointer"
-                      >
-                        Details
+                        {t('See account')}
                       </p>
                     </td>
                   </tr>
@@ -197,53 +189,54 @@ const ClientPage = () => {
           totalPages={totalPages || 1}
         />
       </div>
+
       {showDialog && (
         <Draggable
-          title="Client Details"
+          title={t('Client Details')}
           className="px-8 min-w-[500px] space-y-1 py-6 bg-background shadow-lg rounded-md"
           Open={setShowDialog}
         >
           <div className="space-y-2">
             <div className="flex gap-2">
-              <span className="font-bold">Client Name:</span>
+              <span className="font-bold">{t('Client Name')}:</span>
               <span className="text-gray-500">{showDialog.name}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Type:</span>
+              <span className="font-bold">{t('Type')}:</span>
               <span className="text-gray-500">{showDialog.type}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Country:</span>
+              <span className="font-bold">{t('Country')}:</span>
               <span className="text-gray-500">{showDialog.country}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Email:</span>
+              <span className="font-bold">{t('Email')}:</span>
               <span className="text-gray-500">{showDialog.email}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Agent Name:</span>
+              <span className="font-bold">{t('Agent Name')}:</span>
               <span className="text-gray-500">{showDialog.agentName}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Bank Account Number:</span>
+              <span className="font-bold">{t('Bank Account Number')}:</span>
               <span className="text-gray-500">
                 {showDialog.bankAccountNumber}
               </span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Invitation Code:</span>
+              <span className="font-bold">{t('Invitation Code')}:</span>
               <span className="text-gray-500">{showDialog.invitationCode}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Account Info:</span>
+              <span className="font-bold">{t('Account Info')}:</span>
               <span className="text-gray-500">{showDialog.accountInfo}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Creation Date:</span>
+              <span className="font-bold">{t('Creation Date')}:</span>
               <span className="text-gray-500">{showDialog.createdAt}</span>
             </div>
             <div className="flex gap-2">
-              <span className="font-bold">Description:</span>
+              <span className="font-bold">{t('Description')}:</span>
               <span className="text-gray-500">{showDialog.description}</span>
             </div>
           </div>

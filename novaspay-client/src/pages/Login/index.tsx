@@ -77,9 +77,11 @@ const LoginPage = () => {
             <Switch />
           </div>
           <div>
-            <h2 className="font-bold text-3xl mb-8">Email sign in</h2>
+            <h2 className="font-bold text-3xl mb-8 text-center">
+              Email sign in
+            </h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex flex-col gap-2 w-[400px]">
+              <div className="flex flex-col gap-2 w-[480px]">
                 <div className="relative">
                   <User
                     className="absolute top-1/2 -translate-y-1/2 left-2"
@@ -120,13 +122,13 @@ const LoginPage = () => {
                 </label>
                 <p>Forgot Password</p>
               </div>
-              <button className="rounded-sm w-full bg-sidebar-bg text-button-text py-1">
+              <button className="text-sm rounded-sm w-full bg-sidebar-bg/90 cursor-pointer text-button-text py-2">
                 {_isLoading ? 'Loading...' : 'Sign in'}
               </button>
 
               <button
                 onClick={() => navigate('/company/create-account-login')}
-                className="rounded-sm mt-4 w-full text-button-text bg-sidebar-bg py-1"
+                className="text-sm rounded-sm mt-4 w-full border border-border hover:bg-sidebar-child/20 cursor-pointer py-2"
               >
                 Sign Up
               </button>

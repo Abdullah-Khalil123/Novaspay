@@ -1,13 +1,14 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { UseFormSetValue } from 'react-hook-form';
-import type { DocumentFormData } from '@/types/documentForm'; // Import your form data type
+import type { DocumentFormData } from '@/types/documentForm';
 
 interface BankAccountSelectorProps {
   nextStep: () => void;
   selected: string;
   setSelected: (val: string) => void;
-  setValue: UseFormSetValue<DocumentFormData>; // Type setValue correctly
-  error?: string; // Prop for validation error message
+  setValue: UseFormSetValue<DocumentFormData>;
+  error?: string;
 }
 
 const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
@@ -17,6 +18,8 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
   error,
   nextStep,
 }) => {
+  const { t } = useTranslation();
+
   const options = [
     {
       id: 1,
@@ -45,10 +48,10 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
       <div className="flex flex-col">
         <div>
           <h1 className="text-4xl font-semibold">
-            Select area to open bank account
+            {t('Select area to open bank account')}
           </h1>
           <p className="text-gray-600">
-            Please, let us know your primary location
+            {t('Please, let us know your primary location')}
           </p>
         </div>
 
@@ -79,19 +82,16 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
                 </div>
                 <div className="text-left">
                   <h6 className="text-gray-500 text-sm mt-1">
-                    Available currencies
+                    {t('Available currencies')}
                   </h6>
                   <p className="text-sm mt-1">{opt.currencies.join(', ')}</p>
                 </div>
               </div>
             </label>
           ))}
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}{' '}
-          {/* Display error */}
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           <button
-            onClick={() => {
-              nextStep();
-            }}
+            onClick={() => nextStep()}
             disabled={!selected}
             className={`mt-4 px-4 py-2 rounded-lg text-white ${
               selected
@@ -99,7 +99,7 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
                 : 'bg-gray-400 cursor-not-allowed'
             }`}
           >
-            Next
+            {t('Next')}
           </button>
         </div>
       </div>

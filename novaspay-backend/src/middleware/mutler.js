@@ -1,8 +1,26 @@
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 
-const storage = multer.memoryStorage();
+// Use absolute path for safety
+const uploadDir = path.join(process.cwd(), './uploads');
 
+// Make sure uploads folder exists
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+// Disk storage config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir); // folder to save
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const name = file.originalname + '-' + Date.now() + ext;
+    cb(null, name);
+  },
+});
+
+// File filter (images only)
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|webp/;
   const extname = allowedTypes.test(
@@ -10,16 +28,13 @@ const fileFilter = (req, file, cb) => {
   );
   const mimetype = allowedTypes.test(file.mimetype);
 
-  if (extname && mimetype) {
-    return cb(null, true); // Accept file
-  } else {
-    cb(new Error('Error: Images Only!')); // Reject file
-  }
+  if (extname && mimetype) cb(null, true);
+  else cb(new Error('Only images are allowed'));
 };
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   fileFilter,
 });
 

@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
-import Dropdown from './DropDown'; // Renamed
+import Dropdown from './DropDown';
 import Input from './Input';
+import { useTranslation } from 'react-i18next';
 import type { DocumentFormData } from '@/types/documentForm';
 import type {
   FieldErrors,
@@ -23,6 +24,8 @@ const MultiCurrency = ({
   setValue: UseFormSetValue<DocumentFormData>;
   watch: UseFormWatch<DocumentFormData>;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div>
@@ -32,28 +35,30 @@ const MultiCurrency = ({
         >
           <ArrowLeft />
         </div>
-        <h2 className="text-2xl font-bold">Apply a Multicurrency Account</h2>
+
+        <h2 className="text-2xl font-bold">
+          {t('Apply a Multicurrency Account')}
+        </h2>
         <p className="text-gray-400">
-          Please, provide the transaction informations.
+          {t('Please, provide the transaction informations.')}
         </p>
 
         <div className="flex mt-2 items-end justify-between w-[500px]">
           <div>
-            <p className="font-bold mb-1">Headquarters Currency</p>{' '}
-            {/* Changed label for clarity */}
+            <p className="font-bold mb-1">{t('Headquarters Currency')}</p>
             <Dropdown
               className="min-w-53"
               options={[
                 {
-                  label: 'USD - United States Dollar',
+                  label: t('USD - United States Dollar'),
                   value: 'usd',
                 },
                 {
-                  label: 'EUR - Euro',
+                  label: t('EUR - Euro'),
                   value: 'eur',
                 },
                 {
-                  label: 'GBP - British Pound',
+                  label: t('GBP - British Pound'),
                   value: 'gbp',
                 },
               ]}
@@ -66,10 +71,11 @@ const MultiCurrency = ({
               error={errors.headquaters?.message}
             />
           </div>
+
           <Input
-            label={'State/Province'}
+            label={t('State/Province')}
             className="w-53 font-sans"
-            placeholder="State/Province"
+            placeholder={t('State/Province')}
             {...register('state')}
             error={errors.state?.message}
           />
@@ -77,14 +83,14 @@ const MultiCurrency = ({
 
         <div className="flex mt-2 justify-between mb-2">
           <Input
-            label="City"
-            placeholder="City"
+            label={t('City')}
+            placeholder={t('City')}
             {...register('companyCity')}
             error={errors.companyCity?.message}
           />
           <Input
-            label="Street"
-            placeholder="Street"
+            label={t('Street')}
+            placeholder={t('Street')}
             {...register('companyStreet')}
             error={errors.companyStreet?.message}
           />

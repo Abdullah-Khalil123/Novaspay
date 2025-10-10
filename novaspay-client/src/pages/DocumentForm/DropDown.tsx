@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface DropdownProps {
   label?: string;
@@ -28,24 +28,24 @@ const Dropdown: React.FC<DropdownProps> = ({
     setIsOpen(false);
   };
 
-  //   useEffect(() => {
-  //     const handleClickOutside = (event: MouseEvent) => {
-  //       if (
-  //         dropdownRef.current &&
-  //         !dropdownRef.current.contains(event.target as Node)
-  //       ) {
-  //         setIsOpen(false);
-  //       }
-  //     };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setTimeout(() => setIsOpen(false), 100);
+      }
+    };
 
-  //     if (isOpen) {
-  //       document.addEventListener('mousedown', handleClickOutside);
-  //     } else {
-  //       document.removeEventListener('mousedown', handleClickOutside);
-  //     }
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
 
-  //     return () => document.removeEventListener('mousedown', handleClickOutside);
-  //   }, [isOpen]);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
 
   const selectedLabel =
     options.find((opt) => opt.value === value)?.label || 'Select';
@@ -57,7 +57,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         ref={dropdownRef}
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`bg-white text-gray-600 px-3 py-3 rounded-md w-full text-left flex justify-between items-center ${
+        className={`border border-border px-3 py-3 rounded-md w-full text-left flex justify-between items-center ${
           disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
         } ${className ?? ''} ${error ? 'border-red-500 border' : ''}`}
       >
@@ -79,13 +79,13 @@ const Dropdown: React.FC<DropdownProps> = ({
         </svg>
       </button>
       {isOpen && (
-        <div className="absolute w-full top-full left-0 mt-1 bg-white rounded-md shadow-lg z-10">
+        <div className="h-[300px] overflow-y-scroll absolute w-full top-full left-0 mt-1 bg-secondary rounded-md shadow-lg z-10">
           {options.map((opt) => (
             <div
               key={opt.value}
               onClick={() => handleSelect(opt.value)}
-              className={`px-3 py-2 hover:bg-gray-100 cursor-pointer ${
-                value === opt.value ? 'bg-gray-50 font-medium' : ''
+              className={`px-3 py-2 hover:bg-background cursor-pointer ${
+                value === opt.value ? 'bg-background font-medium' : ''
               }`}
             >
               {opt.label}

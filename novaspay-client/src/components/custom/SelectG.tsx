@@ -78,7 +78,7 @@ function Select<T>({
       {/* Main Select */}
       <div
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative border flex justify-between items-center border-border w-full px-2 py-1 rounded-sm"
+        className="relative border flex justify-between items-center border-border-color w-full px-2 py-1 rounded-sm"
       >
         <span>{value ? getOptionLabel(value) : 'Select an option'}</span>
         <ChevronDown

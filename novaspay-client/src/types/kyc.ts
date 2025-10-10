@@ -28,6 +28,9 @@ export const KYCschema = z.object({
   companyCountry: z.string().nullable().optional(),
   headquarters: z.string().nullable().optional(),
 
+  backFacingImage: z.any().optional(),
+  frontFacingImage: z.any().optional(),
+
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

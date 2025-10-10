@@ -66,6 +66,8 @@ const DocumentForm = () => {
         state: kycData.state || '',
         companyStreet: kycData.companyStreet || '',
         companyCity: kycData.companyCity || '',
+        frontFacingImage: kycData.frontFacingImage || '',
+        backFacingImage: kycData.backFacingImage || '',
       });
       setSelectedBankArea(kycData.area || ''); // Initialize selected area
     }
@@ -114,10 +116,15 @@ const DocumentForm = () => {
 
   const prevStep = () => setStep((prev) => prev - 1);
 
-  // This will be called only on the *final* form submission
-  const onSubmit = (data: any) => {
-    console.log('Final Form Data:', data);
-    createOrUpdateKYC(data, {
+  const onSubmit = (data: Record<string, string>) => {
+    const formData = new FormData();
+
+    console.log(data);
+    Object.keys(data).map((key) => {
+      formData.append(key, data[key]);
+    });
+
+    createOrUpdateKYC(formData, {
       onSuccess: () => {
         toast.success('KYC information submitted successfully!');
       },

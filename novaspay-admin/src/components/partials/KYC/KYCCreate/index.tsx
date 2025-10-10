@@ -274,6 +274,28 @@ const KYCForm = ({ action = 'create' }: { action?: 'create' | 'edit' }) => {
           </Button>
         </div>
       </form>
+
+      {kyc?.frontFacingImage && (
+        <div>
+          <Label>Front ID Preview</Label>
+          <img
+            src={`${import.meta.env.VITE_AUTH_API_URL}${kyc.frontFacingImage}`}
+            alt="Front ID Preview"
+            className="w-full h-64 object-contain rounded-md"
+          />
+        </div>
+      )}
+
+      {kyc?.backFacingImage && (
+        <div>
+          <Label>Back ID Preview</Label>
+          <img
+            src={`${import.meta.env.VITE_AUTH_API_URL}${kyc.backFacingImage}`}
+            alt="Back ID Preview"
+            className="w-full h-64 object-contain rounded-md"
+          />
+        </div>
+      )}
     </div>
   );
 };

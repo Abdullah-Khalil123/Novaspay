@@ -8,6 +8,7 @@ import ReduxProvider from './providers/redux.tsx';
 import { Toaster } from 'react-hot-toast';
 import ThemeProvider from './providers/ThemeProvider.tsx';
 import FontProvider from './providers/FontProvider.tsx';
+import './utils/i18n.ts';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/custom/Button';
 import { Search, RotateCcwIcon } from 'lucide-react';
 import Input from '../../components/custom/Input';
@@ -11,10 +12,12 @@ interface UserFiltersProps {
 }
 
 const UserFilters = ({ filters, setFilters, refetch }: UserFiltersProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border">
       <Input
-        label="Email"
+        label={t('Email')}
         value={filters.email}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, email: e.target.value }))
@@ -24,7 +27,7 @@ const UserFilters = ({ filters, setFilters, refetch }: UserFiltersProps) => {
       <div className="flex space-x-4">
         <Button onClick={refetch}>
           <p className="flex items-center gap-1">
-            <Search size={16} /> Search
+            <Search size={16} /> {t('Search')}
           </p>
         </Button>
         <Button
@@ -34,7 +37,7 @@ const UserFilters = ({ filters, setFilters, refetch }: UserFiltersProps) => {
           }}
         >
           <p className="flex items-center gap-1">
-            <RotateCcwIcon size={16} /> Reset
+            <RotateCcwIcon size={16} /> {t('Reset')}
           </p>
         </Button>
       </div>

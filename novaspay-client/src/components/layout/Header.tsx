@@ -21,8 +21,10 @@ import Dropdown from '../custom/dropdown'; // ⬅️ import reusable dropdown
 import { useNavigate } from 'react-router-dom';
 import BreadCrumb from '../custom/BreadCrumb';
 import { setFontSize } from '@/store/slices/font';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
@@ -101,9 +103,30 @@ const Header = () => {
           </div>
         </Dropdown>
 
-        <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
-          <Languages size={18} />
-        </div>
+        <Dropdown
+          showArrow={false}
+          className="h-full"
+          label={
+            <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
+              <Languages size={18} />
+            </div>
+          }
+        >
+          <div className="py-1 w-[120px]">
+            <p
+              onClick={() => i18n.changeLanguage('zh')}
+              className="px-4 py-1 hover:bg-header-hover cursor-pointer"
+            >
+              简体中文
+            </p>
+            <p
+              onClick={() => i18n.changeLanguage('en')}
+              className="px-4 py-1 hover:bg-header-hover cursor-pointer"
+            >
+              English
+            </p>
+          </div>
+        </Dropdown>
 
         <Dropdown
           showArrow={false}
@@ -114,7 +137,7 @@ const Header = () => {
             </div>
           }
         >
-          <div className="flex flex-col items-start bg-secondary border border-gray-400/20 rounded-sm h-98 w-78 px-3 py-2 absolute right-0">
+          <div className="flex flex-col items-start bg-secondary border border-border rounded-sm h-98 w-78 px-3 py-2 absolute right-0">
             <h1 className="border-b pb-1 w-full">我的站内信</h1>
             <div className="flex-1"></div>
             <button className="flex items-center gap-2 self-end bg-sidebar-bg hover:bg-sidebar-bg/70 cursor-pointer px-2 py-1 rounded-sm">
@@ -128,9 +151,10 @@ const Header = () => {
 
         {/* 🔹 User Dropdown */}
         <Dropdown
-          className={'hover:bg-background '}
+          showArrow={false}
+          className={'hover:bg-background'}
           label={
-            <div className="flex items-center gap-1 pr-2">
+            <div className="flex items-center min-w-[180px] gap-1 pr-2">
               <div className="bg-background flex items-center justify-center size-10 rounded-full">
                 {user?.name
                   ? user.name

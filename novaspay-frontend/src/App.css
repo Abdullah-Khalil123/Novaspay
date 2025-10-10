@@ -17,7 +17,7 @@
 :root {
   --background: #f5f7f9;
   --secondary: #ffffff;
-  --border: #414243;
+  --border: rgb(228, 231, 237);
   --text-primary: #1d1e1f;
   --login-bg: #fff;
   --header-color: #ffffff;
@@ -28,7 +28,7 @@
 .dark {
   --background: #141414;
   --secondary: #1d1e1f;
-  --border: #414243;
+  --border: rgb(70, 71, 73);
   --text-primary: #cfd3dc;
   --login-bg: #293145;
   --header-color: #1d1e1f;
@@ -47,7 +47,7 @@
 @layer base {
   html,
   body {
-    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Times New Roman', Times, serif; */
     color: var(--color-text-primary);
     background-color: var(--color-background);
   }

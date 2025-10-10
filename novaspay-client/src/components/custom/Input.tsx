@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           defaultValue={0}
           {...rest} // <-- spread register props here
-          className={`border h-8 pl-2 rounded-sm border-border disabled:bg-gray-600/20 ${
+          className={`border h-8 pl-2 rounded-sm border-border-color disabled:bg-gray-600/20 ${
             className ?? ''
           }`}
         />

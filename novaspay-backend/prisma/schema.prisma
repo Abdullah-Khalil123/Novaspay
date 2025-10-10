@@ -77,6 +77,9 @@ model KYC {
   status          Status @default(PENDING)
   reason          String?
 
+  frontFacingImage   String?
+  backFacingImage    String?
+
   area            String?
   corporateEmail  String?
   dateOfBirth     DateTime?

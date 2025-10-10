@@ -9,6 +9,7 @@ import Select from '@/components/custom/SelectG';
 import { countries } from '@/utils/country';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Switch from '@/components/custom/toggleTheme';
 
 const registerSchema = z.object({
   accountType: z.string().nonempty('Account type is required'),
@@ -92,15 +93,14 @@ const EnterpriseRegisterPage = () => {
   return (
     <div className="flex min-h-screen">
       {/* Left Section: Welcome Message (Dark Background) */}
-      <div className="w-1/2 text-text-primary flex items-center justify-center p-8">
+      <div className="w-1/2 text-white bg-sidebar-bg flex items-center justify-center p-8">
         <h1 className="text-3xl font-bold">Welcome to the system</h1>
       </div>
 
       {/* Right Section: Enterprise Account Registration Form (Darker Background) */}
       <div className="w-1/2 bg-login-bg text-text-primary flex flex-col justify-between p-8">
         <div className="flex justify-end w-full">
-          {/* <Switch /> */}{' '}
-          {/* You can uncomment if you want the theme toggle here */}
+          <Switch /> {/* You can uncomment if you want the theme toggle here */}
         </div>
 
         <div className="flex flex-col items-center justify-center flex-grow">
@@ -121,7 +121,7 @@ const EnterpriseRegisterPage = () => {
                 <select
                   {...register('accountType')}
                   id="accountType"
-                  className="p-2 border border-gray-600 text-gray-400 rounded-sm bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="p-2 border border-border text-gray-400 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">Please select a Account type</option>
                   <option value="individual">Individual</option>
@@ -147,7 +147,7 @@ const EnterpriseRegisterPage = () => {
                   type="text"
                   id="companyName"
                   placeholder="Please enter Company name"
-                  className="p-2 border border-gray-600 rounded-sm bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="p-2 border border-border rounded-sm text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">
@@ -171,7 +171,7 @@ const EnterpriseRegisterPage = () => {
                     <Select
                       {...field}
                       options={countries}
-                      className="w-full bg-gray-700 py-5 text-gray-400 rounded-sm"
+                      className="w-full py-5 text-gray-400 rounded-sm"
                     />
                   )}
                 />
@@ -196,7 +196,7 @@ const EnterpriseRegisterPage = () => {
                   type="email"
                   id="email"
                   placeholder="Email"
-                  className="p-2 border border-gray-600 rounded-sm bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="p-2 border border-border rounded-sm text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-xs mt-1">
@@ -218,7 +218,7 @@ const EnterpriseRegisterPage = () => {
                   type="password"
                   id="password"
                   placeholder="Password"
-                  className="p-2 border border-gray-600 rounded-sm bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="p-2 border border-border rounded-sm text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 {errors.password && (
                   <p className="text-red-500 text-xs mt-1">
@@ -240,7 +240,7 @@ const EnterpriseRegisterPage = () => {
                   type="text"
                   id="invitationCode"
                   placeholder="Invitation Code"
-                  className="p-2 border border-gray-600 rounded-sm bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="p-2 border border-border rounded-sm text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 {errors.invitationCode && (
                   <p className="text-red-500 text-xs mt-1">
@@ -263,14 +263,14 @@ const EnterpriseRegisterPage = () => {
                     type="text"
                     id="verificationCode"
                     placeholder="Input OTP"
-                    className="flex-grow p-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="flex-grow p-2 border border-border text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   <button
                     type="button"
                     onClick={() => {
                       isOTPSent ? toast('OTP already sent') : sendOTP();
                     }}
-                    className="px-4 bg-gray-600 font-sans py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="px-4 bg-light-gray font-sans py-2 text-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     Send OTP
                   </button>
@@ -285,24 +285,21 @@ const EnterpriseRegisterPage = () => {
               {/* Register Button */}
               <button
                 type="submit"
-                className="mt-6 w-full py-2 bg-blue-500 text-white rounded-sm text-lg font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                className="mt-6 text-sm w-full py-2 bg-sidebar-child text-white rounded-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 disabled={isLoading}
               >
                 {isLoading ? 'Registering...' : 'Register'}
               </button>
+              {/* Existing account link */}
+              <div
+                onClick={() => navigate('/user/login')}
+                className="text-center hover:bg-light-gray cursor-pointer flex border border-border justify-center py-2 gap-2 text-gray-400 text-sm mt-2"
+              >
+                Existing account?{' '}
+                <div className="text-blue-400 hover:underline">Go to login</div>
+              </div>
             </div>
           </form>
-        </div>
-
-        {/* Existing account link */}
-        <div className="text-center text-gray-400 text-sm mt-8">
-          Existing account?{' '}
-          <div
-            onClick={() => navigate('/user/login')}
-            className="text-blue-400 hover:underline"
-          >
-            Go to login
-          </div>
         </div>
       </div>
     </div>

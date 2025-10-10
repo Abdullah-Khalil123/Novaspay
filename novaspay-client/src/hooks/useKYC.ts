@@ -68,7 +68,7 @@ const useGetClientKYC = () => {
 const useCreateClientKYC = () => {
   return useMutation({
     mutationKey: ['createClientKYC'],
-    mutationFn: async (kycData: KYC) => createClientKYC(kycData),
+    mutationFn: async (kycData: FormData) => createClientKYC(kycData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clientKYC'] });
     },

@@ -54,7 +54,7 @@ const updateKYC = async (id: number, kycData: KYC) => {
 
 // Client Know Your Customer (KYC) Form
 
-const createClientKYC = async (kycData: KYC) => {
+const createClientKYC = async (kycData: FormData) => {
   try {
     const response = await axiosInstance.put('/kyc', kycData);
     return response.data;

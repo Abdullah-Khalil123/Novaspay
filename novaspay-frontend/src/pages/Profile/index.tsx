@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const UserProfile = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('resetPassword'); // 'resetPassword', 'setFundPassword', 'updateFundPassword'
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -31,26 +33,27 @@ const UserProfile = () => {
       newPassword: data.newPassword,
     })
       .then((response) => {
-        console.log('Password reset successful:', response);
+        console.log(t('Password reset successful:'), response);
       })
       .catch((error) => {
-        console.error('Password reset failed:', error.response.data.message);
-        toast.error(error.response.data.message || 'Password reset failed');
+        console.error(t('Password reset failed:'), error.response.data.message);
+        toast.error(error.response.data.message || t('Password reset failed'));
         resetSetErrors('oldPassword', {
           type: 'manual',
-          message: 'Old password is incorrect',
+          message: t('Old password is incorrect'),
         });
       });
   }
+
   return (
     <div className="bg-background flex items-center justify-center p-4">
       <div className="shadow-lg rounded-lg flex gap-2 w-full">
         {/* Left Section: Personal Information */}
         <div className="w-1/3 bg-secondary border-gray-200 p-6">
           <h2 className="border-b pb-2 border-gray-400/50 mb-6 text-center">
-            Personal Information
+            {t('Personal Information')}
           </h2>
-          <div className="flex border-y border-x-0 py-1 items-center mb-4">
+          <div className="flex border-y border-border border-x-0 py-1 items-center mb-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 text-gray-500 mr-2"
@@ -65,16 +68,15 @@ const UserProfile = () => {
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
-            <span className="mr-2 text-nowrap">User Mail:</span>
+            <span className="mr-2 text-nowrap">{t('User Mail:')}</span>
             <span>{user?.email}</span>
           </div>
-          {/* Add more personal information fields here if needed */}
         </div>
 
         {/* Right Section: Basic Information with Tabs */}
         <div className="w-2/3 p-6 bg-secondary">
           <h2 className="text-center border-b border-gray-400/50 pb-2 mb-6">
-            Basic Information
+            {t('Basic Information')}
           </h2>
 
           {/* Tabs Menu */}
@@ -87,9 +89,10 @@ const UserProfile = () => {
               }`}
               onClick={() => setActiveTab('resetPassword')}
             >
-              Reset Password
+              {t('Reset Password')}
             </button>
-            {/* <button
+            {/* Uncomment and translate if needed
+            <button
               className={`ml-4 py-2 px-4 text-sm font-medium ${
                 activeTab === 'setFundPassword'
                   ? 'border-b-2 border-green-600 text-green-600'
@@ -97,7 +100,7 @@ const UserProfile = () => {
               }`}
               onClick={() => setActiveTab('setFundPassword')}
             >
-              Set fund password
+              {t('Set fund password')}
             </button>
             <button
               className={`ml-4 py-2 px-4 text-sm font-medium ${
@@ -107,13 +110,14 @@ const UserProfile = () => {
               }`}
               onClick={() => setActiveTab('updateFundPassword')}
             >
-              Update fund password
-            </button> */}
+              {t('Update fund password')}
+            </button>
+            */}
           </div>
 
           {/* Tab Content */}
           <div>
-            <form action="" onSubmit={resetHandleSubmit(onResetSubmit)}>
+            <form onSubmit={resetHandleSubmit(onResetSubmit)}>
               {activeTab === 'resetPassword' && (
                 <div className="space-y-4 flex flex-col">
                   <div className="flex flex-row items-center gap-2">
@@ -121,7 +125,8 @@ const UserProfile = () => {
                       htmlFor="oldPassword"
                       className="text-sm font-medium mb-1 w-30"
                     >
-                      <span className="text-red-500">*</span> Old Password
+                      <span className="text-red-500">*</span>{' '}
+                      {t('Old Password')}
                     </label>
                     <div className="relative">
                       <input
@@ -143,7 +148,8 @@ const UserProfile = () => {
                       htmlFor="newPassword"
                       className="text-sm font-medium mb-1 w-30"
                     >
-                      <span className="text-red-500">*</span> New Password
+                      <span className="text-red-500">*</span>{' '}
+                      {t('New Password')}
                     </label>
                     <div className="relative">
                       <input
@@ -160,7 +166,8 @@ const UserProfile = () => {
                       htmlFor="confirmPassword"
                       className="text-sm font-medium mb-1 w-30"
                     >
-                      <span className="text-red-500">*</span> Confirm Password
+                      <span className="text-red-500">*</span>{' '}
+                      {t('Confirm Password')}
                     </label>
                     <div className="relative">
                       <input
@@ -172,17 +179,17 @@ const UserProfile = () => {
                     </div>
                     {resetErrors.confirmPassword && (
                       <p className="text-red-500 text-sm mt-1">
-                        Passwords do not match.
+                        {t('Passwords do not match.')}
                       </p>
                     )}
                   </div>
 
                   <div className="flex space-x-4 mt-2 ml-32">
                     <button className="px-6 py-2 bg-[#293a05] text-white rounded-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-sidebar-bg focus:ring-offset-2">
-                      Save
+                      {t('Save')}
                     </button>
                     <button className="px-6 py-2 bg-[#b05153] text-white rounded-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2">
-                      Cancel
+                      {t('Cancel')}
                     </button>
                   </div>
                 </div>
@@ -191,21 +198,17 @@ const UserProfile = () => {
 
             {activeTab === 'setFundPassword' && (
               <div>
-                {/* Content for Set Fund Password tab */}
                 <p className="text-gray-600">
-                  This is where you can set your fund password.
+                  {t('This is where you can set your fund password.')}
                 </p>
-                {/* Add your form or content for setting the fund password here */}
               </div>
             )}
 
             {activeTab === 'updateFundPassword' && (
               <div>
-                {/* Content for Update Fund Password tab */}
                 <p className="text-gray-600">
-                  This is where you can update your fund password.
+                  {t('This is where you can update your fund password.')}
                 </p>
-                {/* Add your form or content for updating the fund password here */}
               </div>
             )}
           </div>

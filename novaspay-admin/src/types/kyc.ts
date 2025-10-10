@@ -29,6 +29,9 @@ export const KYCschema = z.object({
   headquarters: z.string().nullable().optional(),
   area: z.string().nullable().optional(),
 
+  backFacingImage: z.string().optional(),
+  frontFacingImage: z.string().optional(),
+
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

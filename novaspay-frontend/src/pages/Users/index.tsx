@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import UserFilters from './UserFilter';
 import PageFilters from '../../components/custom/pagination';
 import Checkbox from '../../components/custom/CheckBox';
@@ -7,6 +8,8 @@ import { useState, useEffect } from 'react';
 import { usePagination } from '@/hooks/usePagination';
 
 const UserPage = () => {
+  const { t } = useTranslation();
+
   const {
     currentPage,
     pageSize,
@@ -36,6 +39,15 @@ const UserPage = () => {
 
   const users: Client[] = data?.data || [];
 
+  const headers = [
+    'ID',
+    'Client Name',
+    'Country',
+    'Email',
+    'Login Time',
+    'Register Time',
+  ];
+
   return (
     <div className="px-padding mt-2">
       <UserFilters
@@ -51,16 +63,9 @@ const UserPage = () => {
                 <th className="w-[40px] min-w-[40px] px-2 py-2 text-center">
                   <Checkbox size={15} />
                 </th>
-                {[
-                  'ID',
-                  'Client Name',
-                  'Country',
-                  'Email',
-                  'Login Time',
-                  'Register Time',
-                ].map((header, i) => (
+                {headers.map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
-                    <div>{header}</div>
+                    <div>{t(header)}</div>
                   </th>
                 ))}
               </tr>
@@ -69,13 +74,13 @@ const UserPage = () => {
               {isLoading ? (
                 <tr>
                   <td colSpan={7} className="py-10">
-                    Loading...
+                    {t('Loading...')}
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-10">
-                    No users found.
+                    {t('No users found.')}
                   </td>
                 </tr>
               ) : (

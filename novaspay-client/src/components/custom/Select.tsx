@@ -27,7 +27,7 @@ const Select = ({
       {/* Main Select */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="relative border flex justify-between items-center border-border w-full px-2 py-1 rounded-sm"
+        className="relative border flex justify-between items-center border-border-color w-full px-2 py-1 rounded-sm"
       >
         <span>{(value || options[0]) + '/page' || 'Select an option'}</span>
         <ChevronDown
@@ -44,7 +44,7 @@ const Select = ({
             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-border"></div>
 
             {/* Options List */}
-            <div className="bg-secondary border border-border rounded-sm max-h-60 overflow-y-auto">
+            <div className="bg-secondary border border-border-color rounded-sm max-h-60 overflow-y-auto">
               {options.map((option) => (
                 <div
                   key={option}

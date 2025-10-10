@@ -12,6 +12,7 @@ import { onBoardingRoutes } from './routes/onBoarding';
 import { userRoute } from './routes/users';
 import { applicationsRouter } from './routes/applications';
 import { currencyRoutes } from './routes/currency';
+import { adminRoutes } from './routes/admin';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       onBoardingRoutes,
       userRoute,
       applicationsRouter,
+      adminRoutes,
     ],
   },
 

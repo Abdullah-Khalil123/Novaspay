@@ -17,6 +17,8 @@ const createOrUpdateClientKYC = async (req, res) => {
     companyCity,
     headquaters,
     area,
+    frontFacingImage,
+    backFacingImage,
   } = req.body;
 
   try {
@@ -33,7 +35,7 @@ const createOrUpdateClientKYC = async (req, res) => {
     let kycRecord;
 
     // If KYC exists, update it
-    if (client.kyc.id) {
+    if (client?.kyc?.id) {
       kycRecord = await prisma.kYC.update({
         where: { id: client.kyc.id },
         data: {
@@ -52,6 +54,9 @@ const createOrUpdateClientKYC = async (req, res) => {
           companyCity,
           headquarters: headquaters,
           area,
+
+          frontFacingImage,
+          backFacingImage,
         },
       });
 

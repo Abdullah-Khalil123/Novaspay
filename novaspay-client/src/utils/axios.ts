@@ -17,6 +17,10 @@ export const axiosInstance = axios.create({
   },
 });
 
+export const axiosUpload = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
 const attachToken = (config: any) => {
   const token = getToken();
   if (token) {
@@ -28,6 +32,10 @@ const attachToken = (config: any) => {
 };
 
 axiosInstance.interceptors.request.use(attachToken, (error) =>
+  Promise.reject(error)
+);
+
+axiosUpload.interceptors.request.use(attachToken, (error) =>
   Promise.reject(error)
 );
 

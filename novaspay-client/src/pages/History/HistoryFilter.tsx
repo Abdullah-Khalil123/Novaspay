@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/custom/Button';
 import Input from '../../components/custom/Input';
 import Select from '../../components/custom/SelectG';
@@ -23,30 +24,38 @@ const HistoryFilter = ({
   refetch,
   onDownload,
 }: HistoryFiltersProps) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border">
+    <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border-color">
       <Input
-        label="Order Id"
+        label={t('Order Id')}
         value={filters.orderId}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, orderId: e.target.value }))
         }
       />
+
       <Select
-        label="Area"
-        options={['Europe', 'EUR/USD-W']}
+        label={t('Area')}
+        options={[t('Europe'), t('EUR/USD-W')]}
         value={filters.area}
         onChange={(e) => setFilters((prev: any) => ({ ...prev, area: e }))}
       />
+
       <Input
-        label="Receiving Name"
+        label={t('Receiving Name')}
         value={filters.receiverName}
         onChange={(e) =>
-          setFilters((prev: any) => ({ ...prev, receiverName: e.target.value }))
+          setFilters((prev: any) => ({
+            ...prev,
+            receiverName: e.target.value,
+          }))
         }
       />
+
       <Input
-        label="Receiving Number"
+        label={t('Receiving Number')}
         value={filters.receiverNumber}
         onChange={(e) =>
           setFilters((prev: any) => ({
@@ -55,15 +64,23 @@ const HistoryFilter = ({
           }))
         }
       />
+
       <Select
-        label="Order Type"
-        options={['PAYMENT', 'TRANSFER', 'EXCHANGE', 'DEPOSIT', 'FEE']}
+        label={t('Order Type')}
+        options={[
+          t('PAYMENT'),
+          t('TRANSFER'),
+          t('EXCHANGE'),
+          t('DEPOSIT'),
+          t('FEE'),
+        ]}
         value={filters.orderType}
         onChange={(e) => setFilters((prev: any) => ({ ...prev, orderType: e }))}
       />
+
       <Select
-        label="Status"
-        options={['Active', 'Inactive', 'Pending']}
+        label={t('Status')}
+        options={[t('Active'), t('Inactive'), t('Pending')]}
         value={filters.status}
         onChange={(e) => setFilters((prev: any) => ({ ...prev, status: e }))}
       />
@@ -71,9 +88,10 @@ const HistoryFilter = ({
       <div className="flex space-x-4">
         <Button onClick={refetch}>
           <p className="flex items-center gap-1">
-            <Search size={16} /> Search
+            <Search size={16} /> {t('Search')}
           </p>
         </Button>
+
         <Button
           onClick={() => {
             setFilters({
@@ -88,13 +106,14 @@ const HistoryFilter = ({
           }}
         >
           <p className="flex items-center gap-1">
-            <RotateCcwIcon size={16} /> Reset
+            <RotateCcwIcon size={16} /> {t('Reset')}
           </p>
         </Button>
+
         {onDownload && (
           <Button onClick={onDownload}>
             <p className="flex items-center gap-1">
-              <Download size={16} /> Download
+              <Download size={16} /> {t('Download')}
             </p>
           </Button>
         )}

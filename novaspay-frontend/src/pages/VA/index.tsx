@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useVAs } from '@/hooks/useVa';
 import PageFilters from '../../components/custom/pagination';
 import type { VA } from '@/types/va';
 import { usePagination } from '@/hooks/usePagination';
+import { useTranslation } from 'react-i18next';
 
 const VAPage = () => {
+  const { t } = useTranslation();
+
   const {
     currentPage,
     pageSize,
@@ -19,7 +21,6 @@ const VAPage = () => {
     initialPageSize: 10,
   });
 
-  // Optional filters (if you plan to add them later)
   const [filters] = useState({
     purpose: '',
     currency: '',
@@ -42,29 +43,27 @@ const VAPage = () => {
 
   return (
     <div className="px-padding mt-2">
-      {/* You can later add <VAFilters filters={filters} setFilters={setFilters} refetch={refetch} /> */}
-
       <div className="bg-secondary rounded-md border border-border mt-4 p-4">
         <div className="overflow-x-auto">
           <table className="table-fixed text-sm w-full border-collapse">
             <thead className="text-text-primary bg-background">
               <tr>
                 {[
-                  'Purpose',
-                  'Currency',
-                  'Payment Method',
-                  'Headquarters',
-                  'State/Province',
-                  'City',
-                  'Postal Code',
-                  'Business Category',
-                  'Operating Country or Region',
-                  'Expected Funding Source',
-                  'Store Photos',
-                  'Decline Reason',
-                  'Status',
-                  'Creation Date',
-                  'Latest Update',
+                  t('Purpose'),
+                  t('Currency'),
+                  t('Payment Method'),
+                  t('Headquarters'),
+                  t('State/Province'),
+                  t('City'),
+                  t('Postal Code'),
+                  t('Business Category'),
+                  t('Operating Country or Region'),
+                  t('Expected Funding Source'),
+                  t('Store Photos'),
+                  t('Decline Reason'),
+                  t('Status'),
+                  t('Creation Date'),
+                  t('Latest Update'),
                 ].map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
                     <div>{header}</div>
@@ -77,13 +76,13 @@ const VAPage = () => {
               {isLoading ? (
                 <tr>
                   <td colSpan={15} className="py-10">
-                    Loading...
+                    {t('Loading')}...
                   </td>
                 </tr>
               ) : vas.length === 0 ? (
                 <tr>
                   <td colSpan={15} className="py-10">
-                    No VA records found.
+                    {t('No VA records found')}
                   </td>
                 </tr>
               ) : (

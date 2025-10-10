@@ -6,8 +6,10 @@ import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { createInviteLink } from '@/actions/client';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const IndexPage = () => {
+  const { t } = useTranslation();
   const [inviteCode, setInviteCode] = useState<string | null>(null);
   const [show, setShow] = useState<boolean | null>(null);
 
@@ -20,7 +22,7 @@ const IndexPage = () => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteCode || '');
-    toast.success('Invitation code copied to clipboard!');
+    toast.success(t('Invitation code copied to clipboard!'));
   };
 
   const handleCreateInvite = async () => {
@@ -30,9 +32,10 @@ const IndexPage = () => {
       setInviteCode(code);
       setShow(true);
     } catch (err) {
-      alert('Failed to generate invite.');
+      alert(t('Failed to generate invite.'));
     }
   };
+
   const inviteLink = `${
     import.meta.env.VITE_CLIENT_URL
   }/company/create-account-login?invitationCode=${inviteCode}`;
@@ -45,36 +48,27 @@ const IndexPage = () => {
             onClick={handleCreateInvite}
             className="text-red-400 text-sm underline cursor-pointer"
           >
-            Invite to Register
+            {t('Invite to Register')}
           </p>
         </div>
 
         <div className="p-5 mt-4 flex items-center justify-between bg-[#d6d6da] rounded-lg">
           <div className="flex gap-5 text-[#6b6868]">
             <Info />
-            <p>To switch wallet accounts, please click the button !</p>
+            <p>{t('To switch wallet accounts, please click the button!')}</p>
           </div>
           <a
             href={import.meta.env.VITE_CLIENT_URL + '/user/login'}
             className="bg-sidebar-bg cursor-pointer text-button-text px-4 py-2 rounded-md"
           >
-            Switch wallet user function
+            {t('Switch wallet user function')}
           </a>
         </div>
 
-        {/* <div className="bg-white p-6 w-[356px] mt-8 rounded-lg text-[#6B7280]">
-          <div className="flex items-center justify-between">
-            <div className="bg-[#dbeafd] text-[#2463eb] w-fit p-1 px-2 text-2xl rounded-md">
-              $
-            </div>
-            <p>USD Account</p>
-          </div>
-
-          <button className="text-center w-full text-red-500">Views</button>
-        </div> */}
-
-        <div className="bg-secondary mt-8 p-3.5 rounded-md border-gray-500 border-[1px]">
-          <h2 className="text-3xl font-bold mb-4">Recent Transactions</h2>
+        <div className="bg-secondary mt-8 p-3.5 rounded-md border border-border">
+          <h2 className="text-3xl font-bold mb-4">
+            {t('Recent Transactions')}
+          </h2>
           <Table data={transactions} />
         </div>
       </div>
@@ -82,32 +76,30 @@ const IndexPage = () => {
       {show && (
         <Draggable
           className="bg-background px-4"
-          title="Invite User to Register"
+          title={t('Invite User to Register')}
           Open={setShow}
           children={
             <div className="p-6 rounded-xl shadow-lg flex flex-col items-center gap-4 w-[280px] text-center">
-              {/* QR Code */}
               <QRCodeSVG value={inviteLink} size={230} />
 
-              {/* Code (optional) */}
               <code className="bg-[#f3f4f6] p-2 rounded-md w-full break-all">
                 <p className="text-black text-sm break-all">{inviteCode}</p>
               </code>
 
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center text-text-primary">
                 <button
                   onClick={handleCopy}
-                  className="bg-sidebar-bg cursor-pointer px-4 text-nowrap py-2 rounded-sm"
+                  className="cursor-pointer border border-border px-4 text-nowrap py-2 rounded-sm"
                 >
-                  Copy Code
+                  {t('Copy Code')}
                 </button>
                 <a
                   href={inviteLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-nowrap bg-sidebar-child px-4 py-2 rounded-sm"
+                  className="text-nowrap border border-border px-4 py-2 rounded-sm"
                 >
-                  Go to Page
+                  {t('Go to Page')}
                 </a>
               </div>
             </div>
@@ -119,30 +111,46 @@ const IndexPage = () => {
 };
 
 const Table = ({ data }: { data: Transaction[] }) => {
+  const { t } = useTranslation();
+
   return (
     <table className="w-full">
       <thead>
-        <tr className="text-text-primary border-b-[1px] border-border bg-background">
-          <th className="py-2">Description</th>
-          <th>Date</th>
-          <th>Amount</th>
-          <th>Fee</th>
-          <th>Status</th>
+        <tr className="text-text-primary border-b border-border">
+          <th className="py-2">{t('Description')}</th>
+          <th>{t('Date')}</th>
+          <th>{t('Amount')}</th>
+          <th>{t('Fee')}</th>
+          <th>{t('Status')}</th>
         </tr>
       </thead>
       <tbody className="text-center text-text-primary">
         {data.map((item, index) => (
-          <tr key={index} className={index % 2 === 0 ? 'bg-background' : ''}>
+          <tr
+            key={index}
+            className={
+              index % 2 === 0
+                ? 'border-b border-border'
+                : 'border-b border-border bg-background'
+            }
+          >
             <td className="h-10">
               {item.orderType == 'DEPOSIT' ? (
                 <ArrowRight className="inline mr-1" color="blue" />
               ) : (
                 <ArrowDown className="inline mr-1" color="green" />
               )}{' '}
-              {item.orderType}
+              {t(item.orderType as string)}
             </td>
             <td>{item.updatedAt}</td>
-            <td>{item.amount}</td>
+            <td
+              className={`${
+                item.orderType === 'TRANSFER' ? 'text-green-600' : ''
+              }`}
+            >
+              {item.amount}
+              <span className="text-text-primary"> (USD)</span>
+            </td>
             <td>{item.fee}</td>
             <td>
               <div className="text-sm text-white flex justify-center">
@@ -157,7 +165,7 @@ const Table = ({ data }: { data: Transaction[] }) => {
                       : 'bg-orange-700/80'
                   }`}
                 >
-                  {item.status}
+                  {t(item.status as string)}
                 </p>
               </div>
             </td>

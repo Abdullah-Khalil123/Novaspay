@@ -26,13 +26,13 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   return (
     <div className={`flex flex-col w-full mt-2 ${className ?? ''}`}>
       {label && <label className="font-bold mb-1">{label}</label>}
-      <div className="flex overflow-hidden rounded-md bg-[#f9f5f5]">
+      <div className="flex overflow-hidden rounded-md border border-border">
         {/* Country Code Selector */}
-        <div className="flex items-center gap-1 bg-[#f9f5f5] px-3 py-2 border-r border-gray-200">
+        <div className="flex items-center gap-1 px-3 py-2 border-r border-border">
           <select
             value={countryCode}
             onChange={(e) => setCountryCode(e.target.value)}
-            className="bg-transparent outline-none text-gray-700 text-sm appearance-none cursor-pointer"
+            className="bg-transparent outline-none text-sm appearance-none cursor-pointer"
           >
             {countryCodes.map((code) => (
               <option key={code} value={code}>
@@ -46,7 +46,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
         <input
           type="text"
           placeholder="34534534534"
-          className="flex-1 bg-white px-2 py-3 outline-none text-gray-800 text-sm rounded-r-md"
+          className="flex-1 px-2 py-3 outline-none text-gray-400 text-sm rounded-r-md"
           {...register(name)} // Register the phone number field
         />
       </div>

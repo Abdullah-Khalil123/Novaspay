@@ -8,7 +8,7 @@ const App = () => {
       <main className="w-full flex h-full">
         <SideNav />
 
-        <div className="bg-background flex flex-col flex-1">
+        <div className="flex flex-col flex-1">
           <Header />
 
           {/* Content area */}

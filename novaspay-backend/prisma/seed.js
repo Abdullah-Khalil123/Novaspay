@@ -1,4 +1,10 @@
-import { PrismaClient, Status, AccountStatus, OrderType } from '@prisma/client';
+import {
+  PrismaClient,
+  Status,
+  StatusApplication,
+  AccountStatus,
+  OrderType,
+} from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
 
@@ -19,6 +25,7 @@ async function main() {
   await prisma.kYC.deleteMany();
   await prisma.onBoarding.deleteMany();
   await prisma.vA.deleteMany();
+  await prisma.emailVerification.deleteMany();
   await prisma.invite.deleteMany();
   await prisma.client.deleteMany();
   await prisma.user.deleteMany();
@@ -116,7 +123,7 @@ async function main() {
   }
   console.log(`✅ Created ${accounts.length} accounts`);
 
-  // Seed Transactions with OrderType enum
+  // Seed Transactions
   console.log('💸 Seeding transactions...');
   const transactions = [];
   for (const client of clients) {
@@ -185,7 +192,12 @@ async function main() {
           approverId: Math.random() > 0.3 ? randomItem(users).id : null,
           approvalComments: faker.lorem.sentence(),
           remark: faker.lorem.sentence(),
-          status: randomItem(Object.values(Status)),
+          status: randomItem([
+            StatusApplication.Pending,
+            StatusApplication.Approved,
+            StatusApplication.Rejected,
+            StatusApplication.InReview,
+          ]),
           createdAt: faker.date.recent({ days: 60 }),
         },
       });
@@ -207,7 +219,13 @@ async function main() {
         middleName: Math.random() > 0.5 ? faker.person.middleName() : null,
         phone: faker.phone.number(),
         agentId: randomNumber(1000, 9999),
-        status: randomItem(Object.values(Status)),
+        status: randomItem([
+          Status.PENDING,
+          Status.SUCCESS,
+          Status.FAILED,
+          Status.CANCELED,
+          Status.IN_REVIEW,
+        ]),
         reason: Math.random() > 0.6 ? faker.lorem.sentence() : null,
         area: faker.location.state(),
         corporateEmail: Math.random() > 0.5 ? faker.internet.email() : null,
@@ -278,12 +296,33 @@ async function main() {
             faker.image.url()
           ),
           declineReason: Math.random() > 0.8 ? faker.lorem.sentence() : null,
-          status: randomItem(Object.values(Status)),
+          status: randomItem([
+            Status.PENDING,
+            Status.SUCCESS,
+            Status.FAILED,
+            Status.CANCELED,
+            Status.IN_REVIEW,
+          ]),
         },
       })
     )
   );
   console.log(`✅ Created ${vas.length} virtual accounts`);
+
+  // Seed Email Verifications
+  console.log('📧 Seeding email verifications...');
+  const emailVerifications = await Promise.all(
+    Array.from({ length: 5 }).map(() =>
+      prisma.emailVerification.create({
+        data: {
+          email: faker.internet.email(),
+          otp: faker.string.numeric(6),
+          expiresAt: faker.date.future(),
+        },
+      })
+    )
+  );
+  console.log(`✅ Created ${emailVerifications.length} email verifications`);
 
   // Seed Invites
   console.log('📨 Seeding invites...');
@@ -350,6 +389,7 @@ async function main() {
     KYC: kycs.length,
     OnBoardings: onboardings.length,
     VAs: vas.length,
+    EmailVerifications: emailVerifications.length,
     Invites: invites.length,
     Currencies: createdCurrencies.length,
   });

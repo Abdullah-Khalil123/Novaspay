@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/custom/Button';
 import Input from '../../components/custom/Input';
 import { Search, RotateCcwIcon } from 'lucide-react';
@@ -12,17 +13,19 @@ interface ClientFiltersProps {
 }
 
 const ClientFilter = ({ filters, setFilters, refetch }: ClientFiltersProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-3 rounded-md border border-border">
       <Input
-        label="Client Name"
+        label={t('Client Name')}
         value={filters.clientName}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, clientName: e.target.value }))
         }
       />
       <Input
-        label="Country"
+        label={t('Country')}
         value={filters.country}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, country: e.target.value }))
@@ -33,7 +36,7 @@ const ClientFilter = ({ filters, setFilters, refetch }: ClientFiltersProps) => {
         <Button onClick={refetch}>
           <p className="flex items-center gap-1">
             <Search size={16} />
-            Search
+            {t('Search')}
           </p>
         </Button>
         <Button
@@ -44,7 +47,7 @@ const ClientFilter = ({ filters, setFilters, refetch }: ClientFiltersProps) => {
         >
           <p className="flex items-center gap-1">
             <RotateCcwIcon size={16} />
-            Reset
+            {t('Reset')}
           </p>
         </Button>
       </div>

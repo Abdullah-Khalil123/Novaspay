@@ -2,6 +2,7 @@ import Button from '../../components/custom/Button';
 import Input from '../../components/custom/Input';
 import Select from '../../components/custom/SelectG';
 import { Search, RotateCcwIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface AccountsFiltersProps {
   filters: any;
@@ -14,10 +15,12 @@ const AccountsFilters = ({
   setFilters,
   refetch,
 }: AccountsFiltersProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-secondary flex space-x-8 space-y-4 flex-wrap p-2 rounded-md border border-border">
       <Input
-        label="Account Number"
+        label={t('Account Number')}
         value={filters.accountNumber}
         onChange={(e) =>
           setFilters((prev: any) => ({
@@ -27,36 +30,36 @@ const AccountsFilters = ({
         }
       />
       <Input
-        label="Banking Name"
+        label={t('Banking Name')}
         value={filters.bankingName}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, bankingName: e.target.value }))
         }
       />
       <Input
-        label="IBAN Number"
+        label={t('IBAN Number')}
         value={filters.ibanNumber}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, ibanNumber: e.target.value }))
         }
       />
       <Input
-        label="Account Name"
+        label={t('Account Name')}
         value={filters.accountName}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, accountName: e.target.value }))
         }
       />
       <Input
-        label="Currency"
+        label={t('Currency')}
         value={filters.currency}
         onChange={(e) =>
           setFilters((prev: any) => ({ ...prev, currency: e.target.value }))
         }
       />
       <Select
-        label="Status"
-        options={['Active', 'Inactive', 'Pending']}
+        label={t('Status')}
+        options={[t('Active'), t('Inactive'), t('Pending')]}
         value={filters.status}
         onChange={(e) => setFilters((prev: any) => ({ ...prev, status: e }))}
       />
@@ -65,7 +68,7 @@ const AccountsFilters = ({
           onClick={() => refetch()}
           children={
             <p className="flex items-center gap-1">
-              <Search size={16} /> Search
+              <Search size={16} /> {t('Search')}
             </p>
           }
         />
@@ -83,7 +86,7 @@ const AccountsFilters = ({
           }}
           children={
             <p className="flex items-center gap-1">
-              <RotateCcwIcon size={16} /> Reset
+              <RotateCcwIcon size={16} /> {t('Reset')}
             </p>
           }
         />

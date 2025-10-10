@@ -21,8 +21,10 @@ import Dropdown from '../custom/dropdown'; // ⬅️ import reusable dropdown
 import { useNavigate } from 'react-router-dom';
 import BreadCrumb from '../custom/Breadcrumbs';
 import { setFontSize } from '@/store/slices/font';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
@@ -101,9 +103,33 @@ const Header = () => {
           </div>
         </Dropdown>
 
-        <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
+        {/* <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
           <Languages size={18} />
-        </div>
+        </div> */}
+        <Dropdown
+          showArrow={false}
+          className="h-full"
+          label={
+            <div className="hover:bg-header-hover px-2 h-full flex items-center cursor-pointer">
+              <Languages size={18} />
+            </div>
+          }
+        >
+          <div className="py-1 w-[120px]">
+            <p
+              onClick={() => i18n.changeLanguage('zh')}
+              className="px-4 py-1 hover:bg-header-hover cursor-pointer"
+            >
+              简体中文
+            </p>
+            <p
+              onClick={() => i18n.changeLanguage('en')}
+              className="px-4 py-1 hover:bg-header-hover cursor-pointer"
+            >
+              English
+            </p>
+          </div>
+        </Dropdown>
 
         <Dropdown
           showArrow={false}

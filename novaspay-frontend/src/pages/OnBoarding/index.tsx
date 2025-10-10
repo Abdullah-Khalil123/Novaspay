@@ -5,8 +5,10 @@ import type { OnBoarding } from '@/types/onBoarding';
 import { usePagination } from '@/hooks/usePagination';
 import { useEffect, useState } from 'react';
 import Draggable from '@/components/custom/dragable';
+import { useTranslation } from 'react-i18next';
 
 const OnboardingPage = () => {
+  const { t } = useTranslation();
   const [showDetails, setShowDetails] = useState<OnBoarding | null>(null);
 
   const {
@@ -44,11 +46,11 @@ const OnboardingPage = () => {
             <thead className="text-text-primary bg-background">
               <tr>
                 {[
-                  'Client Name',
-                  'Account Error Msg',
-                  'Bank Account Status Msg',
-                  'Reason',
-                  'Creation date',
+                  t('Client Name'),
+                  t('Account Error Msg'),
+                  t('Bank Account Status Msg'),
+                  t('Reason'),
+                  t('Creation date'),
                 ].map((header, i) => (
                   <th key={i} className="w-[80px] min-w-[80px] px-2 py-2">
                     {header}
@@ -61,13 +63,13 @@ const OnboardingPage = () => {
               {isLoading ? (
                 <tr>
                   <td colSpan={6} className="py-4">
-                    Loading...
+                    {t('Loading...')}
                   </td>
                 </tr>
               ) : onboardings.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-4">
-                    No onboarding records found.
+                    {t('No onboarding records found.')}
                   </td>
                 </tr>
               ) : (
@@ -104,7 +106,7 @@ const OnboardingPage = () => {
                         onClick={() => setShowDetails(acc)}
                         className="hover:text-[#60831a] text-sidebar-child cursor-pointer"
                       >
-                        Details
+                        {t('Details')}
                       </p>
                     </td>
                   </tr>
@@ -123,31 +125,31 @@ const OnboardingPage = () => {
         {showDetails && (
           <Draggable
             Open={setShowDetails}
-            title="Onboarding Details"
+            title={t('Onboarding Details')}
             className="px-8 min-w-[600px] space-y-1 py-6 bg-background shadow-lg rounded-md"
           >
             <p>
-              Client Name:{' '}
+              {t('Client Name')}:{' '}
               <span className="text-gray-500">{showDetails.clientName}</span>
             </p>
             <p>
-              Account Error Message:{' '}
+              {t('Account Error Message')}:{' '}
               <span className="text-gray-500">
                 {showDetails.accountErrorMessage}
               </span>
             </p>
             <p>
-              Bank Account Status Message:{' '}
+              {t('Bank Account Status Message')}:{' '}
               <span className="text-gray-500">
                 {showDetails.bankAccountStatusMsg}
               </span>
             </p>
             <p>
-              Reason:{' '}
+              {t('Reason')}:{' '}
               <span className="text-gray-500">{showDetails.reason}</span>
             </p>
             <p>
-              Creation Date:{' '}
+              {t('Creation Date')}:{' '}
               <span className="text-gray-500">{showDetails.createdAt}</span>
             </p>
           </Draggable>

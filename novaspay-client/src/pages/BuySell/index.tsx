@@ -201,7 +201,7 @@ const CryptoBuySell = () => {
             type="number"
             {...register('referenceRate', { valueAsNumber: true })}
             disabled
-            className="w-full"
+            className="w-full cursor-not-allowed"
           />
 
           {/* Total Amount */}
@@ -213,7 +213,7 @@ const CryptoBuySell = () => {
             type="number"
             {...register('totalAmount', { valueAsNumber: true })}
             disabled
-            className="w-full"
+            className="w-full cursor-not-allowed"
           />
 
           {/* Estimated Fee */}
@@ -225,7 +225,7 @@ const CryptoBuySell = () => {
             type="number"
             {...register('estimatedFee', { valueAsNumber: true })}
             disabled
-            className="w-full"
+            className="w-full cursor-not-allowed"
           />
 
           {/* Estimated Amount */}
@@ -236,7 +236,7 @@ const CryptoBuySell = () => {
           <Input
             type="number"
             {...register('estimatedAmount', { valueAsNumber: true })}
-            className="w-full"
+            className="w-full cursor-not-allowed"
             disabled
           />
 

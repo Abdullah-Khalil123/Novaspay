@@ -45,7 +45,7 @@ const Dropdown = ({
       <button
         onClick={() => setOpen((prev) => !prev)}
         className={
-          'flex cursor-pointer items-center gap-2 shadow-sm' +
+          'flex cursor-pointer items-center gap-2 ' +
           (showArrow ? ' px-2 rounded-md py-2' : ' h-full')
         }
       >

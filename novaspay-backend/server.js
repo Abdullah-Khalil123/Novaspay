@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import { connectDB } from './src/config/db.js';
 
 // Cron jobs
@@ -19,6 +20,7 @@ import vaRoutes from './src/routes/vaController.js';
 import clientRoute from './src/routes/clientRoute.js';
 import applicationRoute from './src/routes/application.js';
 import currencyRoute from './src/routes/currency.js';
+import adminCreateRoute from './src/routes/adminCreateRoute.js';
 import { protect } from './src/middleware/auth.js';
 
 // Client Routes
@@ -27,6 +29,7 @@ import clientAccountRoutes from './src/routes/client/acounts.js';
 import clientApplicationRoutes from './src/routes/client/applications.js';
 import clientKycRoutes from './src/routes/client/kyc.js';
 import clientCurrencyRoute from './src/routes/client/currency.js';
+import clientUpload from './src/routes/client/upload.js';
 
 // Initialize express app
 const app = express();
@@ -44,7 +47,10 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Auth routes
 app.use('/api/auth', adminAuth);
@@ -56,9 +62,11 @@ app.use('/api/account', clientAccountRoutes);
 app.use('/api/application', clientApplicationRoutes);
 app.use('/api/kyc', clientKycRoutes);
 app.use('/api/currency', clientCurrencyRoute);
+app.use('/api/upload', clientUpload);
 
 // Admin Routes (Protected)
 app.use(protect);
+app.use('/admin/admin-route', adminCreateRoute);
 app.use('/admin/transaction', transactionRoutes);
 app.use('/admin/account', accountRoutes);
 app.use('/admin/kyc', kycRoutes);
