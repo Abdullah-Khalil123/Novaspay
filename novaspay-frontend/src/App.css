@@ -11,6 +11,8 @@
   --color-login-bg: var(--login-bg);
   --color-header-color: var(--header-color);
   --color-header-hover: var(--header-hover);
+
+  --color-border-color: var(--border-color);
   --color-button-text: #ffffff;
 }
 
@@ -20,6 +22,7 @@
   --border: rgb(228, 231, 237);
   --text-primary: #1d1e1f;
   --login-bg: #fff;
+  --border-color: rgba(228, 231, 237, 0.252);
   --header-color: #ffffff;
   --header-hover: #f5f7f9;
 }
