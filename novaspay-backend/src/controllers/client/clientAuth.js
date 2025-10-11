@@ -218,11 +218,7 @@ const sendVerificationOTP = async (req, res) => {
     });
 
     // Send OTP Email
-    await sendEmail(
-      email,
-      'Verify Your Email',
-      `<p>Your verification code is <b>${otp}</b>. It expires in 5 minutes.</p>`
-    );
+    await sendEmail(email, 'Verify Your Email', otp);
 
     return res.status(200).json({ message: 'OTP sent successfully' });
   } catch (error) {
@@ -276,11 +272,7 @@ const sendForgetOTP = async (req, res) => {
     });
 
     // Send OTP Email
-    await sendEmail(
-      email,
-      'Verify Your Email',
-      `<p>Your verification code is <b>${otp}</b>. It expires in 5 minutes.</p>`
-    );
+    await sendEmail(email, 'Verify Your Email', otp);
 
     return res.status(200).json({ message: 'OTP sent successfully' });
   } catch (error) {
