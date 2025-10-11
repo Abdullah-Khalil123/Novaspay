@@ -120,7 +120,7 @@ const LoginPage = () => {
                   <input type="checkbox" />
                   <span className="ml-2 select-none">Remember me</span>
                 </label>
-                <p>Forgot Password</p>
+                <a href="/user/forgot">Forgot Password</a>
               </div>
               <button className="text-sm rounded-sm w-full bg-sidebar-bg/90 cursor-pointer text-button-text py-2">
                 {_isLoading ? 'Loading...' : 'Sign in'}

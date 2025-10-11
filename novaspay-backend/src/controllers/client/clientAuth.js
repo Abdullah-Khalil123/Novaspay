@@ -131,7 +131,7 @@ const clientRegister = async (req, res) => {
     }
 
     // 4️⃣ Delete OTP after successful verification
-    await prisma.emailVerification.delete({
+    const tm = await prisma.emailVerification.delete({
       where: { email },
     });
 
@@ -233,6 +233,64 @@ const sendVerificationOTP = async (req, res) => {
   }
 };
 
+const sendForgetOTP = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+
+    const existingClient = await prisma.client.findUnique({ where: { email } });
+    if (!existingClient) {
+      return res.status(400).json({ message: 'Email is not registered' });
+    }
+
+    // Check if OTP was sent recently (within 1 minute)
+    const lastOTP = await prisma.emailVerification.findFirst({
+      where: { email },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (lastOTP && Date.now() - lastOTP.createdAt.getTime() < 60 * 1000) {
+      const secondsLeft = Math.ceil(
+        (60 * 1000 - (Date.now() - lastOTP.createdAt.getTime())) / 1000
+      );
+      return res.status(429).json({
+        message: `Please wait ${secondsLeft}s before requesting a new OTP.`,
+      });
+    }
+
+    // Generate new 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+
+    // Delete old OTPs
+    await prisma.emailVerification.deleteMany({ where: { email } });
+
+    // Save new OTP (expires in 5 mins)
+    await prisma.emailVerification.create({
+      data: {
+        email,
+        otp,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+        createdAt: new Date(), // ensure model includes this field
+      },
+    });
+
+    // Send OTP Email
+    await sendEmail(
+      email,
+      'Verify Your Email',
+      `<p>Your verification code is <b>${otp}</b>. It expires in 5 minutes.</p>`
+    );
+
+    return res.status(200).json({ message: 'OTP sent successfully' });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+};
+
 const verifyEmailOTP = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -264,10 +322,76 @@ const verifyEmailOTP = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  const { email, verificationCode, newPassword } = req.body;
+
+  try {
+    // 1️⃣ Validate input
+    if (!email || !verificationCode || !newPassword) {
+      return res.status(400).json({ message: 'Please provide all fields' });
+    }
+
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ message: 'Password must be at least 6 characters' });
+    }
+
+    // 2️⃣ Check if client exists
+    const client = await prisma.client.findUnique({
+      where: { email },
+    });
+
+    if (!client) {
+      return res.status(404).json({ message: 'Client not found' });
+    }
+
+    // 3️⃣ Check OTP record
+    const otpRecord = await prisma.emailVerification.findUnique({
+      where: { email },
+    });
+
+    if (!otpRecord) {
+      return res.status(400).json({ message: 'No OTP found for this email' });
+    }
+
+    // 4️⃣ Validate OTP
+    if (otpRecord.otp !== verificationCode) {
+      return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    if (new Date() > otpRecord.expiresAt) {
+      return res.status(400).json({ message: 'Verification code expired' });
+    }
+
+    // 5️⃣ Delete OTP after successful verification
+    await prisma.emailVerification.delete({
+      where: { email },
+    });
+
+    // 6️⃣ Hash new password and update
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.client.update({
+      where: { id: client.id },
+      data: { password: hashedPassword },
+    });
+
+    return res.status(200).json({
+      message: 'Password reset successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+};
 export {
   clientLogin,
   clientResetPassword,
+  sendForgetOTP,
   clientRegister,
   verifyEmailOTP,
   sendVerificationOTP,
+  forgotPassword,
 };

@@ -48,6 +48,7 @@ const EnterpriseRegisterPage = () => {
       email: '',
       password: '',
       invitationCode: invitationCode || '',
+      verificationCode: '',
     },
   });
 
@@ -62,6 +63,7 @@ const EnterpriseRegisterPage = () => {
         country: data.country,
         accountType: data.accountType,
         invitationCode: data.invitationCode,
+        verificationCode: data.verificationCode,
       });
       toast.success('Registration successful!');
       new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
@@ -270,7 +272,7 @@ const EnterpriseRegisterPage = () => {
                     onClick={() => {
                       isOTPSent ? toast('OTP already sent') : sendOTP();
                     }}
-                    className="px-4 bg-light-gray font-sans py-2 text-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="px-4 bg-light-gray font-sans py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     Send OTP
                   </button>

@@ -12,6 +12,7 @@ import UserProfile from '@/pages/Profile';
 import SignUpPage from '@/pages/SignUp';
 import DocumentForm from '@/pages/DocumentForm';
 import DetailOpenDeposit from '@/pages/DetailOpenDeposit';
+import ForgotPage from '@/pages/Forgot';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
         element: <UserProfile />,
       },
     ],
+  },
+
+  {
+    path: 'user/forgot',
+    element: <ForgotPage />,
   },
   {
     path: 'company/create-account-login',

@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/utils/axios';
+import { axiosInstance, axiosPublic } from '@/utils/axios';
 
 const login = async ({
   email,
@@ -38,6 +38,28 @@ const resetPassword = async ({
   }
 };
 
+const forgotPassword = async ({
+  verificationCode,
+  email,
+  newPassword,
+}: {
+  verificationCode: string;
+  email: string;
+  newPassword: string;
+}) => {
+  try {
+    const response = await axiosPublic.post('api/user/forgot', {
+      email: email,
+      newPassword: newPassword,
+      verificationCode: verificationCode,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Password reset failed:', error);
+    throw error;
+  }
+};
+
 const registerUser = async ({
   name,
   email,
@@ -45,6 +67,7 @@ const registerUser = async ({
   country,
   accountType,
   invitationCode,
+  verificationCode,
 }: {
   name: string;
   email: string;
@@ -52,6 +75,7 @@ const registerUser = async ({
   country: string;
   accountType: string;
   invitationCode?: string;
+  verificationCode: string;
 }) => {
   try {
     const response = await axiosInstance.post('/user/register', {
@@ -60,6 +84,7 @@ const registerUser = async ({
       password,
       country,
       accountType,
+      verificationCode,
       invitationCode,
     });
     return response.data;
@@ -79,4 +104,21 @@ const sendVerificationOTP = async (email: string) => {
   }
 };
 
-export { login, resetPassword, registerUser, sendVerificationOTP };
+const sendForgetOTP = async (email: string) => {
+  try {
+    const response = await axiosInstance.post('/user/forget-otp', { email });
+    return response.data;
+  } catch (error) {
+    console.error('Sending OTP failed:', error);
+    throw error;
+  }
+};
+
+export {
+  login,
+  resetPassword,
+  registerUser,
+  sendVerificationOTP,
+  sendForgetOTP,
+  forgotPassword,
+};
