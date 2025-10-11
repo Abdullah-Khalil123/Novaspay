@@ -27,7 +27,7 @@ const MultiCurrency = ({
   const { t } = useTranslation();
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="w-full text-black h-full flex flex-col items-center justify-center">
       <div>
         <div
           className="mb-4 cursor-pointer border border-white rounded-full w-fit p-2"
@@ -47,7 +47,7 @@ const MultiCurrency = ({
           <div>
             <p className="font-bold mb-1">{t('Headquarters Currency')}</p>
             <Dropdown
-              className="min-w-53"
+              className="min-w-53 border-none bg-white text-gray-500"
               options={[
                 {
                   label: t('USD - United States Dollar'),
@@ -74,7 +74,7 @@ const MultiCurrency = ({
 
           <Input
             label={t('State/Province')}
-            className="w-53 font-sans"
+            className="w-53 font-sans border-none bg-white text-gray-500"
             placeholder={t('State/Province')}
             {...register('state')}
             error={errors.state?.message}
@@ -85,11 +85,13 @@ const MultiCurrency = ({
           <Input
             label={t('City')}
             placeholder={t('City')}
+            className="w-53 font-sans border-none bg-white text-gray-500"
             {...register('companyCity')}
             error={errors.companyCity?.message}
           />
           <Input
             label={t('Street')}
+            className="w-53 font-sans border-none bg-white text-gray-500"
             placeholder={t('Street')}
             {...register('companyStreet')}
             error={errors.companyStreet?.message}

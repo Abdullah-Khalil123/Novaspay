@@ -74,7 +74,7 @@ const IndexPage = () => {
           </div>
         }
 
-        <div className="bg-white p-6 w-full mt-8 rounded-lg text-[#6B7280]">
+        <div className="bg-white p-6 w-full max-w-[500px] mt-8 rounded-lg text-[#6B7280]">
           <div className="flex items-center justify-between">
             <div className="bg-[#dbeafd] text-[#2463eb] w-fit p-1 px-2 text-2xl rounded-md">
               $

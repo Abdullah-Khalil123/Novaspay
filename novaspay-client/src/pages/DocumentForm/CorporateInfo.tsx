@@ -60,7 +60,7 @@ const CorporateInfo = ({
   }, [watchedBackImageUrl]);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="w-full text-black h-full flex flex-col items-center justify-center">
       <div>
         <div>
           <div
@@ -79,12 +79,13 @@ const CorporateInfo = ({
             <Input
               label={t('Email')}
               placeholder={t('Email')}
+              className="border-none bg-white text-gray-500"
               {...register('email')}
               error={errors.email?.message}
             />
             <Input
               label={t('Date of birth')}
-              className="w-53 font-sans"
+              className="w-53 font-sans border-none bg-white text-gray-500"
               type="date"
               placeholder={t('DD/MM/YYYY')}
               {...register('dateOfBirth')}
@@ -107,7 +108,7 @@ const CorporateInfo = ({
             </h2>
             <p className="font-bold">{t('Country')}</p>
             <Dropdown
-              className="max-w-53 my-2"
+              className="max-w-53 my-2 border-none bg-white text-gray-500"
               options={countriesWithCodes.map((country) => ({
                 label: country.name,
                 value: country.code,
@@ -122,6 +123,7 @@ const CorporateInfo = ({
             <Input
               label={t('Address')}
               placeholder={t('Address')}
+              className="border-none bg-white text-gray-500"
               {...register('address')}
               error={errors.address?.message}
             />
@@ -134,12 +136,14 @@ const CorporateInfo = ({
               <Input
                 label={t('First Name')}
                 placeholder={t('First Name')}
+                className="border-none bg-white text-gray-500"
                 {...register('firstName')}
                 error={errors.firstName?.message}
               />
               <Input
                 label={t('Middle Name')}
                 placeholder={t('Middle Name')}
+                className="border-none bg-white text-gray-500"
                 {...register('middleName')}
                 error={errors.middleName?.message}
               />
@@ -147,11 +151,13 @@ const CorporateInfo = ({
             <div className="flex justify-between mb-2">
               <Input
                 label={t('Last Name')}
+                className="border-none bg-white text-gray-500"
                 placeholder={t('Last Name')}
                 {...register('lastName')}
                 error={errors.lastName?.message}
               />
               <Input
+                className="border-none bg-white text-gray-500"
                 label={t('City Name')}
                 placeholder={t('City')}
                 {...register('city')}
@@ -160,7 +166,7 @@ const CorporateInfo = ({
             </div>
             <Input
               label={t('Postal Code')}
-              className="w-53"
+              className="border-none bg-white text-gray-500"
               placeholder={t('Postal Code')}
               {...register('postalCode')}
               error={errors.postalCode?.message}

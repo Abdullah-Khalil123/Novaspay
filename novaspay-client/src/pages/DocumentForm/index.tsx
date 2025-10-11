@@ -159,7 +159,7 @@ const DocumentForm = () => {
   };
 
   return (
-    <div className="min-h-full p-6 flex flex-col justify-center items-center">
+    <div className="bg-pink rounded-md min-h-full p-6 flex flex-col justify-center items-center">
       <form onSubmit={handleSubmit(onSubmit)}>
         {step === 1 && (
           <BankAccountSelector

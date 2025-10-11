@@ -4,6 +4,7 @@
 @theme inline {
   --color-sidebar-bg: #001529;
   --color-sidebar-child: #0f2438;
+  --color-pink: #f8f4f4;
   --color-background: var(--background);
   --color-secondary: var(--secondary);
   --color-border: var(--border);
@@ -41,8 +42,12 @@
   --light-gray: #f5f7fa;
 }
 
-.font-size-small {
+.font-size-default {
   font-size: 14px;
+}
+
+.font-size-small {
+  font-size: 12px;
 }
 
 .font-size-large {
