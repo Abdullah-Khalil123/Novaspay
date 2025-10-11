@@ -44,7 +44,7 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
   };
 
   return (
-    <div className="flex justify-center items-center h-full w-full">
+    <div className="flex text-black justify-center items-center h-full w-full">
       <div className="flex flex-col">
         <div>
           <h1 className="text-4xl font-semibold">
@@ -63,7 +63,7 @@ const BankAccountSelector: React.FC<BankAccountSelectorProps> = ({
               className={`flex items-center gap-3 border rounded-lg p-4 cursor-pointer transition-colors ${
                 opt.disabled
                   ? 'opacity-60 cursor-not-allowed'
-                  : 'hover:bg-secondary'
+                  : 'hover:bg-secondary/20'
               } ${
                 selected === opt.title
                   ? 'border-sidebar-child border-dashed bg-secondary/10'

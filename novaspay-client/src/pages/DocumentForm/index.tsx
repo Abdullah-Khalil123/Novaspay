@@ -62,12 +62,13 @@ const DocumentForm = () => {
           ? new Date(kycData.dateOfBirth).toISOString().split('T')[0]
           : '',
 
-        contactNumber: kycData.phone || '',
+        contactNumber: kycData.contactNumber || '',
         country: kycData.companyCountry || '',
         address: kycData.companyAddress || '',
         firstName: kycData.firstName || '',
         middleName: kycData.middleName || '',
         lastName: kycData.lastName || '',
+
         city: kycData.city || '',
         postalCode: kycData.postalCode || '',
         headquaters: kycData.headquarters || '',
