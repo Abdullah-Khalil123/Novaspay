@@ -20,7 +20,6 @@ interface PhoneInputProps {
 const PhoneInput: React.FC<PhoneInputProps> = ({
   label = 'Contact Number',
   className,
-  register,
   name,
   error,
   setValue,
@@ -43,7 +42,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
 
   return (
     <div className={`flex flex-col w-full mt-2 ${className ?? ''}`}>
-      {label && <label className="font-bold mb-1">{label}</label>}
+      {label && <label className="font-bold mb-3">{label}</label>}
 
       <div className="flex h-[50px] rounded-xl bg-white border border-gray-200 text-gray-700">
         {/* Custom Dropdown */}

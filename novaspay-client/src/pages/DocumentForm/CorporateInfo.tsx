@@ -70,12 +70,12 @@ const CorporateInfo = ({
             <ArrowLeft size={14} />
           </div>
           <h2 className="text-2xl font-bold">{t('Corporate Info')}</h2>
-          <p className="text-gray-400">
+          <p className="text-gray-400 mb-8">
             {t('Please provide corporate information')}
           </p>
 
           {/* CONTACT INFO */}
-          <div className="flex mt-2 justify-between w-[500px]">
+          <div className="flex mt-2 justify-between w-[500px] mb-6">
             <Input
               label={t('Email')}
               placeholder={t('Email')}
@@ -93,7 +93,7 @@ const CorporateInfo = ({
             />
           </div>
 
-          <div>
+          <div className="mb-6">
             <PhoneInput
               register={register}
               setValue={setValue}
@@ -136,7 +136,7 @@ const CorporateInfo = ({
             <h2 className="text-red-400 uppercase mb-5">
               {t('User Information')}
             </h2>
-            <div className="flex justify-between mb-2">
+            <div className="flex justify-between mb-8">
               <Input
                 label={t('First Name')}
                 placeholder={t('First Name')}
@@ -152,7 +152,7 @@ const CorporateInfo = ({
                 error={errors.middleName?.message}
               />
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="flex justify-between mb-8">
               <Input
                 label={t('Last Name')}
                 className="border-none w-[220px] h-[50px] rounded-xl bg-white text-gray-500"
@@ -170,7 +170,7 @@ const CorporateInfo = ({
             </div>
             <Input
               label={t('Postal Code')}
-              className="border-none h-[50px] rounded-xl bg-white text-gray-500"
+              className="border-none h-[50px] w-[220px] rounded-xl bg-white text-gray-500"
               placeholder={t('Postal Code')}
               {...register('postalCode')}
               error={errors.postalCode?.message}
