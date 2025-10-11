@@ -31,6 +31,7 @@ const getAllApplications = async (req, res) => {
     toCurrency,
     cryptoAddress,
     status,
+    email,
   } = req.query;
 
   try {
@@ -38,6 +39,13 @@ const getAllApplications = async (req, res) => {
       take: parseInt(limit) || 10,
       skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
       where: {
+        client: email
+          ? {
+              email: {
+                contains: email,
+              },
+            }
+          : undefined,
         area: area ? { contains: area } : undefined,
         vaBankAccount: vaBankAccount ? { contains: vaBankAccount } : undefined,
         transactionType: transactionType

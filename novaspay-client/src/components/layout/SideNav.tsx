@@ -12,6 +12,7 @@ import Va from '@/assets/va';
 
 import type { RootState } from '@/store';
 import { setSidebar } from '@/store/slices/sideNav';
+import { useTranslation } from 'react-i18next';
 
 export type NavItem = {
   name: string;
@@ -186,124 +187,53 @@ const SideNav = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [dispatch]);
-  // const navItems: NavItem[] = [
-  //   { name: 'Home', icon: <House />, link: '/index' },
-  //   {
-  //     name: 'Virtual Bank',
-  //     icon: <Bank />,
-  //     children: [
-  //       {
-  //         name: 'Receive',
-  //         icon: <Recieve />,
-  //         children: [
-  //           {
-  //             name: 'Accounts',
-  //             link: '/banking/receive/bankAccount',
-  //             icon: <House />,
-  //           },
-  //         ],
-  //       },
-  //       {
-  //         name: 'History',
-  //         icon: <History />,
 
-  //         children: [
-  //           {
-  //             name: 'History List',
-  //             link: '/banking/history/history',
-  //           },
-  //         ],
-  //       },
-  //       {
-  //         name: 'VA Applications',
-  //         icon: <Va />,
-
-  //         children: [
-  //           {
-  //             name: 'Apply Kyc Records',
-  //             link: '/banking/others/profiles/index',
-  //             icon: <Kyc />,
-  //           },
-  //           {
-  //             name: 'Onboarding List',
-  //             link: '/banking/others/applicationRecord',
-  //             icon: <OnBoarding />,
-  //           },
-  //           {
-  //             name: 'VA Apply History',
-  //             link: '/banking/others/application',
-  //             icon: <Va />,
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  //   { name: 'Counterparty', icon: <CounterParty />, children: [] },
-  //   {
-  //     name: 'Client',
-  //     icon: <Client />,
-  //     children: [
-  //       { name: 'Client List', link: '/member/client', icon: <ClientIcon /> },
-  //       { name: 'Users', link: '/member/user', icon: <Users /> },
-  //     ],
-  //   },
-  // ];
-
+  const { t } = useTranslation();
   const navItems = [
-    { name: 'Home', icon: <House />, link: '/index' },
+    { name: t('Home'), icon: <House />, link: '/index' },
     {
-      name: 'Virtual Bank',
+      name: t('Virtual Bank'),
       icon: <Bank />,
       children: [
         {
-          name: 'Receive',
+          name: t('Receive'),
           icon: <Recieve />,
           children: [
             {
-              name: 'Accounts',
+              name: t('Accounts'),
               link: '/banking/receive/bankAccount',
               icon: <House />,
             },
           ],
         },
         {
-          name: 'Crypto Asset',
+          name: t('Crypto Asset'),
           icon: <History />,
-
           children: [
             {
-              name: 'Buy/Sell',
+              name: t('Buy/Sell'),
               link: '/banking/crypto/cryptoBuySell',
             },
             {
-              name: 'Application List',
+              name: t('Application List'),
               link: '/banking/crypto/crypto',
             },
           ],
         },
         {
-          name: 'History',
+          name: t('History'),
           icon: <Va />,
-
           children: [
             {
-              name: 'History List',
+              name: t('History List'),
               link: '/banking/history/history',
             },
           ],
         },
       ],
     },
-    // { name: 'Counterparty', icon: <CounterParty />, children: [] },
-    // {
-    //   name: 'Client',
-    //   icon: <Client />,
-    //   children: [
-    //     { name: 'Client List', link: '/member/client', icon: <ClientIcon /> },
-    //     { name: 'Users', link: '/member/user', icon: <Users /> },
-    //   ],
-    // },
   ];
+
   return (
     <div
       className={

@@ -36,6 +36,12 @@ const ApplicationList = () => {
           },
           {
             type: 'text',
+            name: 'email',
+            label: 'Email',
+            placeholder: 'Filter by Client Email',
+          },
+          {
+            type: 'text',
             name: 'vaBankAccount',
             label: 'VA Bank Account',
             placeholder: 'Filter by VA Bank Account',

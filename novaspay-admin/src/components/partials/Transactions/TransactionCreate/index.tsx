@@ -53,7 +53,6 @@ const TransactionCreate = ({
   const {
     register,
     control,
-    setValue,
     handleSubmit,
     reset,
     formState: { errors },

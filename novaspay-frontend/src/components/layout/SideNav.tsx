@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+
 import { setSidebar } from '@/store/slices/sideNav';
 
 import House from '@/assets/home';
@@ -193,51 +195,50 @@ const SideNav = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [dispatch]);
 
+  const { t } = useTranslation();
   const navItems: NavItem[] = [
-    { name: 'Home', icon: <House />, link: '/index' },
+    { name: t('Home'), icon: <House />, link: '/index' },
     {
-      name: 'Virtual Bank',
+      name: t('Virtual Bank'),
       icon: <Bank />,
       children: [
         {
-          name: 'Receive',
+          name: t('Receive'),
           icon: <Recieve />,
           children: [
             {
-              name: 'Accounts',
+              name: t('Accounts'),
               link: '/banking/receive/bankAccount',
               icon: <House />,
             },
           ],
         },
         {
-          name: 'History',
+          name: t('History'),
           icon: <History />,
-
           children: [
             {
-              name: 'History List',
+              name: t('History List'),
               link: '/banking/history/history',
             },
           ],
         },
         {
-          name: 'VA Applications',
+          name: t('VA Applications'),
           icon: <Va />,
-
           children: [
             {
-              name: 'Apply Kyc Records',
+              name: t('Apply Kyc Records'),
               link: '/banking/others/profiles/index',
               icon: <Kyc />,
             },
             {
-              name: 'Onboarding List',
+              name: t('Onboarding List'),
               link: '/banking/others/applicationRecord',
               icon: <OnBoarding />,
             },
             {
-              name: 'VA Apply History',
+              name: t('VA Apply History'),
               link: '/banking/others/application',
               icon: <Va />,
             },
@@ -245,13 +246,17 @@ const SideNav = () => {
         },
       ],
     },
-    { name: 'Counterparty', icon: <CounterParty />, children: [] },
+    { name: t('Counterparty'), icon: <CounterParty />, children: [] },
     {
-      name: 'Client',
+      name: t('Client'),
       icon: <Client />,
       children: [
-        { name: 'Client List', link: '/member/client', icon: <ClientIcon /> },
-        { name: 'Users', link: '/member/user', icon: <Users /> },
+        {
+          name: t('Client List'),
+          link: '/member/client',
+          icon: <ClientIcon />,
+        },
+        { name: t('Users'), link: '/member/user', icon: <Users /> },
       ],
     },
   ];
