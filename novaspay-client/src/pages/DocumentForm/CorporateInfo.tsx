@@ -79,13 +79,13 @@ const CorporateInfo = ({
             <Input
               label={t('Email')}
               placeholder={t('Email')}
-              className="border-none bg-white text-gray-500 h-[50px] rounded-xl w-[240px]"
+              className="border-none bg-white text-gray-500 h-[56px] rounded-xl w-[240px]"
               {...register('email')}
               error={errors.email?.message}
             />
             <Input
               label={t('Date of birth')}
-              className="font-sans border-none w-[220px] h-[50px] rounded-xl bg-white text-gray-500"
+              className="font-sans border-none w-[220px] h-[56px] rounded-xl bg-white text-gray-500"
               type="date"
               placeholder={t('DD/MM/YYYY')}
               {...register('dateOfBirth')}
@@ -110,7 +110,7 @@ const CorporateInfo = ({
             </h2>
             <p className="font-bold">{t('Country')}</p>
             <Dropdown
-              className="max-w-53 my-2 h-[50px] rounded-xl border-none bg-white text-gray-500"
+              className="max-w-53 my-2 h-[56px] rounded-xl border-none bg-white text-gray-500"
               options={countriesWithCodes.map((country) => ({
                 label: country.name,
                 value: country.code,
@@ -125,7 +125,7 @@ const CorporateInfo = ({
             <Input
               label={t('Address')}
               placeholder={t('Address')}
-              className="border-none h-[50px] rounded-xl bg-white text-gray-500"
+              className="border-none h-[56px] rounded-xl bg-white text-gray-500"
               {...register('address')}
               error={errors.address?.message}
             />
@@ -140,14 +140,14 @@ const CorporateInfo = ({
               <Input
                 label={t('First Name')}
                 placeholder={t('First Name')}
-                className="border-none w-[220px] h-[50px] rounded-xl bg-white text-gray-500"
+                className="border-none w-[220px] h-[56px] rounded-xl bg-white text-gray-500"
                 {...register('firstName')}
                 error={errors.firstName?.message}
               />
               <Input
                 label={t('Middle Name')}
                 placeholder={t('Middle Name')}
-                className="border-none w-[220px] h-[50px] rounded-xl bg-white text-gray-500"
+                className="border-none w-[220px] h-[56px] rounded-xl bg-white text-gray-500"
                 {...register('middleName')}
                 error={errors.middleName?.message}
               />
@@ -155,13 +155,13 @@ const CorporateInfo = ({
             <div className="flex justify-between mb-8">
               <Input
                 label={t('Last Name')}
-                className="border-none w-[220px] h-[50px] rounded-xl bg-white text-gray-500"
+                className="border-none w-[220px] h-[56px] rounded-xl bg-white text-gray-500"
                 placeholder={t('Last Name')}
                 {...register('lastName')}
                 error={errors.lastName?.message}
               />
               <Input
-                className="border-none w-[220px] h-[50px] rounded-xl bg-white text-gray-500"
+                className="border-none w-[220px] h-[56px] rounded-xl bg-white text-gray-500"
                 label={t('City Name')}
                 placeholder={t('City')}
                 {...register('city')}
@@ -170,7 +170,7 @@ const CorporateInfo = ({
             </div>
             <Input
               label={t('Postal Code')}
-              className="border-none h-[50px] w-[220px] rounded-xl bg-white text-gray-500"
+              className="border-none h-[56px] w-[220px] rounded-xl bg-white text-gray-500"
               placeholder={t('Postal Code')}
               {...register('postalCode')}
               error={errors.postalCode?.message}
