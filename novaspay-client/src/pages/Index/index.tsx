@@ -216,11 +216,12 @@ const Table = ({
             <td>{item.updatedAt}</td>
             <td
               className={`${
-                item.orderType === 'TRANSFER' || item.orderType === 'DEPOSIT'
-                  ? 'text-green-600'
-                  : ''
+                item.orderType !== 'TRANSFER'
+                  ? 'text-[#ed4248]'
+                  : 'text-green-600'
               }`}
             >
+              {item.orderType === 'TRANSFER' ? '+' : '-'}
               {item.amount}
               <span className="text-text-primary"> (USD)</span>
             </td>
