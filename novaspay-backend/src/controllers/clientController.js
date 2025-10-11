@@ -20,12 +20,13 @@ const getClientById = async (req, res) => {
 
 const getAllClients = async (req, res) => {
   const { limit, page } = req.query;
-  const { clientName, country, email } = req.query;
+  const { clientName, country, email, id } = req.query;
   try {
     const clients = await prisma.client.findMany({
       take: parseInt(limit) || 10,
       skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
       where: {
+        id: id ? parseInt(id) : undefined,
         name: clientName ? { contains: clientName } : undefined,
         country: country ? { contains: country } : undefined,
         email: email ? { contains: email } : undefined,

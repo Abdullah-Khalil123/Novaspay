@@ -2,13 +2,28 @@ import prisma from '../../prisma/client.js';
 
 const getAllTransactions = async (req, res) => {
   const { limit, page } = req.query;
-  const { orderId, receiverName, receiverNumber, orderType, status } =
-    req.query;
+  const {
+    orderId,
+    receiverName,
+    receiverNumber,
+    accountName,
+    orderType,
+    status,
+    email,
+  } = req.query;
   try {
     const transactions = await prisma.transaction.findMany({
       take: parseInt(limit) || 10,
       skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
       where: {
+        client: email
+          ? {
+              email: {
+                contains: email,
+              },
+            }
+          : undefined,
+        accountName: accountName ? { contains: accountName } : undefined,
         orderId: orderId ? { contains: orderId } : undefined,
         receiverName: receiverName ? { contains: receiverName } : undefined,
         receiverNumber: receiverNumber
@@ -17,7 +32,11 @@ const getAllTransactions = async (req, res) => {
         orderType: orderType ? { equals: orderType } : undefined,
         status: status ? { equals: status } : undefined,
       },
+      include: {
+        client: true,
+      },
     });
+
     return res.status(200).json({
       message: 'Transactions retrieved successfully',
       data: transactions,
@@ -71,6 +90,7 @@ const getTransactionById = async (req, res) => {
 
       // extended data
       fromAccountId: transaction.paymentAccount || '--',
+      clientId: transaction.client.id || '',
       customerName: transaction.client?.name || '--',
       customerAddress:
         transaction.client?.kyc?.companyAddress ||
@@ -100,6 +120,7 @@ const getTransactionById = async (req, res) => {
 
 const createTransaction = async (req, res) => {
   const {
+    clientId,
     orderId,
     accountName,
     paymentAccount,
@@ -115,6 +136,7 @@ const createTransaction = async (req, res) => {
   try {
     const newTransaction = await prisma.transaction.create({
       data: {
+        clientId,
         orderId,
         accountName,
         paymentAccount,

@@ -55,7 +55,7 @@ const createApplication = async (req, res) => {
         fromCurrency,
         referenceRate,
         totalAmount,
-        status: 'PENDING',
+        status: 'Pending',
       },
     });
     return res.status(201).json({

@@ -74,6 +74,7 @@ const createAccount = async (req, res) => {
     accountNumber,
     accountName,
     bankingAddress,
+    clientId,
   } = req.body;
   try {
     const newAccount = await prisma.account.create({
@@ -83,6 +84,11 @@ const createAccount = async (req, res) => {
         clientName,
         ibanNumber,
         balance,
+        client: {
+          connect: {
+            id: clientId,
+          },
+        },
         realBalance,
         accountNumber,
         accountName,

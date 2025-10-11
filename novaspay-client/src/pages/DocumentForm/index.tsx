@@ -8,13 +8,21 @@ import {
   documentFormSchema,
   type DocumentFormData,
 } from '@/types/documentForm'; // Ensure DocumentFormData is exported
-import { useCreateClientKYC, useGetClientKYC } from '@/hooks/useKYC';
+import {
+  useCreateClientKYC,
+  useKYCs,
+  useUpdateClientKYC,
+} from '@/hooks/useKYC';
 import type { KYC } from '@/types/kyc';
 import { toast } from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
 
 const DocumentForm = () => {
-  const { data } = useGetClientKYC();
-  const { mutate: createOrUpdateKYC } = useCreateClientKYC();
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get('mode');
+  const { data } = useKYCs({}, mode !== 'crt');
+  const { mutate: createKYC } = useCreateClientKYC();
+  const { mutate: updateKYC } = useUpdateClientKYC();
   const kycData: KYC = data?.data;
   const {
     setValue,
@@ -119,21 +127,35 @@ const DocumentForm = () => {
   const onSubmit = (data: Record<string, string>) => {
     const formData = new FormData();
 
-    console.log(data);
+    // console.log(data);
     Object.keys(data).map((key) => {
       formData.append(key, data[key]);
     });
-
-    createOrUpdateKYC(formData, {
-      onSuccess: () => {
-        toast.success('KYC information submitted successfully!');
-      },
-      onError: (error: any) => {
-        toast.error(
-          error?.response?.data?.message || 'Failed to submit KYC information.'
-        );
-      },
-    });
+    if (mode == 'crt') {
+      createKYC(formData, {
+        onSuccess: () => {
+          toast.success('KYC information submitted successfully!');
+        },
+        onError: (error: any) => {
+          toast.error(
+            error?.response?.data?.message ||
+              'Failed to submit KYC information.'
+          );
+        },
+      });
+    } else {
+      updateKYC(formData, {
+        onSuccess: () => {
+          toast.success('KYC information submitted successfully!');
+        },
+        onError: (error: any) => {
+          toast.error(
+            error?.response?.data?.message ||
+              'Failed to submit KYC information.'
+          );
+        },
+      });
+    }
   };
 
   return (

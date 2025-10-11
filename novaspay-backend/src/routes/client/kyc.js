@@ -1,7 +1,8 @@
 import express from 'express';
 import {
-  createOrUpdateClientKYC,
+  createClientKYC,
   getClientKYC,
+  updateClientKYC,
 } from '../../controllers/client/kycController.js';
 import { protectClient } from '../../middleware/authClient.js';
 
@@ -9,6 +10,7 @@ const router = express.Router();
 
 router.use(protectClient);
 router.get('/', getClientKYC);
-router.put('/', createOrUpdateClientKYC);
+router.post('/', createClientKYC);
+router.put('/', updateClientKYC);
 
 export default router;

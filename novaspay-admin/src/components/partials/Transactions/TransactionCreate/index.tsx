@@ -28,6 +28,7 @@ import {
 import { toast } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import SelectClient from '@/components/custom/SelectClient';
 
 type TransactionFormValues = z.infer<typeof transactionSchema>;
 
@@ -52,6 +53,7 @@ const TransactionCreate = ({
   const {
     register,
     control,
+    setValue,
     handleSubmit,
     reset,
     formState: { errors },
@@ -137,6 +139,20 @@ const TransactionCreate = ({
                     {errors.accountName.message}
                   </p>
                 )}
+              </div>
+
+              <div>
+                <Label>Client</Label>
+                <Controller
+                  name="clientId"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectClient
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
               </div>
 
               <div>
@@ -252,7 +268,7 @@ const TransactionCreate = ({
                   render={({ field }) => (
                     <Select
                       onValueChange={field.onChange}
-                      value={field.value || 'pending'}
+                      value={field.value || 'PENDING'}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select status" />

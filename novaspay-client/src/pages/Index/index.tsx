@@ -1,6 +1,7 @@
+import { getClientKYC } from '@/actions/kyc';
 import Draggable from '@/components/custom/dragable';
 import { useAccounts } from '@/hooks/useAccounts';
-import { useGetClientKYC } from '@/hooks/useKYC';
+import { useKYCs } from '@/hooks/useKYC';
 import { useTransactions } from '@/hooks/useTransaction';
 import type { Account } from '@/types/accounts';
 import type { KYC } from '@/types/kyc';
@@ -24,7 +25,7 @@ const IndexPage = () => {
   const { t } = useTranslation();
   const router = useNavigate();
   const [showDetails, setShowDetails] = useState<Account | null>();
-  const { data: kycData } = useGetClientKYC();
+  const { data: kycData } = useKYCs();
   const Kyc: KYC = kycData?.data;
 
   const navigate = useNavigate();
@@ -57,8 +58,14 @@ const IndexPage = () => {
               <p>{Kyc?.reason}</p>
             </div>
             <button
-              onClick={() => {
-                navigate('/member/client/documentForm');
+              onClick={async () => {
+                getClientKYC()
+                  .then(() => {
+                    navigate('/member/client/documentForm?mode=upd');
+                  })
+                  .catch(() => {
+                    navigate('/member/client/documentForm?mode=crt');
+                  });
               }}
               className="bg-sidebar-bg text-sm cursor-pointer text-button-text px-4 py-2 rounded-sm"
             >
@@ -66,16 +73,6 @@ const IndexPage = () => {
             </button>
           </div>
         }
-
-        {/* <div className="p-5 mt-4 flex items-center justify-between bg-[#d6d6da] rounded-lg">
-          <div className="flex gap-5 text-[#6b6868]">
-            <Info />
-            <p>To switch wallet accounts, please click the button !</p>
-          </div>
-          <button className="bg-sidebar-bg text-button-text px-4 py-2 rounded-md">
-            Switch wallet user funtion
-          </button>
-        </div> */}
 
         <div className="bg-secondary p-6 w-full mt-8 rounded-lg text-[#6B7280]">
           <div className="flex items-center justify-between">

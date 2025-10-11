@@ -13,6 +13,7 @@ export const accountSchema = z.object({
   bankingAddress: z.string().nullable().optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
+  clientId: z.number().optional(),
 });
 
 export type Account = z.infer<typeof accountSchema>;

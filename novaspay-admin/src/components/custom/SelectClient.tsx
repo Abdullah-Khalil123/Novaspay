@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -28,14 +28,35 @@ interface SelectClientProps {
 const SelectClient = ({ value, onChange }: SelectClientProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  const { data, isLoading } = useClients({ clientName: search });
-  const clients: Client[] = data?.data || [];
-  const selectedClient = clients.find((c) => c.id === value);
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Fetch clients with debounced search
+  const { data, isLoading } = useClients({
+    clientName: debouncedSearch || undefined,
+    id: value || undefined,
+  });
+
+  const clients = useMemo(() => data?.data || [], [data]);
+
+  const selectedClient = useMemo(
+    () => clients.find((c: Client) => c.id === value),
+    [clients, value]
+  );
 
   const handleSelect = (clientId: number) => {
-    onChange?.(clientId);
+    const newValue = clientId === value ? null : clientId;
+    onChange?.(newValue);
     setOpen(false);
+    setSearch('');
   };
 
   return (
@@ -44,18 +65,18 @@ const SelectClient = ({ value, onChange }: SelectClientProps) => {
         <Button
           variant="outline"
           role="combobox"
+          aria-expanded={open}
           className="w-full justify-between"
+          disabled={isLoading && !selectedClient}
         >
-          {isLoading
-            ? 'Loading...'
-            : selectedClient
-            ? selectedClient.name
-            : 'Select Client'}
+          <span className="truncate">
+            {selectedClient ? selectedClient.name : 'Select Client'}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
-        <Command>
+      <PopoverContent className="w-[300px] p-0" align="start">
+        <Command shouldFilter={false}>
           <CommandInput
             placeholder="Search client..."
             value={search}
@@ -64,12 +85,14 @@ const SelectClient = ({ value, onChange }: SelectClientProps) => {
           <CommandList>
             {isLoading ? (
               <CommandEmpty>Loading...</CommandEmpty>
-            ) : clients.length ? ( // ✅ use `clients.length`
+            ) : clients.length > 0 ? (
               <CommandGroup>
-                {clients.map((client) => (
+                {clients.map((client: Client) => (
                   <CommandItem
                     key={client.id}
-                    onSelect={() => handleSelect(client?.id as number)}
+                    value={String(client.id)}
+                    onSelect={() => handleSelect(client.id as number)}
+                    className="cursor-pointer"
                   >
                     <Check
                       className={cn(
@@ -77,12 +100,14 @@ const SelectClient = ({ value, onChange }: SelectClientProps) => {
                         client.id === value ? 'opacity-100' : 'opacity-0'
                       )}
                     />
-                    {client.name}
+                    <span className="truncate">{client.name}</span>
                   </CommandItem>
                 ))}
               </CommandGroup>
             ) : (
-              <CommandEmpty>No clients found.</CommandEmpty>
+              <CommandEmpty>
+                {search ? 'No clients found.' : 'Start typing to search...'}
+              </CommandEmpty>
             )}
           </CommandList>
         </Command>

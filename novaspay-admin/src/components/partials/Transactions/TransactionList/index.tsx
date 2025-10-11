@@ -32,6 +32,12 @@ const Transactions = () => {
         fields={[
           {
             type: 'text',
+            name: 'email',
+            label: 'Client Email',
+            placeholder: 'Filter by Client Email',
+          },
+          {
+            type: 'text',
             name: 'orderId',
             label: 'Order ID',
             placeholder: 'Filter by Order ID',
@@ -48,6 +54,7 @@ const Transactions = () => {
             label: 'Receiver Number',
             placeholder: 'Filter by Receiver Number',
           },
+
           {
             type: 'select',
             name: 'orderType',

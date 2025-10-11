@@ -13,6 +13,7 @@ export const transactionSchema = z.object({
   receiverName: z.string().nullable().optional(),
   receiverNumber: z.string().nullable().optional(),
   status: z.string().optional(),
+  clientId: z.number().optional(),
   updatedAt: z.string().optional(),
 });
 

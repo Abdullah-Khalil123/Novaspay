@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -21,6 +21,7 @@ import {
 import { toast } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import SelectClient from '@/components/custom/SelectClient';
 
 type AccountFormValues = z.infer<typeof accountSchema>;
 
@@ -45,6 +46,7 @@ const AccountCreate = ({
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors },
   } = useForm<AccountFormValues>({
@@ -156,6 +158,20 @@ const AccountCreate = ({
                     {errors.clientName.message}
                   </p>
                 )}
+              </div>
+
+              <div>
+                <Label>Client</Label>
+                <Controller
+                  name="clientId"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectClient
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
               </div>
 
               <div className="space-y-2">
