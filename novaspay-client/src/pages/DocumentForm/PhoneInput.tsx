@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type {
   UseFormRegister,
   UseFormSetValue,
@@ -25,7 +25,6 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   setValue,
   watch,
 }) => {
-  // Extract country code + number when editing
   const initialValue = watch(name) || '';
   const initialCode =
     countryCodes.find((code) => initialValue.startsWith(code)) || '+92';
@@ -34,22 +33,80 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   const [countryCode, setCountryCode] = useState(initialCode);
   const [phoneNumber, setPhoneNumber] = useState(initialNumber);
   const [open, setOpen] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Whenever code or number changes → update form value
   useEffect(() => {
     setValue(name, `${countryCode}${phoneNumber}` as any);
   }, [countryCode, phoneNumber, name, setValue]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (listRef.current && !listRef.current.contains(event.target as Node)) {
+        const button = listRef.current.previousElementSibling;
+        if (button && !button.contains(event.target as Node)) {
+          setOpen(false);
+          setSearchQuery('');
+        }
+      }
+    };
+
+    if (open) document.addEventListener('mousedown', handleClickOutside);
+    else document.removeEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!open) return;
+      const key = e.key;
+      if (!/[0-9]/.test(key)) return;
+
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+      const newSearchQuery = searchQuery + key;
+      setSearchQuery(newSearchQuery);
+
+      searchTimeoutRef.current = setTimeout(() => {
+        setSearchQuery('');
+      }, 700);
+
+      const foundIndex = countryCodes.findIndex((code) =>
+        code.substring(1).startsWith(newSearchQuery)
+      );
+      if (foundIndex !== -1 && listRef.current) {
+        const item = listRef.current.children[foundIndex] as HTMLElement;
+        const container = listRef.current;
+        const itemTop = item.offsetTop;
+        const itemHeight = item.offsetHeight;
+        const containerHeight = container.clientHeight;
+        const scrollPosition = itemTop - containerHeight / 2 + itemHeight / 2;
+        container.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        setCountryCode(countryCodes[foundIndex]);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    };
+  }, [open, searchQuery]);
+
   return (
     <div className={`flex flex-col w-full mt-2 ${className ?? ''}`}>
       {label && <label className="font-bold mb-3">{label}</label>}
-
       <div className="flex h-[50px] rounded-xl bg-white border border-gray-200 text-gray-700">
-        {/* Custom Dropdown */}
         <div className="relative w-28">
           <button
             type="button"
-            onClick={() => setOpen(!open)}
+            onClick={() => {
+              setOpen(!open);
+              setSearchQuery('');
+            }}
             className="w-full h-full px-3 py-2 bg-gray-200 text-gray-700 text-sm flex justify-between items-center rounded-l-xl focus:outline-none"
           >
             <span>{countryCode}</span>
@@ -69,15 +126,18 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
               />
             </svg>
           </button>
-
           {open && (
-            <ul className="absolute -translate-x-1/2 -right-full h-[200px] w-[150px] overflow-y-scroll bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-[999]">
+            <ul
+              ref={listRef}
+              className="absolute -translate-x-1/2 -right-full h-[200px] w-[150px] overflow-y-scroll bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-[999]"
+            >
               {countryCodes.map((code) => (
                 <li
                   key={code}
                   onClick={() => {
                     setCountryCode(code);
                     setOpen(false);
+                    setSearchQuery('');
                   }}
                   className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 ${
                     code === countryCode ? 'bg-gray-50 font-semibold' : ''
@@ -89,8 +149,6 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
             </ul>
           )}
         </div>
-
-        {/* Phone Input Field */}
         <input
           type="text"
           placeholder="34534534534"
@@ -99,8 +157,6 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </div>
-
-      {/* Validation Error */}
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
