@@ -8,9 +8,7 @@ export const applicationSchema = z.object({
   area: z.string().min(1, 'Area must be selected'),
   clientId: z.number().optional(),
   createdAt: z.string().optional(),
-  cryptoAddress: z
-    .string()
-    .min(5, 'Crypto address must be at least 5 characters'),
+  cryptoAddress: z.string().min(5, 'required'),
   estimatedAmount: z.number().optional(),
   estimatedFee: z.number().optional(),
   referenceRate: z.number().optional(),
@@ -21,7 +19,7 @@ export const applicationSchema = z.object({
   totalAmount: z.number().optional(),
   transactionType: z.string(),
   updatedAt: z.string().optional(),
-  vaBankAccount: z.string(),
+  vaBankAccount: z.string().min(1, 'required'),
 
   client: z
     .object({

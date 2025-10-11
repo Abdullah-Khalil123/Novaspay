@@ -56,7 +56,7 @@ const LoginPage = () => {
   }
   return (
     <div className="flex">
-      <div className="w-1/2 h-screen flex flex-col justify-between p-8">
+      <div className="w-0 hidden lg:w-1/2 h-screen lg:flex flex-col justify-between p-8">
         <h2 className="font-bold text-lg">Novaspay</h2>
         <div className="flex flex-col items-center">
           <img src="/login.jpeg" alt="" className="w-80" />
@@ -71,7 +71,7 @@ const LoginPage = () => {
           by our licensed financial partners.
         </p>
       </div>
-      <div className="w-1/2">
+      <div className="w-full lg:w-1/2">
         <div className="p-4 bg-login-bg h-screen flex flex-col justify-between items-center">
           <div className="flex justify-end w-full">
             <Switch />
@@ -120,7 +120,9 @@ const LoginPage = () => {
                   <input type="checkbox" />
                   <span className="ml-2 select-none">Remember me</span>
                 </label>
-                <a href="/user/forgot">Forgot Password</a>
+                <a href="/user/forgot" className="text-sidebar-bg">
+                  Forgot Password
+                </a>
               </div>
               <button className="text-sm rounded-sm w-full bg-sidebar-bg/90 cursor-pointer text-button-text py-2">
                 {_isLoading ? 'Loading...' : 'Sign in'}

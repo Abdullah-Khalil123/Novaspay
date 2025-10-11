@@ -14,7 +14,7 @@ function RadioGroup<T>({ options, value, onChange }: RadioGroupProps<T>) {
             key={String(opt.value)}
             onClick={() => onChange?.(opt.value)}
             type="button"
-            className={`flex items-center px-4 py-1 rounded-md border transition 
+            className={`flex items-center px-4 py-1 mb-5 rounded-md border transition 
               ${
                 selected
                   ? 'border-green-800 bg-green-50 text-green-800'

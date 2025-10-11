@@ -74,7 +74,7 @@ const IndexPage = () => {
           </div>
         }
 
-        <div className="bg-secondary p-6 w-full mt-8 rounded-lg text-[#6B7280]">
+        <div className="bg-white p-6 w-full mt-8 rounded-lg text-[#6B7280]">
           <div className="flex items-center justify-between">
             <div className="bg-[#dbeafd] text-[#2463eb] w-fit p-1 px-2 text-2xl rounded-md">
               $
@@ -188,7 +188,7 @@ const Table = ({
   return (
     <table className="w-full">
       <thead>
-        <tr className="text-text-primary border-b-[1px] border-border-color">
+        <tr className="text-[#A3a6ad] border-b-[1px] border-border-color">
           <th className="py-2">{t('Description')}</th>
           <th>{t('Date')}</th>
           <th>{t('Amount')}</th>

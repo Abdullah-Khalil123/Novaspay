@@ -1,7 +1,7 @@
 import z from 'zod';
 
 export const documentFormSchema = z.object({
-  area: z.string().min(1, 'Area is required'),
+  area: z.string().min(2, 'Area is required'),
   email: z.email('Invalid email address'),
   dateOfBirth: z.string().min(1, 'Date of birth is required'),
   contactNumber: z.string().min(1, 'Contact number is required'),

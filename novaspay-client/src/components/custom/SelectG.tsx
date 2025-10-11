@@ -8,12 +8,14 @@ interface SelectProps<T> {
   value?: T | null;
   onChange?: (val: T) => void;
   getOptionLabel?: (option: T) => string;
+  isError?: boolean;
 }
 
 function Select<T>({
   label,
   className,
   options,
+  isError,
   value,
   onChange,
   getOptionLabel = (opt) => String(opt),
@@ -68,7 +70,7 @@ function Select<T>({
     <div
       ref={wrapperRef}
       className={
-        'flex items-center h-8 w-64 space-x-4 cursor-pointer ' +
+        'flex items-center h-9 w-64 space-x-4 cursor-pointer ' +
         (className ? ` ${className}` : '')
       }
     >
@@ -78,7 +80,9 @@ function Select<T>({
       {/* Main Select */}
       <div
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative border flex justify-between items-center border-border-color w-full px-2 py-1 rounded-sm"
+        className={`relative border flex justify-between items-center border-border-color w-full px-2 py-1 rounded-sm ${
+          isError ? 'border-red-500/70' : ''
+        }`}
       >
         <span>{value ? getOptionLabel(value) : 'Select an option'}</span>
         <ChevronDown
