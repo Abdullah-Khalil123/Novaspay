@@ -1,8 +1,9 @@
 import prisma from '../../prisma/client.js';
 
 const getAllTransactions = async (req, res) => {
-  const { limit, page } = req.query;
   const {
+    limit,
+    page,
     orderId,
     receiverName,
     receiverNumber,
@@ -11,40 +12,53 @@ const getAllTransactions = async (req, res) => {
     status,
     email,
   } = req.query;
+
   try {
+    const take = parseInt(limit) || 10;
+    const skip = ((parseInt(page) || 1) - 1) * take;
+
+    // Base filters
+    const where = {
+      accountName: accountName ? { contains: accountName } : undefined,
+      orderId: orderId ? { contains: orderId } : undefined,
+      receiverName: receiverName ? { contains: receiverName } : undefined,
+      receiverNumber: receiverNumber ? { contains: receiverNumber } : undefined,
+      orderType: orderType ? { equals: orderType } : undefined,
+      status: status ? { equals: status } : undefined,
+    };
+
+    // Role-based filtering
+    if (req.user.role === 'ADMIN') {
+      // Only transactions of clients invited by this admin
+      where.client = {
+        invitedBy: {
+          inviterId: req.user.id,
+        },
+      };
+    } else if (email) {
+      // Filter by client email for SUPER_ADMIN
+      where.client = {
+        email: {
+          contains: email,
+        },
+      };
+    }
+
     const transactions = await prisma.transaction.findMany({
-      take: parseInt(limit) || 10,
-      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
-      where: {
-        client: email
-          ? {
-              email: {
-                contains: email,
-              },
-            }
-          : undefined,
-        accountName: accountName ? { contains: accountName } : undefined,
-        orderId: orderId ? { contains: orderId } : undefined,
-        receiverName: receiverName ? { contains: receiverName } : undefined,
-        receiverNumber: receiverNumber
-          ? { contains: receiverNumber }
-          : undefined,
-        orderType: orderType ? { equals: orderType } : undefined,
-        status: status ? { equals: status } : undefined,
-      },
+      take,
+      skip,
+      where,
       include: {
-        client: true,
+        client: true, // Include client info if needed
       },
     });
+
+    const total = await prisma.transaction.count({ where });
 
     return res.status(200).json({
       message: 'Transactions retrieved successfully',
       data: transactions,
-      pagination: {
-        limit: parseInt(limit) || 10,
-        page: parseInt(page) || 1,
-        total: await prisma.transaction.count(),
-      },
+      pagination: { limit: take, page: parseInt(page) || 1, total },
     });
   } catch (error) {
     return res

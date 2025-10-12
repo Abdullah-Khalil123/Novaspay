@@ -17,19 +17,37 @@ const getVAById = async (req, res) => {
 
 const getAllVAs = async (req, res) => {
   const { limit, page } = req.query;
+
   try {
+    const take = parseInt(limit) || 10;
+    const skip = ((parseInt(page) || 1) - 1) * take;
+
+    // Base where filter
+    const where = {};
+
+    // Role-based filtering
+    if (req.user.role === 'ADMIN') {
+      // Only VAs of clients invited by this admin
+      where.client = {
+        invitedBy: {
+          inviterId: req.user.id,
+        },
+      };
+    }
+
     const records = await prisma.vA.findMany({
-      take: parseInt(limit) || 10,
-      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+      take,
+      skip,
+      where,
+      include: { client: true }, // include client info if needed
     });
+
+    const total = await prisma.vA.count({ where });
+
     return res.status(200).json({
       message: 'VAs retrieved successfully',
       data: records,
-      pagination: {
-        limit: parseInt(limit) || 10,
-        page: parseInt(page) || 1,
-        total: await prisma.vA.count(),
-      },
+      pagination: { limit: take, page: parseInt(page) || 1, total },
     });
   } catch (error) {
     return res
@@ -49,6 +67,7 @@ const createVA = async (req, res) => {
     street,
     postalCode,
     businessCategory,
+    clientId,
     region,
     fundingSource,
     storePhotos,
@@ -70,6 +89,7 @@ const createVA = async (req, res) => {
         region,
         fundingSource,
         storePhotos,
+        clientId: clientId,
         declineReason,
         status,
       },

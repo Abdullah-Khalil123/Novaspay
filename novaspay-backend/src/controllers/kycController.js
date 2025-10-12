@@ -22,33 +22,50 @@ const getKYCById = async (req, res) => {
 };
 
 const getAllKYCs = async (req, res) => {
-  const { limit, page } = req.query;
-  const { email, name, status, userId } = req.query;
+  const { limit, page, email, name, status, userId } = req.query;
+
   try {
+    const take = parseInt(limit) || 10;
+    const skip = ((parseInt(page) || 1) - 1) * take;
+
+    // Base filters
+    const where = {
+      email: email ? { contains: email } : undefined,
+      firstName: name ? { contains: name } : undefined,
+      status: status ? { equals: status } : undefined,
+    };
+
+    // Role-based filtering
+    if (req.user.role === 'ADMIN') {
+      // Only KYCs of clients invited by this admin
+      where.client = {
+        invitedBy: {
+          inviterId: req.user.id,
+        },
+      };
+    } else if (userId) {
+      // Filter by clientId for SUPER_ADMIN
+      where.clientId = parseInt(userId);
+    }
+
     const kycs = await prisma.kYC.findMany({
-      take: parseInt(limit) || 10,
-      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
-      where: {
-        email: email ? { contains: email } : undefined,
-        name: name ? { contains: name } : undefined,
-        status: status ? { equals: status } : undefined,
-        clientId: userId ? { equals: parseInt(userId) } : undefined,
-      },
+      take,
+      skip,
+      where,
+      include: { client: true }, // optional: include client info
     });
+
+    const total = await prisma.kYC.count({ where });
+
     return res.status(200).json({
       message: 'KYC records retrieved successfully',
       data: kycs,
-      pagination: {
-        limit: parseInt(limit) || 10,
-        page: parseInt(page) || 1,
-        total: await prisma.kYC.count(),
-      },
+      pagination: { limit: take, page: parseInt(page) || 1, total },
     });
   } catch (error) {
-    return res.status(500).json({
-      message: 'Server error',
-      error: error.message,
-    });
+    return res
+      .status(500)
+      .json({ message: 'Server error', error: error.message });
   }
 };
 

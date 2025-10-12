@@ -4,6 +4,7 @@ import {
   StatusApplication,
   AccountStatus,
   OrderType,
+  Role,
 } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
@@ -17,7 +18,7 @@ const randomNumber = (min, max) =>
 async function main() {
   console.log('🌱 Starting database seeding...');
 
-  // Clear previous data
+  // Clear previous data in correct order (respecting foreign key constraints)
   console.log('🗑️ Clearing existing data...');
   await prisma.applications.deleteMany();
   await prisma.transaction.deleteMany();
@@ -26,8 +27,8 @@ async function main() {
   await prisma.onBoarding.deleteMany();
   await prisma.vA.deleteMany();
   await prisma.emailVerification.deleteMany();
-  await prisma.invite.deleteMany();
   await prisma.client.deleteMany();
+  await prisma.invite.deleteMany();
   await prisma.user.deleteMany();
   await prisma.quote.deleteMany();
   await prisma.currency.deleteMany();
@@ -36,35 +37,77 @@ async function main() {
   console.log('👤 Seeding users...');
   const hashedPassword = await bcrypt.hash('password123', 10);
 
-  const users = await Promise.all([
-    prisma.user.create({
-      data: {
-        email: 'admin@example.com',
-        password: hashedPassword,
-        name: 'Admin User',
-        lastActive: new Date(),
-      },
-    }),
-    ...Array.from({ length: 4 }).map(() =>
+  const superAdmin = await prisma.user.create({
+    data: {
+      email: 'superadmin@example.com',
+      password: hashedPassword,
+      name: 'Super Admin',
+      role: Role.SUPER_ADMIN,
+      lastActive: new Date(),
+    },
+  });
+
+  const admin = await prisma.user.create({
+    data: {
+      email: 'admin@example.com',
+      password: hashedPassword,
+      name: 'Admin User',
+      role: Role.ADMIN,
+      lastActive: new Date(),
+    },
+  });
+
+  const otherUsers = await Promise.all(
+    Array.from({ length: 3 }).map(() =>
       prisma.user.create({
         data: {
           email: faker.internet.email(),
           password: hashedPassword,
           name: faker.person.fullName(),
+          role: randomItem([Role.ADMIN, Role.ADMIN, Role.SUPER_ADMIN]),
           lastActive: faker.date.recent({ days: 60 }),
         },
       })
-    ),
-  ]);
+    )
+  );
+
+  const users = [superAdmin, admin, ...otherUsers];
   console.log(`✅ Created ${users.length} users`);
 
-  // Seed Clients
+  // Seed Invites
+  console.log('📨 Seeding invites...');
+  const invites = await Promise.all(
+    Array.from({ length: 15 }).map(() =>
+      prisma.invite.create({
+        data: {
+          code: faker.string.uuid(),
+          used: false,
+          inviterId: randomItem(users).id,
+        },
+      })
+    )
+  );
+  console.log(`✅ Created ${invites.length} invites`);
+
+  // Seed Clients (some with invites, some without)
   console.log('👥 Seeding clients...');
   const clientTypes = ['individual', 'business', 'corporate'];
   const countries = ['USA', 'UK', 'Canada', 'Germany', 'France', 'Australia'];
   const clients = [];
 
   for (let i = 0; i < 10; i++) {
+    // 70% of clients use invites
+    const useInvite = Math.random() < 0.7 && invites.length > 0;
+    let inviteId = null;
+
+    if (useInvite) {
+      const availableInvite = invites.find((inv) => !inv.used);
+      if (availableInvite) {
+        inviteId = availableInvite.id;
+        availableInvite.used = true; // Mark as used in memory
+      }
+    }
+
     const client = await prisma.client.create({
       data: {
         name: faker.person.fullName(),
@@ -78,8 +121,18 @@ async function main() {
         description: faker.company.catchPhrase(),
         invitationCode: faker.string.alphanumeric(8).toUpperCase(),
         accountInfo: faker.lorem.sentence(),
+        invitedById: inviteId,
       },
     });
+
+    // Update invite if used
+    if (inviteId) {
+      await prisma.invite.update({
+        where: { id: inviteId },
+        data: { used: true, usedAt: new Date() },
+      });
+    }
+
     clients.push(client);
   }
   console.log(`✅ Created ${clients.length} clients`);
@@ -113,6 +166,8 @@ async function main() {
         bankingAddress: faker.location.streetAddress(),
         status: randomItem([
           AccountStatus.ACTIVE,
+          AccountStatus.ACTIVE,
+          AccountStatus.ACTIVE,
           AccountStatus.INACTIVE,
           AccountStatus.SUSPENDED,
         ]),
@@ -141,6 +196,7 @@ async function main() {
           fee: parseFloat((amt * 0.02).toFixed(2)),
           status: randomItem([
             Status.PENDING,
+            Status.SUCCESS,
             Status.SUCCESS,
             Status.FAILED,
             Status.CANCELED,
@@ -190,8 +246,8 @@ async function main() {
           estimatedFee: fee,
           estimatedAmount: amount * rate - fee,
           approverId: Math.random() > 0.3 ? randomItem(users).id : null,
-          approvalComments: faker.lorem.sentence(),
-          remark: faker.lorem.sentence(),
+          approvalComments: Math.random() > 0.5 ? faker.lorem.sentence() : null,
+          remark: Math.random() > 0.5 ? faker.lorem.sentence() : null,
           status: randomItem([
             StatusApplication.Pending,
             StatusApplication.Approved,
@@ -212,7 +268,7 @@ async function main() {
   for (const client of clients) {
     const kyc = await prisma.kYC.create({
       data: {
-        email: faker.internet.email(),
+        email: client.email || faker.internet.email(),
         type: randomItem(['individual', 'business']),
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
@@ -222,11 +278,13 @@ async function main() {
         status: randomItem([
           Status.PENDING,
           Status.SUCCESS,
+          Status.SUCCESS,
           Status.FAILED,
-          Status.CANCELED,
           Status.IN_REVIEW,
         ]),
         reason: Math.random() > 0.6 ? faker.lorem.sentence() : null,
+        frontFacingImage: Math.random() > 0.3 ? faker.image.avatar() : null,
+        backFacingImage: Math.random() > 0.3 ? faker.image.avatar() : null,
         area: faker.location.state(),
         corporateEmail: Math.random() > 0.5 ? faker.internet.email() : null,
         dateOfBirth: faker.date.birthdate({ min: 18, max: 70, mode: 'age' }),
@@ -246,67 +304,77 @@ async function main() {
   }
   console.log(`✅ Created ${kycs.length} KYC records`);
 
-  // Seed Onboarding
+  // Seed Onboarding (linked to clients)
   console.log('🚀 Seeding onboarding...');
-  const onboardings = await Promise.all(
-    Array.from({ length: 8 }).map(() =>
-      prisma.onBoarding.create({
-        data: {
-          clientName: faker.person.fullName(),
-          accountErrorMessage:
-            Math.random() > 0.7 ? faker.lorem.sentence() : null,
-          bankAccountStatusMsg:
-            Math.random() > 0.5
-              ? 'Account verified successfully'
-              : 'Pending verification',
-          reason: Math.random() > 0.6 ? faker.lorem.sentence() : null,
-        },
-      })
-    )
-  );
+  const onboardings = [];
+  // Create onboarding for 8 random clients
+  const clientsForOnboarding = faker.helpers.shuffle([...clients]).slice(0, 8);
+
+  for (const client of clientsForOnboarding) {
+    const onboarding = await prisma.onBoarding.create({
+      data: {
+        clientName: client.name,
+        accountErrorMessage:
+          Math.random() > 0.7 ? faker.lorem.sentence() : null,
+        bankAccountStatusMsg:
+          Math.random() > 0.5
+            ? 'Account verified successfully'
+            : 'Pending verification',
+        reason: Math.random() > 0.6 ? faker.lorem.sentence() : null,
+        clientId: client.id,
+      },
+    });
+    onboardings.push(onboarding);
+  }
   console.log(`✅ Created ${onboardings.length} onboarding records`);
 
-  // Seed VA
+  // Seed VA (Virtual Accounts - linked to clients)
   console.log('🏢 Seeding virtual accounts...');
-  const vas = await Promise.all(
-    Array.from({ length: 12 }).map(() =>
-      prisma.vA.create({
-        data: {
-          purpose: randomItem([
-            'business_operations',
-            'payment_collection',
-            'investment',
-          ]),
-          currency: randomItem(currencies),
-          paymentMethod: randomItem(['bank_transfer', 'card', 'crypto']),
-          headquaters: faker.location.country(),
-          state: faker.location.state(),
-          city: faker.location.city(),
-          street: faker.location.streetAddress(),
-          postalCode: faker.location.zipCode(),
-          businessCategory: randomItem([
-            'retail',
-            'technology',
-            'finance',
-            'services',
-          ]),
-          region: faker.location.state(),
-          fundingSource: randomItem(['revenue', 'investment', 'loan']),
-          storePhotos: Array.from({ length: randomNumber(0, 4) }, () =>
-            faker.image.url()
-          ),
-          declineReason: Math.random() > 0.8 ? faker.lorem.sentence() : null,
-          status: randomItem([
-            Status.PENDING,
-            Status.SUCCESS,
-            Status.FAILED,
-            Status.CANCELED,
-            Status.IN_REVIEW,
-          ]),
-        },
-      })
-    )
+  const vas = [];
+  // Create VAs for remaining clients (not used for onboarding)
+  const clientsForVA = clients.filter(
+    (c) => !clientsForOnboarding.find((ob) => ob.id === c.id)
   );
+
+  for (const client of clientsForVA.slice(0, 5)) {
+    const va = await prisma.vA.create({
+      data: {
+        purpose: randomItem([
+          'business_operations',
+          'payment_collection',
+          'investment',
+        ]),
+        currency: randomItem(currencies),
+        paymentMethod: randomItem(['bank_transfer', 'card', 'crypto']),
+        headquaters: faker.location.country(),
+        state: faker.location.state(),
+        city: faker.location.city(),
+        street: faker.location.streetAddress(),
+        postalCode: faker.location.zipCode(),
+        businessCategory: randomItem([
+          'retail',
+          'technology',
+          'finance',
+          'services',
+        ]),
+        region: faker.location.state(),
+        fundingSource: randomItem(['revenue', 'investment', 'loan']),
+        storePhotos: Array.from({ length: randomNumber(0, 4) }, () =>
+          faker.image.url()
+        ),
+        declineReason: Math.random() > 0.8 ? faker.lorem.sentence() : null,
+        status: randomItem([
+          Status.PENDING,
+          Status.SUCCESS,
+          Status.FAILED,
+          Status.CANCELED,
+          Status.IN_REVIEW,
+        ]),
+        clientId: client.id,
+      },
+    });
+    vas.push(va);
+  }
   console.log(`✅ Created ${vas.length} virtual accounts`);
 
   // Seed Email Verifications
@@ -324,21 +392,6 @@ async function main() {
   );
   console.log(`✅ Created ${emailVerifications.length} email verifications`);
 
-  // Seed Invites
-  console.log('📨 Seeding invites...');
-  const invites = await Promise.all(
-    Array.from({ length: 5 }).map(() =>
-      prisma.invite.create({
-        data: {
-          code: faker.string.uuid(),
-          used: faker.datatype.boolean(),
-          usedAt: Math.random() > 0.5 ? faker.date.recent() : null,
-        },
-      })
-    )
-  );
-  console.log(`✅ Created ${invites.length} invites`);
-
   // Seed Currency and Quotes
   console.log('💱 Seeding currencies and quotes...');
   const currencyData = [
@@ -350,6 +403,8 @@ async function main() {
   ];
 
   const createdCurrencies = [];
+  let totalQuotes = 0;
+
   for (const curr of currencyData) {
     const currency = await prisma.currency.create({
       data: {
@@ -375,13 +430,17 @@ async function main() {
           currencyId: currency.id,
         },
       });
+      totalQuotes++;
     }
   }
-  console.log(`✅ Created ${createdCurrencies.length} currencies with quotes`);
+  console.log(
+    `✅ Created ${createdCurrencies.length} currencies with ${totalQuotes} quotes`
+  );
 
   console.log('\n🎉 Seeding completed successfully!');
   console.table({
     Users: users.length,
+    Invites: invites.length,
     Clients: clients.length,
     Accounts: accounts.length,
     Transactions: transactions.length,
@@ -390,10 +449,15 @@ async function main() {
     OnBoardings: onboardings.length,
     VAs: vas.length,
     EmailVerifications: emailVerifications.length,
-    Invites: invites.length,
     Currencies: createdCurrencies.length,
+    Quotes: totalQuotes,
   });
-  console.log('\n🔐 Test credentials: admin@example.com / password123');
+  console.log('\n🔐 Test credentials:');
+  console.log('  Super Admin: superadmin@example.com / password123');
+  console.log('  Admin: admin@example.com / password123');
+  console.log(
+    `\n📊 Database stats: ${clients.length} clients with ${accounts.length} accounts, ${transactions.length} transactions`
+  );
 }
 
 main()

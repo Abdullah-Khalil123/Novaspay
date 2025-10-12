@@ -22,8 +22,9 @@ const getAccountById = async (req, res) => {
 };
 
 const getAllAccounts = async (req, res) => {
-  const { limit, page } = req.query;
   const {
+    limit,
+    page,
     accountNumber,
     bankingName,
     ibanNumber,
@@ -32,28 +33,51 @@ const getAllAccounts = async (req, res) => {
     status,
     userId,
   } = req.query;
+
   try {
+    const take = parseInt(limit) || 10;
+    const skip = ((parseInt(page) || 1) - 1) * take;
+
+    // Base where filters
+    const where = {
+      accountNumber: accountNumber ? { contains: accountNumber } : undefined,
+      bankingName: bankingName ? { contains: bankingName } : undefined,
+      ibanNumber: ibanNumber ? { contains: ibanNumber } : undefined,
+      accountName: accountName ? { contains: accountName } : undefined,
+      currency: currency ? { contains: currency } : undefined,
+      status: status ? { equals: status } : undefined,
+    };
+
+    // Role-based filtering
+    if (req.user.role === 'ADMIN') {
+      // Only accounts of clients invited by this admin
+      where.client = {
+        invitedBy: {
+          inviterId: req.user.id,
+        },
+      };
+    } else if (userId) {
+      // Filter by clientId if provided (for SUPER_ADMIN)
+      where.clientId = parseInt(userId);
+    }
+
     const accounts = await prisma.account.findMany({
-      take: parseInt(limit) || 10,
-      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
-      where: {
-        accountNumber: accountNumber ? { contains: accountNumber } : undefined,
-        bankingName: bankingName ? { contains: bankingName } : undefined,
-        ibanNumber: ibanNumber ? { contains: ibanNumber } : undefined,
-        accountName: accountName ? { contains: accountName } : undefined,
-        currency: currency ? { contains: currency } : undefined,
-        status: status ? { equals: status } : undefined,
-        clientId: userId ? { equals: parseInt(userId) } : undefined,
+      take,
+      skip,
+      where,
+      include: {
+        client: true, // optional, if you want client info
       },
     });
+
+    const total = await prisma.account.count({
+      where,
+    });
+
     return res.status(200).json({
       message: 'Accounts retrieved successfully',
       data: accounts,
-      pagination: {
-        limit: parseInt(limit) || 10,
-        page: parseInt(page) || 1,
-        total: await prisma.account.count(),
-      },
+      pagination: { limit: take, page: parseInt(page) || 1, total },
     });
   } catch (error) {
     return res.status(500).json({

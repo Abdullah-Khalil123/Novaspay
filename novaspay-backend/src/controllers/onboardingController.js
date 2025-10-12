@@ -23,19 +23,35 @@ const getOnBoardingById = async (req, res) => {
 // Get all OnBoarding records
 const getAllOnBoardings = async (req, res) => {
   const { limit, page } = req.query;
+
   try {
+    const take = parseInt(limit) || 10;
+    const skip = ((parseInt(page) || 1) - 1) * take;
+
+    const where = {};
+
+    if (req.user.role === 'ADMIN') {
+      // Only OnBoardings of clients invited by this admin
+      where.client = {
+        invitedBy: {
+          inviterId: req.user.id,
+        },
+      };
+    }
+
     const records = await prisma.onBoarding.findMany({
-      take: parseInt(limit) || 10,
-      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
+      take,
+      skip,
+      where,
+      include: { client: true }, // include client info
     });
+
+    const total = await prisma.onBoarding.count({ where });
+
     return res.status(200).json({
       message: 'OnBoardings retrieved successfully',
       data: records,
-      pagination: {
-        limit: parseInt(limit) || 10,
-        page: parseInt(page) || 1,
-        total: await prisma.onBoarding.count(),
-      },
+      pagination: { limit: take, page: parseInt(page) || 1, total },
     });
   } catch (error) {
     return res
@@ -46,11 +62,22 @@ const getAllOnBoardings = async (req, res) => {
 
 // Create OnBoarding
 const createOnBoarding = async (req, res) => {
-  const { clientName, accountErrorMessage, bankAccountStatusMsg, reason } =
-    req.body;
+  const {
+    clientName,
+    accountErrorMessage,
+    bankAccountStatusMsg,
+    reason,
+    clientId,
+  } = req.body;
   try {
     const newRecord = await prisma.onBoarding.create({
-      data: { clientName, accountErrorMessage, bankAccountStatusMsg, reason },
+      data: {
+        clientName,
+        accountErrorMessage,
+        bankAccountStatusMsg,
+        reason,
+        clientId: clientId,
+      },
     });
     return res
       .status(201)

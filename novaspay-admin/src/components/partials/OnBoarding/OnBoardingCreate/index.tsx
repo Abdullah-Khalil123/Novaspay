@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -21,6 +21,7 @@ import {
 import { toast } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import SelectClient from '@/components/custom/SelectClient';
 
 type OnboardingFormValues = z.infer<typeof onboardingSchema>;
 
@@ -48,6 +49,7 @@ const OnboardingCreate = ({
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors },
   } = useForm<OnboardingFormValues>({
@@ -59,6 +61,7 @@ const OnboardingCreate = ({
       reason: '',
     },
   });
+  console.log(errors);
 
   useEffect(() => {
     if (action === 'edit' && onboarding) {
@@ -148,6 +151,20 @@ const OnboardingCreate = ({
                   id="bankAccountStatusMsg"
                   {...register('bankAccountStatusMsg')}
                   placeholder="Verified / Pending / Failed"
+                />
+              </div>
+
+              <div>
+                <Label>Client</Label>
+                <Controller
+                  name="clientId"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectClient
+                      value={field.value as unknown as number}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
               </div>
 

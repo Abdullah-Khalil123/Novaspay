@@ -16,6 +16,7 @@ export const vaSchema = z.object({
   storePhotos: z.array(z.string()).optional(),
   declineReason: z.string().nullable().optional(),
   status: z.string().nullable().optional(),
+  clientId: z.any().optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

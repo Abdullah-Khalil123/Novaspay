@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import SelectClient from '@/components/custom/SelectClient';
 
 type VAFormValues = z.infer<typeof vaSchema>;
 
@@ -128,6 +129,20 @@ const VACreate = ({ action = 'create' }: { action?: 'create' | 'edit' }) => {
                     {errors.purpose.message}
                   </p>
                 )}
+              </div>
+
+              <div>
+                <Label>Client</Label>
+                <Controller
+                  name="clientId"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectClient
+                      value={field.value as unknown as number}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
               </div>
 
               <div className="space-y-2">

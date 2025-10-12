@@ -7,6 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role { // NEW: Add Role enum
+  ADMIN
+  SUPER_ADMIN
+}
 
 // ADMINS
 model User {
@@ -14,6 +18,9 @@ model User {
   email           String    @unique
   password        String
   name            String?
+
+  role            Role      @default(ADMIN)
+  createdInvites  Invite[] // NEW: User can create many invites
 
   lastActive      DateTime?
   applications   Applications[]
@@ -111,6 +118,9 @@ model OnBoarding {
   reason                String?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+
+  clientId             Int?      @unique
+  client               Client?   @relation(fields: [clientId], references: [id])
 }
 
 model VA {
@@ -128,6 +138,11 @@ model VA {
   fundingSource  String?
   storePhotos    String[] @default([])
   declineReason  String?
+
+  clientId             Int?      @unique
+  client               Client?   @relation(fields: [clientId], references: [id])
+
+
   status         Status @default(PENDING)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -150,8 +165,14 @@ model Client {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  invitedById    String?   @unique// NEW: foreign key to the Invite model's ID
+  invitedBy      Invite?   @relation(fields: [invitedById], references: [id]) // NEW: Client is linked by the Invite that created it
+
+
   account         Account?
   kyc             KYC?
+  onBoarding      OnBoarding?
+  va              VA?
 
   transactions Transaction[]
   applications Applications[]
@@ -171,6 +192,12 @@ model Invite {
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
   usedAt    DateTime?
+
+  inviterId Int      // NEW: ID of the User (admin) who created this invite
+  inviter   User     @relation(fields: [inviterId], references: [id]) // NEW: Link to the inviter
+
+  // NEW: An invite can create one client (after being used)
+  client    Client?
 }
 
 model Applications {

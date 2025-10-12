@@ -19,27 +19,40 @@ const getClientById = async (req, res) => {
 };
 
 const getAllClients = async (req, res) => {
-  const { limit, page } = req.query;
-  const { clientName, country, email, id } = req.query;
+  const { limit, page, clientName, country, email, id } = req.query;
+
   try {
+    const take = parseInt(limit) || 10;
+    const skip = ((parseInt(page) || 1) - 1) * take;
+
+    const where = {
+      id: id ? parseInt(id) : undefined,
+      name: clientName ? { contains: clientName } : undefined,
+      country: country ? { contains: country } : undefined,
+      email: email ? { contains: email } : undefined,
+    };
+
+    // Role-based filtering
+    if (req.user.role === 'ADMIN') {
+      // Only clients invited by this admin
+      where.invitedBy = {
+        inviterId: req.user.id,
+      };
+    }
+
     const clients = await prisma.client.findMany({
-      take: parseInt(limit) || 10,
-      skip: ((parseInt(page) || 1) - 1) * (parseInt(limit) || 10),
-      where: {
-        id: id ? parseInt(id) : undefined,
-        name: clientName ? { contains: clientName } : undefined,
-        country: country ? { contains: country } : undefined,
-        email: email ? { contains: email } : undefined,
-      },
+      take,
+      skip,
+      where,
+      include: { invitedBy: true }, // optional: include invite info
     });
+
+    const total = await prisma.client.count({ where });
+
     return res.status(200).json({
       message: 'Clients retrieved successfully',
       data: clients,
-      pagination: {
-        limit: parseInt(limit) || 10,
-        page: parseInt(page) || 1,
-        total: await prisma.client.count(),
-      },
+      pagination: { limit: take, page: parseInt(page) || 1, total },
     });
   } catch (error) {
     return res

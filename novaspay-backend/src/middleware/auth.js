@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import prisma from '../../prisma/client.js';
 
 export const protect = async (req, res, next) => {
   let token = req.headers.authorization?.split(' ')[1] || req.cookies.token;
@@ -7,7 +6,7 @@ export const protect = async (req, res, next) => {
   if (lang) {
     req.lang = lang.split(',')[0]; // Set the language preference
   } else {
-    req.lang = 'en'; // Default to English
+    req.lang = 'en';
   }
   if (!token) {
     return res.status(401).json({ message: 'Not authorized, no token' });
@@ -19,6 +18,7 @@ export const protect = async (req, res, next) => {
         id: decoded.id,
         name: decoded.name,
         email: decoded.email,
+        role: decoded.role,
       };
 
       if (!req.user) {
