@@ -37,6 +37,7 @@ const HistoryFilter = ({
       />
 
       <Select
+        className="mt-1"
         label={t('Area')}
         options={[t('Europe'), t('EUR/USD-W')]}
         value={filters.area}
