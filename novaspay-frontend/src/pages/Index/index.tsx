@@ -67,40 +67,6 @@ const IndexPage = () => {
         </p>
       </div>
 
-      {/* KYC AUDIT */}
-      {
-        <div
-          className={
-            'p-5 mt-4 flex items-center justify-between rounded-lg ' +
-            (Kyc?.status === 'FAILED' ? ' bg-[#fce2e2]' : ' bg-[#d0d0d4]')
-          }
-        >
-          <div
-            className={
-              'gap-5 ' +
-              (Kyc?.status === 'FAILED' ? 'text-[#f36b6e]' : 'text-[#6b6868]')
-            }
-          >
-            <h3 className="text-xl font-bold">KYC Audit {Kyc?.status}</h3>
-            <p>{Kyc?.reason}</p>
-          </div>
-          <button
-            onClick={async () => {
-              getAllKYCs()
-                .then(() => {
-                  router('/member/client/documentForm?mode=upd');
-                })
-                .catch(() => {
-                  router('/member/client/documentForm?mode=crt');
-                });
-            }}
-            className="bg-sidebar-bg text-sm cursor-pointer text-button-text px-4 py-2 rounded-sm"
-          >
-            Update Account
-          </button>
-        </div>
-      }
-
       {/* ACCOUNT INFO */}
       <div className="bg-white p-6 w-full max-w-[500px] mt-8 rounded-lg text-[#6B7280]">
         <div className="flex items-center justify-between">
