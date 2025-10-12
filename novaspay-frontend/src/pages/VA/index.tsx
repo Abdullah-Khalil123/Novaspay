@@ -128,7 +128,10 @@ const VAPage = () => {
                     <td className="w-[80px] min-w-[80px] px-2 py-10 truncate">
                       {acc.storePhotos?.join(', ')}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-10 truncate">
+                    <td
+                      title={acc.declineReason as string}
+                      className="w-[80px] min-w-[80px] px-2 py-10 truncate"
+                    >
                       {acc.declineReason}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-10 truncate">

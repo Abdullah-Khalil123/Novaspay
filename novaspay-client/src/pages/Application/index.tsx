@@ -135,13 +135,22 @@ const ApplicationList = () => {
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {app.estimatedAmount}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      title={app.approver?.name}
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                    >
                       {app.approver?.name}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      title={app.approvalComments as string}
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                    >
                       {app.approvalComments}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      title={app.remark as string}
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                    >
                       {app.remark}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">

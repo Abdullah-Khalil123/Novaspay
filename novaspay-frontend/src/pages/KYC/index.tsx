@@ -113,7 +113,10 @@ const KYCPage = () => {
                     <td className="w-[80px] min-w-[80px] px-2 py-10 truncate">
                       {acc.createdAt}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-10 truncate">
+                    <td
+                      className="w-[80px] min-w-[80px] px-2 py-10 truncate"
+                      title={acc.reason as string}
+                    >
                       {acc.reason}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-10 truncate">

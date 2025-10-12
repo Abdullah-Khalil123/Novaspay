@@ -116,19 +116,31 @@ const ReceiveAccount = () => {
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {acc.clientName}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      title={acc.ibanNumber as string}
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                    >
                       {acc.ibanNumber}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {acc.balance}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      title={acc.accountNumber as string}
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                    >
                       {acc.accountNumber}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      title={acc.accountName as string}
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                    >
                       {acc.accountName}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      title={acc.bankingAddress as string}
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                    >
                       {acc.bankingAddress}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">

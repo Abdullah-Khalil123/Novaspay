@@ -116,7 +116,9 @@ const HistoryPage = () => {
                     <td className="px-2 py-2">{tx.status}</td>
                     <td className="px-2 py-2">{tx.orderType}</td>
                     <td className="px-2 py-2">
-                      <p className="line-clamp-3">{tx.reason}</p>
+                      <p className="line-clamp-3" title={tx.reason as string}>
+                        {tx.reason}
+                      </p>
                     </td>
                     <td className="px-2 py-2">{tx.createdAt}</td>
                     <td className="px-2 py-2">{tx.updatedAt}</td>

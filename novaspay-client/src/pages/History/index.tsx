@@ -115,7 +115,10 @@ const HistoryPage = () => {
                     <td className="px-2 py-2">{tx.fee}</td>
                     <td className="px-2 py-2">{tx.status}</td>
                     <td className="px-2 py-2">{tx.orderType}</td>
-                    <td className="px-2 py-2 max-h-[50px] line-clamp-3 text-ellipsis">
+                    <td
+                      title={tx.reason as string}
+                      className="px-2 py-2 max-h-[50px] line-clamp-3 text-ellipsis"
+                    >
                       {tx.reason}
                     </td>
                     <td className="px-2 py-2">

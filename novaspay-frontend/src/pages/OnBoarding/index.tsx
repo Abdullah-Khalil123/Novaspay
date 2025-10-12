@@ -91,7 +91,10 @@ const OnboardingPage = () => {
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
                       {acc.bankAccountStatusMsg}
                     </td>
-                    <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
+                    <td
+                      className="w-[80px] min-w-[80px] px-2 py-4 truncate"
+                      title={acc.reason as string}
+                    >
                       {acc.reason}
                     </td>
                     <td className="w-[80px] min-w-[80px] px-2 py-4 truncate">
